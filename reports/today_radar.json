@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-05-31T17:05:21.405367+00:00",
-  "mode": "live_recent_window",
+  "generated_at": "2026-06-03T06:48:41.220488+00:00",
+  "mode": "offline_existing_jsonl",
   "framing": "candidate_shortlist_not_verified_prediction",
   "window": {
     "days_min": 30,
     "days_max": 45,
-    "created_start": "2026-04-16",
-    "created_end": "2026-05-01"
+    "created_start": "2026-04-19",
+    "created_end": "2026-05-04"
   },
   "inputs": {
-    "raw_jsonl": "/Users/wenjun/openclaw-project/data/today_repos_raw_strict_tmp.jsonl",
-    "features_csv": "/Users/wenjun/openclaw-project/data/today_features_strict_tmp.csv",
-    "artifacts_dir": "/Users/wenjun/openclaw-project/data/model_artifacts"
+    "raw_jsonl": "today_repos_raw_strict_tmp.jsonl",
+    "features_csv": "today_features.csv",
+    "artifacts_dir": "data/model_artifacts"
   },
   "candidates": [
     {
@@ -154,6 +154,147 @@
         "readme_len_30d": 0,
         "has_readme_30d": 0,
         "activity_total_30d": 0,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 6,
+      "full_name": "MatthewK78/Rose",
+      "url": "https://github.com/MatthewK78/Rose",
+      "language": "Python",
+      "attention_score": 0.325,
+      "current_stars": 67,
+      "created_at": "2026-04-17T07:43:47Z",
+      "action": "try",
+      "reasons": [
+        "30-day README length is above the training-set p75 — stronger early documentation.",
+        "30-day README includes images/screenshots."
+      ],
+      "risks": [
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 18,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 1,
+        "readme_len_30d": 14189,
+        "has_readme_30d": 1,
+        "activity_total_30d": 18,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 7,
+      "full_name": "Suraj-G-Rao/My-Portfolio",
+      "url": "https://github.com/Suraj-G-Rao/My-Portfolio",
+      "language": "JavaScript",
+      "attention_score": 0.295,
+      "current_stars": 44,
+      "created_at": "2026-04-16T09:07:21Z",
+      "action": "try",
+      "reasons": [
+        "30-day README length is above the training-set p75 — stronger early documentation.",
+        "30-day README contains a demo URL.",
+        "30-day README includes images/screenshots.",
+        "First-30-day commit count is high."
+      ],
+      "risks": [
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 51,
+        "issues_30d": 0,
+        "prs_30d": 24,
+        "contributors_30d": 1,
+        "readme_len_30d": 6251,
+        "has_readme_30d": 1,
+        "activity_total_30d": 75,
+        "has_pr_activity_30d": 1
+      }
+    },
+    {
+      "rank": 8,
+      "full_name": "caojiaolong/spaces-index",
+      "url": "https://github.com/caojiaolong/spaces-index",
+      "language": "Python",
+      "attention_score": 0.25,
+      "current_stars": 219,
+      "created_at": "2026-04-30T09:32:41Z",
+      "action": "try",
+      "reasons": [
+        "30-day README length is above the training-set p75 — stronger early documentation.",
+        "30-day README includes images/screenshots."
+      ],
+      "risks": [
+        "No early issue/PR interaction observed."
+      ],
+      "signals": {
+        "commits_30d": 8,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 2,
+        "readme_len_30d": 165208,
+        "has_readme_30d": 1,
+        "activity_total_30d": 8,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 9,
+      "full_name": "anknpolley123/BTCDump",
+      "url": "https://github.com/anknpolley123/BTCDump",
+      "language": "Python",
+      "attention_score": 0.16,
+      "current_stars": 84,
+      "created_at": "2026-04-17T07:16:30Z",
+      "action": "try",
+      "reasons": [
+        "30-day README length is above the training-set p75 — stronger early documentation.",
+        "30-day README includes images/screenshots."
+      ],
+      "risks": [
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 4,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 1,
+        "readme_len_30d": 6751,
+        "has_readme_30d": 1,
+        "activity_total_30d": 4,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 10,
+      "full_name": "Abhay557/fakedata",
+      "url": "https://github.com/Abhay557/fakedata",
+      "language": "JavaScript",
+      "attention_score": 0.059188,
+      "current_stars": 9,
+      "created_at": "2026-04-19T16:10:37Z",
+      "action": "watch",
+      "reasons": [
+        "First-30-day commit count is high.",
+        "Total 30-day activity (commits + issues + PRs) is in the top quartile."
+      ],
+      "risks": [
+        "No README at the 30-day mark (or could not be fetched).",
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 43,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 0,
+        "readme_len_30d": 0,
+        "has_readme_30d": 0,
+        "activity_total_30d": 43,
         "has_pr_activity_30d": 0
       }
     }

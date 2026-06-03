@@ -215,11 +215,9 @@ openclaw-project/
 │   ├── today-radar/           #   应用层（可选）：radar.py
 │   └── inspect-pipeline-state/#   状态巡检：inspect.py
 │
-├── agents/                    # 编排器与构建脚本
-│   ├── orchestrator.py        #   DeepSeek Chat + Tool Use 调度器
-│   ├── build_ppt.py           #   生成展示 PPT
-│   ├── build_walkthrough.py   #   生成 HTML walkthrough
-│   └── build_models_explained.py
+├── agents/                    # 编排器
+│   └── orchestrator.py        #   DeepSeek Chat + Tool Use 调度器
+│                              #   (旧版 build_ppt.py / build_walkthrough.py 已移到 archive/)
 │
 ├── data/                      # 固定历史快照 + 中间产物（canonical）
 │   ├── repos_raw_500_strict.jsonl   # 正式数据：500 条 strict-30d 记录
@@ -249,6 +247,15 @@ openclaw-project/
 ---
 
 ## 8. 如何复现 / 运行
+
+两条路径，按需选择：
+
+| 路径 | 命令 | 需要 | 适用场景 |
+|---|---|---|---|
+| 最简离线复现 | `bash reproduce.sh` | 仅 pip 依赖 | 验证数字、检查代码 |
+| 完整系统复现 | `bash setup_openclaw.sh` + orchestrator | DEEPSEEK_API_KEY（可选） | 跑 pipeline + Console |
+
+---
 
 ### ① 最简复现（推荐，已验证 bit-exact）
 
@@ -287,22 +294,23 @@ python3 skills/diagnostic-builder/diagnose.py --results repro/model_results.json
 ```
 > 注意：`extract.py` 的默认 `--input` 指向旧文件 `repos_raw_500.jsonl`，复现时**务必显式传** `repos_raw_500_strict.jsonl`。
 
-### ③ 跑完整 OpenClaw 编排器（含洞察 + 报告 + Console）
+### ③ 完整系统复现（含洞察 + 报告 + Console）
 
-完整链路里的 `diagnose / insight / report / orchestrator` 默认读写 `~/openclaw-project/`，
-且编排器从 `~/.openclaw/workspace/skills/` 找各 Agent。所以跑**完整** pipeline 建议把仓库放到 `~/openclaw-project`：
+完整链路里的编排器默认读写 `~/openclaw-project/`，从 `~/.openclaw/workspace/skills/` 找各 Agent。
+`setup_openclaw.sh` 会自动完成环境搭建：
 
 ```bash
 # 1) 克隆到 ~/openclaw-project（这样所有默认路径都对得上）
 git clone https://github.com/WenjunLi2004/DataMining---OpenClaw.git ~/openclaw-project
-# 2) 让编排器找得到技能
-mkdir -p ~/.openclaw/workspace && cp -r ~/openclaw-project/skills ~/.openclaw/workspace/skills
-# 3) 可选：洞察用 LLM（不设则回退确定性模板，仍可跑完）
+cd ~/openclaw-project
+# 2) 一键搭建：把 skills/ 同步到 ~/.openclaw/workspace/skills/
+bash setup_openclaw.sh
+# 3) 可选：洞察用 LLM（不设则自动回退确定性模板，仍可跑完）
 export DEEPSEEK_API_KEY=sk-...
 # 4) 保留固定原始数据，强制重算本地分析链路
 python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-local "开始分析"
 # 5) 启动 OpenClaw Console
-cd ~/openclaw-project && python3 -m http.server 8080 --bind 127.0.0.1   # http://127.0.0.1:8080/dashboard/
+python3 -m http.server 8080 --bind 127.0.0.1   # http://127.0.0.1:8080/dashboard/
 ```
 > 只有在需要**重新采集**时才需要 `GITHUB_TOKEN`（不推荐——会破坏固定快照的可复现性）。
 

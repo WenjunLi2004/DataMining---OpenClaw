@@ -264,9 +264,9 @@ def write_json_report(path: Path, args, raw_path: Path, features_path: Path,
             "created_end": (today - timedelta(days=args.days_min)).isoformat(),
         },
         "inputs": {
-            "raw_jsonl": str(raw_path),
-            "features_csv": str(features_path),
-            "artifacts_dir": str(Path(args.artifacts_dir).expanduser()),
+            "raw_jsonl": raw_path.name,
+            "features_csv": features_path.name,
+            "artifacts_dir": "data/model_artifacts",
         },
         "candidates": candidates,
     }

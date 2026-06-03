@@ -3,25 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OpenClaw 当前可用文件</title>
+<title>OpenClaw · 当前可用文件</title>
 <style>
-body{margin:0;background:#fbfcfe;color:#24292f;font-family:"LXGW WenKai","霞鹜文楷","PingFang SC",sans-serif;line-height:1.7}
-main{max-width:920px;margin:48px auto;padding:0 24px}
-.card{background:white;border:1px solid #d8e1ec;border-radius:18px;padding:24px;margin:16px 0;box-shadow:0 10px 28px rgba(31,41,55,.06)}
-h1{font-size:38px;margin:0 0 14px} h2{font-size:22px;margin:0 0 10px}.muted{color:#5d6977}a{color:#0969da;font-weight:800;text-decoration:none}li{margin:8px 0}.tag{display:inline-block;background:#eef7ee;color:#2da44e;border:1px solid #bfe7cf;border-radius:999px;padding:4px 10px;font-weight:800;font-size:13px}
+:root{--ink:#232a31;--muted:#5d6977;--line:#e1e8f0;--soft:#f4f7fb;--green:#2ca25f;--blue:#1f76d3;}
+body{margin:0;background:var(--soft);color:var(--ink);
+  font-family:"LXGW WenKai","霞鹜文楷","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;}
+main{max-width:960px;margin:48px auto;padding:0 24px 72px;}
+h1{font-size:2rem;margin:0 0 6px;}
+.sub{color:var(--muted);font-size:.95rem;margin-bottom:32px;}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:18px 0;
+  box-shadow:0 8px 24px rgba(31,41,55,.06);}
+h2{font-size:1.15rem;margin:0 0 14px;font-weight:900;}
+ul{margin:0;padding-left:20px;} li{margin:9px 0;}
+a{color:var(--blue);font-weight:800;text-decoration:none;}
+a:hover{text-decoration:underline;}
+.tag{display:inline-block;background:#eaf6ef;color:var(--green);border:1px solid #bfe3cd;
+     border-radius:999px;padding:2px 10px;font-weight:800;font-size:.78rem;margin-left:6px;}
+.tag.b{background:#eef4ff;color:var(--blue);border-color:#c3d8f7;}
+.note{color:var(--muted);font-size:.88rem;margin-top:8px;}
 </style>
 </head>
 <body><main>
-<h1>OpenClaw 当前可用文件</h1>
-<p class="muted">这个目录已经清理过。旧泄漏版本、旧 PPT、旧预览和旧报告已移到项目根目录的 archive 中。</p>
-<div class="card"><h2>展示优先打开</h2><ul>
-<li><a href="./OPEN_THIS_latest_presentation.pptx">OPEN_THIS_latest_presentation.pptx</a> <span class="tag">最新版 PPT</span></li>
-<li><a href="./OPEN_THIS_latest_presentation.pdf">OPEN_THIS_latest_presentation.pdf</a></li>
-<li><a href="./OPEN_THIS_speech_guide.html">OPEN_THIS_speech_guide.html</a></li>
-</ul></div>
-<div class="card"><h2>当前辅助材料</h2><ul>
-<li><a href="./insights.html">insights.html</a></li>
-<li><a href="./today_radar.html">today_radar.html</a></li>
-<li><a href="./INSIGHTS.md">INSIGHTS.md</a></li>
-</ul></div>
+<h1>OpenClaw · 当前可用文件</h1>
+<p class="sub">reports/ 目录索引 — 所有文件均为当前版本，旧版已移至项目根目录的 archive/。</p>
+
+<div class="card">
+  <h2>📊 展示材料（优先打开）</h2>
+  <ul>
+    <li><a href="./OPEN_THIS_latest_presentation.pptx">OPEN_THIS_latest_presentation.pptx</a>
+        <span class="tag">最新版 PPT · 13 页</span></li>
+    <li><a href="./OPEN_THIS_latest_presentation.pdf">OPEN_THIS_latest_presentation.pdf</a>
+        <span class="tag b">PDF 版</span></li>
+    <li><a href="./OPEN_THIS_speech_guide.html">OPEN_THIS_speech_guide.html</a>
+        — 逐页讲稿（9–10 分钟）</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>🔬 模型评估报告（浅色主题，可在浏览器直接阅读）</h2>
+  <ul>
+    <li><a href="./latest_final.html">latest_final.html</a>
+        <span class="tag">最新 · 稳定入口</span>
+        — 完整评估报告：概览、19 特征、三模型对比、消融、时间切分、分语言分析、方法说明。
+        所有数字均由当前 model_results.json 动态生成。</li>
+    <li><a href="./2026-06-03_two_part_report.html">2026-06-03_two_part_report.html</a>
+        — 同上（与 latest_final.html 内容完全一致，带日期的存档版）。</li>
+  </ul>
+  <p class="note">报告由 skills/report-generator/generate.py 生成；可随时重新生成：
+    <code>python3 skills/report-generator/generate.py</code></p>
+</div>
+
+<div class="card">
+  <h2>💡 洞察分析</h2>
+  <ul>
+    <li><a href="./INSIGHTS.md">INSIGHTS.md</a> — 可解释分析 Markdown 源文件</li>
+    <li><a href="./insights.html">insights.html</a> — HTML 渲染版，含 7 个分析章节</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>📡 Today Radar（近期候选观察清单）</h2>
+  <ul>
+    <li><a href="./today_radar.html">today_radar.html</a> — 近期候选项目榜单</li>
+    <li><a href="./today_radar.json">today_radar.json</a> — 机器可读数据</li>
+  </ul>
+  <p class="note">Today Radar 是可选应用模式，输出"近期候选观察清单"，不是已验证的预测。</p>
+</div>
+
 </main></body></html>

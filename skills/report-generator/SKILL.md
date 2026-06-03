@@ -6,9 +6,10 @@ metadata: { "openclaw": { "emoji": "📊", "requires": { "bins": ["python3"], "e
 
 # Report Generator
 
-Produces a dark-themed HTML report viewable in any browser. If
-`~/openclaw-project/reports/INSIGHTS.md` exists, it is embedded as an
-`Insight Analysis` section.
+Produces a **light-themed** HTML evaluation report viewable in any browser.
+All numbers (AUC, PR-AUC, P@10, ablation, feature importance…) are read
+dynamically from the current `model_results.json` and `diagnostic_summary.json`
+— no hard-coded metrics.
 
 ## Usage
 
@@ -21,6 +22,9 @@ python3 ~/.openclaw/workspace/skills/report-generator/generate.py \
   --out-dir  ~/openclaw-project/reports
 ```
 
-Output: `~/openclaw-project/reports/YYYY-MM-DD_final.html`
+Outputs (identical content, two stable entry points):
 
-Open with: `open ~/openclaw-project/reports/YYYY-MM-DD_analysis.html`
+- `~/openclaw-project/reports/YYYY-MM-DD_two_part_report.html`
+- `~/openclaw-project/reports/latest_final.html`
+
+Open with: `open ~/openclaw-project/reports/latest_final.html`

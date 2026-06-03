@@ -178,7 +178,7 @@ steps that are actually needed.
 
 STEP 1: Call run_inspect_pipeline_state — get current file facts (ALWAYS first).
 STEP 2: Apply the scheduling rules below to each pipeline step.
-STEP 3: Execute steps in order (collect → extract → train → diagnose → insight → report).
+STEP 3: Execute steps in order (collect → extract → train → diagnose → insight → error-analysis → report).
 STEP 4: Output a brief Chinese summary of what ran and why.
 
 ## Scheduling rules (apply after inspection)
@@ -209,7 +209,12 @@ RULE 5 — Insight analysis:
   IF insights.exists == false OR insights.newer_than_diagnostic == false → run_insight_analysis
   ELSE → skip
 
-RULE 6 — Report generation:
+RULE 6 — Error analysis:
+  IF error_analysis.exists == false OR error_analysis.newer_than_model_results == false
+  → run_error_analyst (after model training; uses OOF probs from model_results.json)
+  NOTE: Falls back to deterministic summary when DEEPSEEK_API_KEY is unset — always safe to run.
+
+RULE 7 — Report generation:
   ALWAYS run run_report_generator (never skip — report captures today's date and decision log)
 
 OPTIONAL — Today Radar:
@@ -338,6 +343,28 @@ TOOLS = [
                 "properties": {
                     "input":  {"type": "string"},
                     "output": {"type": "string"},
+                },
+                "required": [],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_error_analyst",
+            "description": (
+                "Analyze high-confidence prediction errors (FP/FN) using the RF OOF probabilities. "
+                "Generates reports/error_analysis.html and data/error_analysis.json. "
+                "Call after model training when error_analysis.json is missing or older than model_results.json. "
+                "Falls back to deterministic statistical summary if no DEEPSEEK_API_KEY is set."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "features": {"type": "string"},
+                    "results":  {"type": "string"},
+                    "out_json": {"type": "string"},
+                    "out_html": {"type": "string"},
                 },
                 "required": [],
             },
@@ -526,6 +553,17 @@ def run_insight_analysis(diagnostic: str = str(DIAGNOSTIC),
     ])
 
 
+def run_error_analyst(features: str = str(FEATURES),
+                      results: str = str(RESULTS),
+                      out_json: str = str(DATA_DIR / "error_analysis.json"),
+                      out_html: str = str(REPORTS_DIR / "error_analysis.html")) -> str:
+    return _run([
+        "python3", str(SKILLS_DIR / "error-analyst/analyze.py"),
+        "--features", features, "--results", results,
+        "--out-json", out_json, "--out-html", out_html,
+    ])
+
+
 def run_report_generator(results: str = str(RESULTS),
                           features: str = str(FEATURES),
                           out_dir: str = str(REPORTS_DIR),
@@ -563,6 +601,7 @@ TOOL_HANDLERS = {
     "run_model_trainer":           run_model_trainer,
     "run_diagnostic_builder":      run_diagnostic_builder,
     "run_insight_analysis":        run_insight_analysis,
+    "run_error_analyst":           run_error_analyst,
     "run_report_generator":        run_report_generator,
     "run_today_radar":             run_today_radar,
 }

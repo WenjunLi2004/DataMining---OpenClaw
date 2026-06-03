@@ -36,11 +36,11 @@ python3 ~/.openclaw/workspace/skills/repo-collector/collect.py --target 500
 | 文件 | 描述 |
 |------|------|
 | `data/repos_raw_500_strict.jsonl` | **正式数据**：500 条 strict-30d 记录（2026-05-30 采集，created 2025-03-01..2025-04-30，batch=strict_30d_1y_2025_03_04） |
-| `data/repos_raw_500.jsonl` | 旧版记录（2026-05-18 采集，created 2025-05-01..2025-06-30）——**不含 30d 字段，保留为历史备份，不再作为主数据源** |
-| `data/repos_raw.jsonl` | 20 条测试记录（pipeline 验证用） |
+| `data/repos_raw_500.jsonl` | 本地旧版历史备份（2026-05-18 采集，created 2025-05-01..2025-06-30）——**不含 30d 字段，已从仓库排除，不再作为主数据源** |
+| `data/repos_raw.jsonl` | 20 条 strict-30d 样例记录（快速测试 / schema 查看用） |
 | `data/summary.md` | 最近一次采集的统计报告 |
-| `data/collect_500_strict.log` | strict 采集的完整运行日志 |
-| `data/collect_500.log` | 旧版采集日志（历史存档） |
+| `data/collect_500_strict.log` | strict 采集的本地完整运行日志（`.gitignore` 排除，不随仓库提交） |
+| `data/collect_500.log` | 旧版本地采集日志（历史存档，不随仓库提交） |
 
 ### 数据规模（strict-30d，2026-05-30）
 - 采集成功：500 / 500，失败：0
@@ -130,7 +130,7 @@ openclaw agent --agent pipeline-orchestrator --message "开始分析"
 
 #### --force-local：演示用强制重算
 
-仅强制重算本地分析链路，**不**重采 GitHub 数据。canonical `data/repos_raw_500.jsonl` 完全
+仅强制重算本地分析链路，**不**重采 GitHub 数据。canonical `data/repos_raw_500_strict.jsonl` 完全
 保持不变：
 
 ```bash
@@ -138,15 +138,15 @@ python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-local 
 ```
 
 执行顺序：`feature-extractor → model-trainer → diagnostic-builder → insight-analysis → report-generator`。
-适合答辩演示时确保所有步骤都看得到状态变化。
+适合展示时确保所有步骤都看得到状态变化。
 
-#### --force-full：高风险，**不推荐答辩演示使用**
+#### --force-full：高风险，**不推荐展示使用**
 
 ```bash
 python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-full "开始分析"
 ```
 
-默认行为已收紧：新采集的数据会写到 `data/repos_raw_500_force_<timestamp>.jsonl`，**canonical
+默认行为已收紧：新采集的数据会写到 `data/repos_raw_500_strict_force_<timestamp>.jsonl`，**canonical
 historical snapshot 仍然保留**。下游步骤仍然消费 canonical 文件，因此默认 `--force-full`
 对实验结果等价于 `--force-local` 加上一次重采集示例。
 
@@ -158,7 +158,7 @@ python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
 ```
 
 GitHub Search API 结果不是确定性的：一旦覆盖，过往的课程实验就无法严格复现。脚本会在终端
-打印醒目警告 + rollback 命令，但答辩演示场景下应该避免使用该参数。
+打印醒目警告 + rollback 命令，但展示场景下应该避免使用该参数。
 
 #### 自然语言强制触发已删除
 
@@ -181,7 +181,7 @@ orchestrator.py  (DeepSeek Chat + Tool Use)
 
 ### 调度策略
 
-- 默认不再按文件年龄自动重采集数据；`data/repos_raw_500.jsonl` 是固定历史回测快照。
+- 默认不再按文件年龄自动重采集数据；`data/repos_raw_500_strict.jsonl` 是固定历史回测快照。
 - 缺少 raw data 时才采集；用户明确要求 force refresh 时才重采。
 - features / model_results / diagnostic_summary / INSIGHTS 按依赖时间戳判断是否需要刷新。
 - HTML report 每次都重新生成，用来记录本次决策和最新 insight。

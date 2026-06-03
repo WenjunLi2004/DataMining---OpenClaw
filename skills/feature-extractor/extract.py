@@ -317,7 +317,7 @@ def add_label(df: pd.DataFrame) -> Tuple[pd.DataFrame, Union[int, Dict[str, int]
 
 def main():
     parser = argparse.ArgumentParser(description="Feature extractor (strict-30d, 19 features)")
-    parser.add_argument("--input",  default=str(Path.home() / "openclaw-project/data/repos_raw_500.jsonl"))
+    parser.add_argument("--input",  default=str(Path.home() / "openclaw-project/data/repos_raw_500_strict.jsonl"))
     parser.add_argument("--output", default=str(Path.home() / "openclaw-project/data/features.csv"))
     parser.add_argument("--mode", choices=["train", "predict"], default="train",
                         help="train: writes is_top20 + schema; predict: aligns to saved schema")

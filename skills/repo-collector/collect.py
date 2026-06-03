@@ -577,8 +577,8 @@ def main():
     parser = argparse.ArgumentParser(description="GitHub repo ML data collector v2")
     parser.add_argument("--target", type=int, default=20,
                         help="Number of repos to collect (default 20 for test)")
-    parser.add_argument("--start", default="2025-05-01", help="Created-after date YYYY-MM-DD")
-    parser.add_argument("--end", default="2025-06-30", help="Created-before date YYYY-MM-DD")
+    parser.add_argument("--start", default="2025-03-01", help="Created-after date YYYY-MM-DD")
+    parser.add_argument("--end", default="2025-04-30", help="Created-before date YYYY-MM-DD")
     parser.add_argument("--out-dir", default=str(Path.home() / "openclaw-project/data"),
                         help="Output directory (ignored if --out-file is an absolute path)")
     parser.add_argument("--out-file", default="repos_raw.jsonl",

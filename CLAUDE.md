@@ -38,11 +38,11 @@ python3 ~/.openclaw/workspace/skills/repo-collector/collect.py --target 500
 | 文件 | 描述 |
 |------|------|
 | `data/repos_raw_500_strict.jsonl` | **正式数据**：500 条 strict-30d 记录（2026-05-30 采集，created 2025-03-01..2025-04-30，batch=strict_30d_1y_2025_03_04） |
-| `data/repos_raw_500.jsonl` | 旧版记录（2026-05-18 采集，created 2025-05-01..2025-06-30）——**不含 30d 字段，保留为历史备份，不再作为主数据源** |
-| `data/repos_raw.jsonl` | 20 条测试记录（pipeline 验证用） |
+| `data/repos_raw_500.jsonl` | 本地旧版历史备份（2026-05-18 采集，created 2025-05-01..2025-06-30）——**不含 30d 字段，已从仓库排除，不再作为主数据源** |
+| `data/repos_raw.jsonl` | 20 条 strict-30d 样例记录（快速测试 / schema 查看用） |
 | `data/summary.md` | 最近一次采集的统计报告 |
-| `data/collect_500_strict.log` | strict 采集的完整运行日志 |
-| `data/collect_500.log` | 旧版采集日志（历史存档） |
+| `data/collect_500_strict.log` | strict 采集的本地完整运行日志（`.gitignore` 排除，不随仓库提交） |
+| `data/collect_500.log` | 旧版本地采集日志（历史存档，不随仓库提交） |
 
 ### JSONL 记录结构
 
@@ -131,14 +131,14 @@ python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-local 
 
 执行顺序：`feature-extractor → model-trainer → diagnostic-builder → insight-analysis → report-generator`。
 
-**全链路强制（高风险，不推荐答辩演示使用）**：
+**全链路强制（高风险，不推荐展示使用）**：
 
 ```bash
 python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-full "开始分析"
 ```
 
-默认 `--force-full` **不会** 覆盖 canonical `data/repos_raw_500.jsonl`——新数据会落到
-`data/repos_raw_500_force_<timestamp>.jsonl`，下游步骤仍然消费 canonical 文件。
+默认 `--force-full` **不会** 覆盖 canonical `data/repos_raw_500_strict.jsonl`——新数据会落到
+`data/repos_raw_500_strict_force_<timestamp>.jsonl`，下游步骤仍然消费 canonical 文件。
 
 只有 `--force-full --force-full-overwrite` 才会真正覆盖 canonical（会先备份并打印
 rollback 命令）。GitHub Search 结果不确定，覆盖后无法严格复现过往实验。
@@ -161,7 +161,7 @@ orchestrator.py  (DeepSeek Chat + Tool Use)
 
 ### 调度策略
 
-- 默认不再按文件年龄自动重采集数据；`data/repos_raw_500.jsonl` 是固定历史回测快照。
+- 默认不再按文件年龄自动重采集数据；`data/repos_raw_500_strict.jsonl` 是固定历史回测快照。
 - 缺少 raw data 时才采集；用户明确要求 force refresh 时才重采。
 - features / model_results / diagnostic_summary / INSIGHTS 按依赖时间戳判断是否需要刷新。
 - HTML report 每次都重新生成，用来记录本次决策和最新 insight。

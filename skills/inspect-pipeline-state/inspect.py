@@ -37,14 +37,14 @@ def _count_jsonl(path: Path) -> int:
 
 
 def inspect_raw():
-    info = _file_info(DATA_DIR / "repos_raw_500.jsonl")
+    info = _file_info(DATA_DIR / "repos_raw_500_strict.jsonl")
     if info["exists"]:
-        info["record_count"] = _count_jsonl(DATA_DIR / "repos_raw_500.jsonl")
+        info["record_count"] = _count_jsonl(DATA_DIR / "repos_raw_500_strict.jsonl")
     return info
 
 
 def inspect_features():
-    raw_path  = DATA_DIR / "repos_raw_500.jsonl"
+    raw_path  = DATA_DIR / "repos_raw_500_strict.jsonl"
     feat_path = DATA_DIR / "features.csv"
     info = _file_info(feat_path)
     if info["exists"] and raw_path.exists():

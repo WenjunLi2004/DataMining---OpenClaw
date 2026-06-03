@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
 set -u
 
-SOURCE="${1:-/Users/wenjun/openclaw-project/reports/tmp_strict30d_presentation.pptx}"
-BACKUP_DIR="${2:-/Users/wenjun/openclaw-project/reports/autosave_backups/tmp_strict30d_presentation}"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SOURCE="${1:-$ROOT/reports/OPEN_THIS_latest_presentation.pptx}"
+BACKUP_DIR="${2:-$ROOT/autosave_backups/OPEN_THIS_latest_presentation}"
 INTERVAL="${AUTOSAVE_INTERVAL_SECONDS:-15}"
 base_name="$(basename "$SOURCE" .pptx)"
 

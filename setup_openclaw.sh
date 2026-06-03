@@ -27,7 +27,7 @@ mkdir -p "$HOME/.openclaw/workspace"
 # 2) 同步 skills/ 到 ~/.openclaw/workspace/skills/
 #    --delete 会移除目标中多余的文件（保持和仓库一致）
 if command -v rsync &>/dev/null; then
-  rsync -a --exclude='__pycache__' --exclude='*.pyc' "$ROOT/skills/" "$DEST/"
+  rsync -a --delete --exclude='__pycache__' --exclude='*.pyc' "$ROOT/skills/" "$DEST/"
   echo "✓ rsync 同步完成: $DEST"
 else
   # 回退到 cp（macOS 自带）

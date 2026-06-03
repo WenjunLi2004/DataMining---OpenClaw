@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T06:48:41.220488+00:00",
+  "generated_at": "2026-06-03T07:08:16.281990+00:00",
   "mode": "offline_existing_jsonl",
   "framing": "candidate_shortlist_not_verified_prediction",
   "window": {
@@ -9,7 +9,7 @@
     "created_end": "2026-05-04"
   },
   "inputs": {
-    "raw_jsonl": "today_repos_raw_strict_tmp.jsonl",
+    "raw_jsonl": "today_repos_raw_strict.jsonl",
     "features_csv": "today_features.csv",
     "artifacts_dir": "data/model_artifacts"
   },

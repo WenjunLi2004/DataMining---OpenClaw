@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-30T12:51:37.092687+00:00",
+  "generated_at": "2026-06-03T07:07:56.517842+00:00",
   "inputs": {
-    "model_results": "/Users/wenjun/openclaw-project/data/model_results.json",
-    "features": "/Users/wenjun/openclaw-project/data/features.csv"
+    "model_results": "data/model_results.json",
+    "features": "data/features.csv"
   },
   "task": {
     "mode": "historical_backtest",

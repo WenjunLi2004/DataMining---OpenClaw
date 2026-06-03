@@ -534,11 +534,17 @@ def build_feature_provenance(df: pd.DataFrame) -> dict[str, Any]:
 
 
 def build_summary(results: dict[str, Any], df: pd.DataFrame, results_path: Path, features_path: Path) -> dict[str, Any]:
+    def display_path(path: Path) -> str:
+        try:
+            return str(path.relative_to(Path.cwd()))
+        except ValueError:
+            return str(path)
+
     summary: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "inputs": {
-            "model_results": str(results_path),
-            "features": str(features_path),
+            "model_results": display_path(results_path),
+            "features": display_path(features_path),
         },
         "task": build_task_summary(df),
         "models": build_model_summary(results),

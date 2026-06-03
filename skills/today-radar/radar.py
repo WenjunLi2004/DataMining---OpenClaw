@@ -253,6 +253,8 @@ def score_features(features_path: Path, artifacts_dir: Path, top_k: int) -> list
 def write_json_report(path: Path, args, raw_path: Path, features_path: Path,
                       candidates: list[dict[str, Any]], mode: str):
     today = datetime.now(timezone.utc).date()
+    raw_name = raw_path.name.replace("_strict_tmp", "_strict")
+    features_name = features_path.name.replace("_strict_tmp", "")
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "mode": mode,
@@ -264,8 +266,8 @@ def write_json_report(path: Path, args, raw_path: Path, features_path: Path,
             "created_end": (today - timedelta(days=args.days_min)).isoformat(),
         },
         "inputs": {
-            "raw_jsonl": raw_path.name,
-            "features_csv": features_path.name,
+            "raw_jsonl": raw_name,
+            "features_csv": features_name,
             "artifacts_dir": "data/model_artifacts",
         },
         "candidates": candidates,

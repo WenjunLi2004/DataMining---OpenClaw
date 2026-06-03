@@ -79,7 +79,7 @@ OPTIONAL — Today Radar:
 ## Quick Start
 
 ```bash
-python3 /Users/wenjun/.openclaw/workspace/skills/pipeline-orchestrator/run.py
+python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py
 ```
 
 No API key setup — read automatically from `~/.openclaw/openclaw.json`.
@@ -88,7 +88,7 @@ The runner automatically starts and opens the OpenClaw Console at
 `http://localhost:8080/dashboard/`. For silent runs:
 
 ```bash
-python3 /Users/wenjun/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
+python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
   --no-open-dashboard "开始分析"
 ```
 
@@ -112,7 +112,7 @@ Force every local analysis step while keeping the fixed historical raw
 snapshot intact:
 
 ```bash
-python3 /Users/wenjun/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
+python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
   --force-local "开始分析"
 ```
 
@@ -124,13 +124,13 @@ diagnostic-builder → insight-analysis → report-generator` without skipping.
 Full chain including GitHub recollection:
 
 ```bash
-python3 /Users/wenjun/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
+python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py \
   --force-full "开始分析"
 ```
 
 By default `--force-full` writes the new snapshot to
-`data/repos_raw_500_force_<timestamp>.jsonl` and leaves the canonical
-`data/repos_raw_500.jsonl` untouched, so course reproducibility is preserved.
+`data/repos_raw_500_strict_force_<timestamp>.jsonl` and leaves the canonical
+`data/repos_raw_500_strict.jsonl` untouched, so reproducibility is preserved.
 
 To actually overwrite the canonical historical snapshot you have to add
 `--force-full-overwrite` explicitly. GitHub Search API results are not

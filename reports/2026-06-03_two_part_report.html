@@ -123,7 +123,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <h2 id="models"><span class="n">4</span>模型结果</h2>
 <p>在固定特征矩阵上训练三类模型，5 折交叉验证。</p>
 <table><thead><tr><th>模型</th><th class="num">AUC</th><th class="num">PR-AUC</th><th class="num">P@10</th><th>角色</th></tr></thead>
-<tbody><tr><td>逻辑回归 (LR)</td><td class='num' class="best">0.883</td><td class='num'>0.624</td><td class='num'>0.80</td><td>整体排序最好、线性稳定、易解释</td></tr><tr><td>随机森林 (RF)</td><td class='num'>0.881</td><td class='num' class="best">0.662</td><td class='num'>0.70</td><td>少数正例识别最好、适合候选排序</td></tr><tr><td>XGBoost</td><td class='num'>0.876</td><td class='num'>0.634</td><td class='num'>0.80</td><td>强基线对照</td></tr></tbody></table>
+<tbody><tr><td>逻辑回归 (LR)</td><td class='num best'>0.883</td><td class='num'>0.624</td><td class='num'>0.80</td><td>整体排序最好、线性稳定、易解释</td></tr><tr><td>随机森林 (RF)</td><td class='num'>0.881</td><td class='num best'>0.662</td><td class='num'>0.70</td><td>少数正例识别最好、适合候选排序</td></tr><tr><td>XGBoost</td><td class='num'>0.876</td><td class='num'>0.634</td><td class='num'>0.80</td><td>强基线对照</td></tr></tbody></table>
 <p class="sub">绿色为该列最佳。模型并非选"唯一正确"，而是看排序、正例识别和应用需求。</p>
 
 <h2 id="metrics"><span class="n">5</span>指标解释</h2>
@@ -191,7 +191,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <p class="sub">本次运行时间：2026-06-03T00:05:03.729887Z。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
 <table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>repo_collector</td><td>skip</td><td class='sub'>fixed historical snapshot exists (500 records)</td></tr><tr><td>feature_extractor</td><td>skip</td><td class='sub'>features.csv is newer than raw data</td></tr><tr><td>model_trainer</td><td>skip</td><td class='sub'>model_results.json is up to date (LR/RF/XGBoost)</td></tr><tr><td>diagnostic_builder</td><td>skip</td><td class='sub'>diagnostic_summary.json is up to date</td></tr><tr><td>insight_analysis</td><td>skip</td><td class='sub'>INSIGHTS.md is up to date</td></tr><tr><td>report_generator</td><td>executed</td><td class='sub'>always runs per scheduling rule</td></tr></tbody></table>
 
-  <footer>本报告由 report-generator 自动生成 · 2026-06-03 06:40 UTC ·
+  <footer>本报告由 report-generator 自动生成 · 2026-06-03 07:09 UTC ·
   数据来源：<code>model_results.json</code> / <code>diagnostic_summary.json</code>。
   课程级历史回测，不代表生产级实时预测。</footer>
 </main>

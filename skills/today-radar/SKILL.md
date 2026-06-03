@@ -30,7 +30,7 @@ Offline smoke test using existing JSONL:
 
 ```bash
 python3 ~/.openclaw/workspace/skills/today-radar/radar.py \
-  --input-jsonl ~/openclaw-project/data/repos_raw_500.jsonl \
+  --input-jsonl ~/openclaw-project/data/repos_raw_500_strict.jsonl \
   --target 10
 ```
 

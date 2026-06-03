@@ -9,6 +9,7 @@ the script falls back to a deterministic Markdown template.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import os
 import re
@@ -31,6 +32,118 @@ REQUIRED_SECTIONS = [
     "## 6. 下一步实验建议",
     "## 7. 可追问问题",
 ]
+
+
+def _markdown_to_html(markdown: str) -> str:
+    lines: list[str] = []
+    in_list = False
+    in_table = False
+
+    def inline(text: str) -> str:
+        text = html.escape(text)
+        text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
+        text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+        return text
+
+    def close_list() -> None:
+        nonlocal in_list
+        if in_list:
+            lines.append("</ul>")
+            in_list = False
+
+    def close_table() -> None:
+        nonlocal in_table
+        if in_table:
+            lines.append("</tbody></table>")
+            in_table = False
+
+    def close_blocks() -> None:
+        close_list()
+        close_table()
+
+    for raw in markdown.splitlines():
+        line = raw.rstrip()
+        if not line:
+            close_blocks()
+            continue
+        if line.startswith("|") and line.endswith("|"):
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if all(re.fullmatch(r":?-{3,}:?", c) for c in cells):
+                continue
+            close_list()
+            if not in_table:
+                lines.append("<table><tbody>")
+                in_table = True
+                tag = "th"
+            else:
+                tag = "td"
+            lines.append("<tr>" + "".join(f"<{tag}>{inline(c)}</{tag}>" for c in cells) + "</tr>")
+            continue
+        if line.startswith("# "):
+            close_blocks()
+            lines.append(f"<h1>{inline(line[2:].strip())}</h1>")
+        elif line.startswith("## "):
+            close_blocks()
+            title = html.escape(line[3:].strip())
+            anchor = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "-", line[3:].strip()).strip("-")
+            lines.append(f'<h2 id="{anchor}">{title}</h2>')
+        elif line.startswith("- "):
+            close_table()
+            if not in_list:
+                lines.append("<ul>")
+                in_list = True
+            lines.append(f"<li>{inline(line[2:].strip())}</li>")
+        else:
+            close_blocks()
+            lines.append(f"<p>{inline(line)}</p>")
+    close_blocks()
+    return "\n".join(lines)
+
+
+def _write_html(markdown: str, path: Path) -> None:
+    body = _markdown_to_html(markdown)
+    nav = []
+    for line in markdown.splitlines():
+        if line.startswith("## "):
+            title = line[3:].strip()
+            anchor = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "-", title).strip("-")
+            nav.append(f'<a href="#{anchor}">{html.escape(title)}</a>')
+    html_text = f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenClaw Insight Analysis</title>
+<style>
+:root{{--bg:#fbfcfe;--ink:#232a31;--muted:#5d6977;--line:#e1e8f0;--soft:#f4f7fb;--green:#2ca25f;--blue:#1f76d3;--card:#fff;--shadow:0 10px 30px rgba(31,41,55,.06);}}
+*{{box-sizing:border-box;}}
+body{{margin:0;background:var(--bg);color:var(--ink);font-family:"LXGW WenKai","霞鹜文楷","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.72;}}
+.layout{{display:flex;align-items:flex-start;}}
+nav{{position:sticky;top:0;width:240px;min-width:240px;height:100vh;overflow:auto;background:#fff;border-right:1px solid var(--line);padding:28px 18px;}}
+nav .brand{{font-weight:900;margin-bottom:16px;}}
+nav a{{display:block;color:#334155;text-decoration:none;font-weight:750;font-size:.88rem;padding:8px 10px;border-radius:9px;}}
+nav a:hover{{background:var(--soft);}}
+main{{max-width:920px;margin:0 auto;padding:42px 44px 80px;}}
+h1{{font-size:2rem;margin:0 0 18px;}}
+h2{{font-size:1.28rem;margin:34px 0 12px;padding-top:8px;border-top:1px solid var(--line);}}
+p,li{{font-size:1rem;}}
+p{{margin:9px 0;}}
+ul{{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 22px 16px 34px;box-shadow:var(--shadow);}}
+li{{margin:7px 0;}}
+table{{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0;box-shadow:var(--shadow);}}
+th,td{{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;}}
+th{{background:var(--soft);font-weight:900;}}
+tr:last-child td{{border-bottom:0;}}
+code{{background:#eef2f7;border-radius:6px;padding:2px 6px;}}
+strong{{color:var(--green);}}
+@media(max-width:820px){{nav{{display:none;}}main{{padding:24px;}}}}
+</style>
+</head>
+<body><div class="layout">
+<nav><div class="brand">OpenClaw<br><span style="color:var(--muted);font-size:.8rem">Insight Analysis</span></div>{''.join(nav)}</nav>
+<main>{body}</main>
+</div></body></html>"""
+    path.write_text(html_text, encoding="utf-8")
 
 # Numbers below this absolute value are treated as "trivial" (year fragments,
 # counts like "7", "30 天", etc.) and not subject to grounding checks.
@@ -399,7 +512,10 @@ def main() -> None:
         text = text.rstrip() + "\n"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(text, encoding="utf-8")
+    html_path = output_path.parent / "insights.html"
+    _write_html(text, html_path)
     print(f"Insight analysis written → {output_path}", flush=True)
+    print(f"Insight HTML written → {html_path}", flush=True)
     print(f"  mode: {mode_used}", flush=True)
 
 

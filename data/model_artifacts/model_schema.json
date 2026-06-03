@@ -126,7 +126,7 @@
     "_source": "RF predict_proba on full training set, p80/p60/p40"
   },
   "label": "is_top20",
-  "trained_on": "/Users/wenjun/openclaw-project/data/features.csv",
+  "trained_on": "data/features.csv",
   "n_samples": 500,
   "n_features": 19,
   "n_positive": 102,

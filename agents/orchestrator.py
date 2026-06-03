@@ -34,7 +34,7 @@ WORKSPACE   = Path.home() / ".openclaw/workspace"
 DATA_DIR    = PROJECT_DIR / "data"
 REPORTS_DIR = PROJECT_DIR / "reports"
 
-RAW_DATA    = DATA_DIR / "repos_raw_500.jsonl"
+RAW_DATA    = DATA_DIR / "repos_raw_500_strict.jsonl"
 FEATURES    = DATA_DIR / "features.csv"
 RESULTS     = DATA_DIR / "model_results.json"
 DIAGNOSTIC  = DATA_DIR / "diagnostic_summary.json"
@@ -241,7 +241,7 @@ TOOLS = [
             "name": "run_inspect_pipeline_state",
             "description": (
                 "Inspect current pipeline file state. Returns JSON with facts about "
-                "repos_raw_500.jsonl, features.csv, model_results.json, "
+                "repos_raw_500_strict.jsonl, features.csv, model_results.json, "
                 "diagnostic_summary.json, INSIGHTS.md, and reports/. "
                 "ALWAYS call this first before any other tool."
             ),
@@ -253,7 +253,7 @@ TOOLS = [
         "function": {
             "name": "run_repo_collector",
             "description": (
-                "Collect GitHub repo raw data → repos_raw_500.jsonl. "
+                "Collect GitHub repo raw data → repos_raw_500_strict.jsonl. "
                 "Only call if raw_data.exists==false, unless the user explicitly asked "
                 "to force recollection. This project defaults to a fixed historical snapshot."
             ),
@@ -429,14 +429,14 @@ def run_inspect_pipeline_state() -> str:
     return _run(["python3", str(SKILLS_DIR / "inspect-pipeline-state/inspect.py")])
 
 
-def run_repo_collector(target: int = 500, start: str = "2025-05-01",
-                        end: str = "2025-06-30", force: bool = False,
+def run_repo_collector(target: int = 500, start: str = "2025-03-01",
+                        end: str = "2025-04-30", force: bool = False,
                         overwrite_canonical: bool = False) -> str:
     """Collect GitHub raw data.
 
     Default (force=False): only runs when canonical RAW_DATA is missing.
     force=True (force-full path):
-        - By default writes to data/repos_raw_500_force_<timestamp>.jsonl, leaving
+        - By default writes to data/repos_raw_500_strict_force_<timestamp>.jsonl, leaving
           the canonical fixed snapshot in place. This preserves course
           reproducibility even after a force-full run.
         - overwrite_canonical=True is required to actually overwrite the
@@ -465,29 +465,30 @@ def run_repo_collector(target: int = 500, start: str = "2025-05-01",
         print(f"║    $ {rollback[:60]:<60s}   ║", flush=True)
         print("╚" + "═" * 70 + "╝", flush=True)
         print("", flush=True)
-        out_filename = "repos_raw_500.jsonl"
+        out_filename = "repos_raw_500_strict.jsonl"
     elif force:
         # Safe default: write force output to a separate file so the canonical
         # snapshot is preserved.
         stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        out_filename = f"repos_raw_500_force_{stamp}.jsonl"
+        out_filename = f"repos_raw_500_strict_force_{stamp}.jsonl"
         print("", flush=True)
         print("╔" + "═" * 70 + "╗", flush=True)
         print("║  ⚠️  FORCE-FULL collection (canonical snapshot preserved)         ║", flush=True)
         print(f"║  output:  data/{out_filename:<55s} ║", flush=True)
-        print("║  Downstream steps still consume data/repos_raw_500.jsonl.         ║", flush=True)
+        print("║  Downstream steps still consume data/repos_raw_500_strict.jsonl.  ║", flush=True)
         print("║  To make this run authoritative, manually replace the canonical   ║", flush=True)
         print("║  file or pass overwrite_canonical=true.                           ║", flush=True)
         print("╚" + "═" * 70 + "╝", flush=True)
         print("", flush=True)
     else:
-        out_filename = "repos_raw_500.jsonl"
+        out_filename = "repos_raw_500_strict.jsonl"
 
     return _run([
         "python3", str(SKILLS_DIR / "repo-collector/collect.py"),
         "--target", str(target),
         "--start", start, "--end", end,
         "--out-file", out_filename,
+        "--batch-name", "strict_30d_1y_2025_03_04",
     ])
 
 
@@ -583,7 +584,7 @@ def _derive_decisions(state: dict, executed: List[str]) -> List[dict]:
     # Collect
     if "run_repo_collector" in executed:
         if not raw.get("exists"):
-            reason = "repos_raw_500.jsonl not found"
+            reason = "repos_raw_500_strict.jsonl not found"
         else:
             reason = "explicit forced re-collection requested"
         decisions.append({"step": "Data Collection", "action": "executed", "reason": reason})
@@ -732,11 +733,6 @@ def _force_mode(user_message: str) -> str:
 
 def run_forced_pipeline(user_message: str, mode: str):
     """Deterministic no-skip path for demos and explicit force requests."""
-    api_key = _resolve_api_key()
-    if not api_key:
-        print("[ERROR] DEEPSEEK_API_KEY not set.", flush=True)
-        sys.exit(1)
-
     run_at = datetime.now(timezone.utc).isoformat()
     print(f"\n{'='*60}", flush=True)
     print(f"[orchestrator] Starting FORCED pipeline ({mode}): {user_message!r}", flush=True)
@@ -756,7 +752,7 @@ def run_forced_pipeline(user_message: str, mode: str):
     executed_tools: List[str] = []
     if mode == "full":
         # Power-user override: only OPENCLAW_FORCE_FULL_OVERWRITE=1 actually
-        # rewrites data/repos_raw_500.jsonl. Default writes to a sibling file
+        # rewrites data/repos_raw_500_strict.jsonl. Default writes to a sibling file
         # so the canonical historical snapshot stays put.
         overwrite = os.environ.get("OPENCLAW_FORCE_FULL_OVERWRITE") == "1"
         run_repo_collector(force=True, overwrite_canonical=overwrite)

@@ -33,9 +33,9 @@ def _api_key_from_config() -> Optional[str]:
         return None
 
 
-def resolve_api_key() -> str:
+def resolve_api_key(required: bool = True) -> str:
     key = os.environ.get("DEEPSEEK_API_KEY") or _api_key_from_config()
-    if not key:
+    if required and not key:
         print(
             "[pipeline-orchestrator] ERROR: No DEEPSEEK_API_KEY found.\n"
             "  Set via: export DEEPSEEK_API_KEY=sk-...\n"
@@ -43,6 +43,12 @@ def resolve_api_key() -> str:
             flush=True,
         )
         sys.exit(1)
+    if not key:
+        print(
+            "[pipeline-orchestrator] No DEEPSEEK_API_KEY found; deterministic force mode "
+            "will use template-based insight analysis.",
+            flush=True,
+        )
     return key
 
 
@@ -120,8 +126,8 @@ def main():
                         help="Force feature/model/diagnostic/insight/report recomputation without recollecting GitHub raw data")
     parser.add_argument("--force-full", action="store_true",
                         help=("Force the full chain INCLUDING GitHub recollection. "
-                              "By default the canonical data/repos_raw_500.jsonl is preserved and the new "
-                              "snapshot lands in data/repos_raw_500_force_<timestamp>.jsonl. "
+                              "By default the canonical data/repos_raw_500_strict.jsonl is preserved and the new "
+                              "snapshot lands in data/repos_raw_500_strict_force_<timestamp>.jsonl. "
                               "Pass --force-full-overwrite to actually overwrite the canonical snapshot."))
     parser.add_argument("--force-full-overwrite", action="store_true",
                         help="Only meaningful with --force-full: overwrite the canonical historical snapshot "
@@ -132,7 +138,8 @@ def main():
         print(f"[pipeline-orchestrator] ERROR: Orchestrator not found: {ORCHESTRATOR}", flush=True)
         sys.exit(1)
 
-    api_key = resolve_api_key()
+    deterministic_force = args.force_local or args.force_full
+    api_key = resolve_api_key(required=not deterministic_force)
     if not args.no_dashboard:
         ensure_dashboard(args.dashboard_port, open_browser=not args.no_open_dashboard)
 
@@ -140,21 +147,23 @@ def main():
     print(f"[pipeline-orchestrator] Orchestrator: {ORCHESTRATOR}", flush=True)
     print("", flush=True)
 
-    env = {**os.environ, "DEEPSEEK_API_KEY": api_key}
+    env = {**os.environ}
+    if api_key:
+        env["DEEPSEEK_API_KEY"] = api_key
     if args.force_full:
         env["OPENCLAW_FORCE_FULL"] = "1"
         if args.force_full_overwrite:
             env["OPENCLAW_FORCE_FULL_OVERWRITE"] = "1"
             print(
                 "[pipeline-orchestrator] ⚠️  --force-full-overwrite ENABLED. "
-                "The canonical data/repos_raw_500.jsonl will be overwritten. "
-                "This is NOT recommended for course defense demos.",
+                "The canonical data/repos_raw_500_strict.jsonl will be overwritten. "
+                "This is NOT recommended for project demonstrations.",
                 flush=True,
             )
         else:
             print(
                 "[pipeline-orchestrator] --force-full will recollect to a sibling file "
-                "(data/repos_raw_500_force_<timestamp>.jsonl). Canonical snapshot preserved.",
+                "(data/repos_raw_500_strict_force_<timestamp>.jsonl). Canonical snapshot preserved.",
                 flush=True,
             )
     elif args.force_local:

@@ -40,10 +40,10 @@ python3 ~/.openclaw/workspace/skills/feature-extractor/extract.py \
   --input ~/openclaw-project/data/repos_raw_500_strict.jsonl \
   --output ~/openclaw-project/data/features.csv
 
-# Approximate mode (old pre-v2 raw data — not recommended for training)
+# Approximate mode (old pre-v2 raw data — audit only, not recommended for training)
 python3 ~/.openclaw/workspace/skills/feature-extractor/extract.py \
-  --input ~/openclaw-project/data/repos_raw_500.jsonl \
-  --output ~/openclaw-project/data/features.csv \
+  --input /path/to/legacy_raw_without_30d_fields.jsonl \
+  --output ~/openclaw-project/data/features_legacy_audit.csv \
   --allow-legacy-fallback
 
 # Predict mode (align to saved schema, no label)
@@ -56,7 +56,7 @@ python3 ~/.openclaw/workspace/skills/feature-extractor/extract.py \
 ## Options
 
 ```
---input PATH              JSONL input file (default: ~/openclaw-project/data/repos_raw_500.jsonl)
+--input PATH              JSONL input file (default: ~/openclaw-project/data/repos_raw_500_strict.jsonl)
 --output PATH             CSV output file (default: ~/openclaw-project/data/features.csv)
 --mode train|predict      train: writes is_top20 + schema; predict: aligns to saved schema
 --artifacts-dir PATH      Where to write/read feature_schema.json (default: data/model_artifacts)

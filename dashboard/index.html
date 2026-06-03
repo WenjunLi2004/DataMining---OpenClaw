@@ -9,25 +9,25 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:          #0f1117;
-  --card:        #1e2330;
-  --card-deep:   #161b27;
-  --border:      #2d3748;
-  --border-dim:  #1e2a3a;
-  --text:        #e2e8f0;
-  --muted:       #64748b;
-  --dimmer:      #374151;
-  --blue:        #3b82f6;
-  --blue-dim:    #1e3a5f;
-  --green:       #34d399;
-  --green-dim:   #14532d;
-  --red:         #f87171;
-  --red-dim:     #450a0a;
-  --amber:       #fbbf24;
-  --amber-dim:   #451a03;
-  --cyan:        #06b6d4;
-  --purple:      #a78bfa;
-  --purple-dim:  #2e1065;
+	  --bg:          #fbfcfe;
+	  --card:        #ffffff;
+	  --card-deep:   #f4f7fb;
+	  --border:      #d8e1ec;
+	  --border-dim:  #e6edf5;
+	  --text:        #232a31;
+	  --muted:       #5d6977;
+	  --dimmer:      #7b8794;
+	  --blue:        #1f76d3;
+	  --blue-dim:    #dbeafe;
+	  --green:       #2ca25f;
+	  --green-dim:   #dcfce7;
+	  --red:         #d92d20;
+	  --red-dim:     #fee2e2;
+	  --amber:       #f28500;
+	  --amber-dim:   #fff7ed;
+	  --cyan:        #0f766e;
+	  --purple:      #7a45e5;
+	  --purple-dim:  #f3e8ff;
 }
 
 body {
@@ -49,7 +49,7 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
-.header-title { font-size: 1.35rem; font-weight: 700; color: #f8fafc; }
+.header-title { font-size: 1.35rem; font-weight: 700; color: var(--text); }
 .header-title span { color: var(--blue); }
 .header-sub { font-size: 0.78rem; color: var(--dimmer); margin-top: 3px; }
 
@@ -195,12 +195,12 @@ body {
   text-anchor: middle;
   dominant-baseline: middle;
   pointer-events: none;
-  fill: #94a3b8;
+	  fill: var(--muted);
 }
-.nlabel.running   { fill: #93c5fd; }
-.nlabel.completed { fill: #6ee7b7; }
-.nlabel.failed    { fill: #fca5a5; }
-.nlabel.orch      { fill: #c4b5fd; }
+.nlabel.running   { fill: var(--blue); }
+.nlabel.completed { fill: var(--green); }
+.nlabel.failed    { fill: var(--red); }
+.nlabel.orch      { fill: var(--purple); }
 
 .nsub {
   font-family: -apple-system, sans-serif;
@@ -208,13 +208,13 @@ body {
   text-anchor: middle;
   dominant-baseline: middle;
   pointer-events: none;
-  fill: #4b5563;
+	  fill: var(--dimmer);
 }
 
 /* SVG connection lines */
 .cline {
   fill: none;
-  stroke: #2d3748;
+	  stroke: var(--border);
   stroke-width: 1.5;
   stroke-dasharray: 5 5;
 }
@@ -399,7 +399,7 @@ marker path { fill: #2d3748; }
   font-size: .75rem;
 }
 .radar-name {
-  color: #e2e8f0;
+	  color: var(--text);
   font-size: .84rem;
   font-weight: 650;
   overflow: hidden;
@@ -494,7 +494,7 @@ marker path { fill: #2d3748; }
 <svg class="arch-svg" viewBox="0 0 1040 230" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="arr-idle" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#2d3748"/>
+	      <path d="M0,0 L0,6 L8,3 z" fill="#d8e1ec"/>
     </marker>
     <marker id="arr-run" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
       <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
@@ -766,7 +766,7 @@ function appendNewEvents() {
     const el = document.createElement('div');
     el.className = 'eline';
     const time  = (e.timestamp || '').substring(11, 19);
-    const color = EVT_COLOR[e.event_type] || '#94a3b8';
+    const color = EVT_COLOR[e.event_type] || '#5d6977';
     const dur   = e.duration_ms > 0 ? fmtMs(e.duration_ms) : '';
     const msg   = (e.message || '').substring(0, 90);
     const etLabel = EVENT_LABEL[e.event_type] || e.event_type || '';

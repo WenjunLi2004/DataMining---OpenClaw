@@ -394,6 +394,12 @@ def main():
     out_path = Path(args.output)
     artifacts_dir = Path(args.artifacts_dir).expanduser()
 
+    def display_path(path: Path) -> str:
+        try:
+            return str(path.relative_to(Path.cwd()))
+        except ValueError:
+            return str(path)
+
     if not in_path.exists():
         print(f"[ERROR] features file not found: {in_path}", flush=True)
         sys.exit(1)
@@ -501,7 +507,7 @@ def main():
         },
         "score_thresholds": score_thresholds,
         "label": "is_top20",
-        "trained_on": str(in_path),
+        "trained_on": display_path(in_path),
         "n_samples": int(X.shape[0]),
         "n_features": int(X.shape[1]),
         "n_positive": int(y.sum()),

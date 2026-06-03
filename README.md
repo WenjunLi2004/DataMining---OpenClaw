@@ -237,6 +237,7 @@ openclaw-project/
 │
 ├── dashboard/                 # OpenClaw Console（pipeline 状态 + 报告 + 雷达）
 │   └── index.html
+├── setup_openclaw.sh          # 完整 OpenClaw 环境搭建（同步 skills 到 ~/.openclaw）
 ├── start_dashboard.sh
 └── docs/                      # README 用的预览图
 ```
@@ -253,7 +254,7 @@ openclaw-project/
 | 路径 | 命令 | 需要 | 适用场景 |
 |---|---|---|---|
 | 最简离线复现 | `bash reproduce.sh` | 仅 pip 依赖 | 验证数字、检查代码 |
-| 完整系统复现 | `bash setup_openclaw.sh` + orchestrator | DEEPSEEK_API_KEY（可选） | 跑 pipeline + Console |
+| 完整系统复现 | `bash setup_openclaw.sh` + orchestrator | `DEEPSEEK_API_KEY` 可选（仅 LLM 洞察需要） | 跑 pipeline + Console |
 
 ---
 
@@ -292,7 +293,7 @@ python3 skills/model-trainer/train.py        --input repro/features.csv \
 python3 skills/diagnostic-builder/diagnose.py --results repro/model_results.json \
         --features repro/features.csv --output repro/diagnostic_summary.json
 ```
-> 注意：`extract.py` 的默认 `--input` 指向旧文件 `repos_raw_500.jsonl`，复现时**务必显式传** `repos_raw_500_strict.jsonl`。
+> 注意：新版 `extract.py` 的默认 `--input` 已指向 `repos_raw_500_strict.jsonl`；这里显式传参只是为了让复现命令更清楚。
 
 ### ③ 完整系统复现（含洞察 + 报告 + Console）
 
@@ -305,7 +306,7 @@ git clone https://github.com/WenjunLi2004/DataMining---OpenClaw.git ~/openclaw-p
 cd ~/openclaw-project
 # 2) 一键搭建：把 skills/ 同步到 ~/.openclaw/workspace/skills/
 bash setup_openclaw.sh
-# 3) 可选：洞察用 LLM（不设则自动回退确定性模板，仍可跑完）
+# 3) 可选：洞察用 LLM（不设则自动回退确定性模板，仍可跑完 force-local）
 export DEEPSEEK_API_KEY=sk-...
 # 4) 保留固定原始数据，强制重算本地分析链路
 python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-local "开始分析"

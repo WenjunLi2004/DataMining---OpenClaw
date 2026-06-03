@@ -206,11 +206,11 @@ def sec_models(models):
     for m in order:
         d = models["metrics"].get(m, {})
         auc = mean(d.get("auc")); pr = mean(d.get("pr_auc")); p10 = d.get("precision_at_10", 0)
-        auc_c = ' class="best"' if m == best_auc_m else ""
-        pr_c = ' class="best"' if m == best_pr_m else ""
+        auc_cls = "num best" if m == best_auc_m else "num"
+        pr_cls = "num best" if m == best_pr_m else "num"
         rows += (f"<tr><td>{esc(name_cn[m])}</td>"
-                 f"<td class='num'{auc_c}>{fmt(auc)}</td>"
-                 f"<td class='num'{pr_c}>{fmt(pr)}</td>"
+                 f"<td class='{auc_cls}'>{fmt(auc)}</td>"
+                 f"<td class='{pr_cls}'>{fmt(pr)}</td>"
                  f"<td class='num'>{fmt(p10,2)}</td>"
                  f"<td>{esc(role[m])}</td></tr>")
     return f"""

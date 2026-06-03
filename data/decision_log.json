@@ -1,0 +1,31 @@
+{
+  "run_at": "2026-06-03T00:05:03.729887Z",
+  "trigger": "cron_daily_analysis",
+  "decisions": {
+    "repo_collector": {
+      "action": "skip",
+      "reason": "fixed historical snapshot exists (500 records)"
+    },
+    "feature_extractor": {
+      "action": "skip",
+      "reason": "features.csv is newer than raw data"
+    },
+    "model_trainer": {
+      "action": "skip",
+      "reason": "model_results.json is up to date (LR/RF/XGBoost)"
+    },
+    "diagnostic_builder": {
+      "action": "skip",
+      "reason": "diagnostic_summary.json is up to date"
+    },
+    "insight_analysis": {
+      "action": "skip",
+      "reason": "INSIGHTS.md is up to date"
+    },
+    "report_generator": {
+      "action": "executed",
+      "reason": "always runs per scheduling rule"
+    }
+  },
+  "output_report": "2026-06-03_two_part_report.html"
+}

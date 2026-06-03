@@ -1,0 +1,161 @@
+{
+  "generated_at": "2026-05-31T17:05:21.405367+00:00",
+  "mode": "live_recent_window",
+  "framing": "candidate_shortlist_not_verified_prediction",
+  "window": {
+    "days_min": 30,
+    "days_max": 45,
+    "created_start": "2026-04-16",
+    "created_end": "2026-05-01"
+  },
+  "inputs": {
+    "raw_jsonl": "/Users/wenjun/openclaw-project/data/today_repos_raw_strict_tmp.jsonl",
+    "features_csv": "/Users/wenjun/openclaw-project/data/today_features_strict_tmp.csv",
+    "artifacts_dir": "/Users/wenjun/openclaw-project/data/model_artifacts"
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "full_name": "lunashia/o-m_beatmap_trainer",
+      "url": "https://github.com/lunashia/o-m_beatmap_trainer",
+      "language": "Python",
+      "attention_score": 0.935,
+      "current_stars": 68,
+      "created_at": "2026-04-28T08:47:27Z",
+      "action": "deep_dive",
+      "reasons": [
+        "Score is driven by a combination of weaker signals rather than one standout feature."
+      ],
+      "risks": [
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 5,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 1,
+        "readme_len_30d": 2788,
+        "has_readme_30d": 1,
+        "activity_total_30d": 5,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 2,
+      "full_name": "Kavishp7499/qp",
+      "url": "https://github.com/Kavishp7499/qp",
+      "language": "Go",
+      "attention_score": 0.717892,
+      "current_stars": 1,
+      "created_at": "2026-04-17T23:59:57Z",
+      "action": "deep_dive",
+      "reasons": [
+        "Score is driven by a combination of weaker signals rather than one standout feature."
+      ],
+      "risks": [
+        "No README at the 30-day mark (or could not be fetched).",
+        "First-30-day commit activity is very low.",
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 0,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 0,
+        "readme_len_30d": 0,
+        "has_readme_30d": 0,
+        "activity_total_30d": 0,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 3,
+      "full_name": "NotHarshhaa/mlflow-k8s-operator",
+      "url": "https://github.com/NotHarshhaa/mlflow-k8s-operator",
+      "language": "Go",
+      "attention_score": 0.717892,
+      "current_stars": 2,
+      "created_at": "2026-04-30T08:01:43Z",
+      "action": "deep_dive",
+      "reasons": [
+        "Score is driven by a combination of weaker signals rather than one standout feature."
+      ],
+      "risks": [
+        "No README at the 30-day mark (or could not be fetched).",
+        "First-30-day commit activity is very low.",
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 0,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 0,
+        "readme_len_30d": 0,
+        "has_readme_30d": 0,
+        "activity_total_30d": 0,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 4,
+      "full_name": "esengine/DeepSeek-Reasonix",
+      "url": "https://github.com/esengine/DeepSeek-Reasonix",
+      "language": "Go",
+      "attention_score": 0.717892,
+      "current_stars": 15136,
+      "created_at": "2026-04-21T08:27:02Z",
+      "action": "deep_dive",
+      "reasons": [
+        "Score is driven by a combination of weaker signals rather than one standout feature."
+      ],
+      "risks": [
+        "No README at the 30-day mark (or could not be fetched).",
+        "First-30-day commit activity is very low.",
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 0,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 0,
+        "readme_len_30d": 0,
+        "has_readme_30d": 0,
+        "activity_total_30d": 0,
+        "has_pr_activity_30d": 0
+      }
+    },
+    {
+      "rank": 5,
+      "full_name": "eSlider/bonsai-ollama",
+      "url": "https://github.com/eSlider/bonsai-ollama",
+      "language": "Go",
+      "attention_score": 0.717892,
+      "current_stars": 2,
+      "created_at": "2026-04-22T12:28:42Z",
+      "action": "deep_dive",
+      "reasons": [
+        "Score is driven by a combination of weaker signals rather than one standout feature."
+      ],
+      "risks": [
+        "No README at the 30-day mark (or could not be fetched).",
+        "First-30-day commit activity is very low.",
+        "No early issue/PR interaction observed.",
+        "Single-author commits in the first 30 days."
+      ],
+      "signals": {
+        "commits_30d": 0,
+        "issues_30d": 0,
+        "prs_30d": 0,
+        "contributors_30d": 0,
+        "readme_len_30d": 0,
+        "has_readme_30d": 0,
+        "activity_total_30d": 0,
+        "has_pr_activity_30d": 0
+      }
+    }
+  ]
+}

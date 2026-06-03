@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Insight Analysis</title>
+  <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1117; color: #e2e8f0;
+  line-height: 1.6; padding: 32px; max-width: 1100px; margin: 0 auto;
+}
+h1 { font-size: 1.8rem; font-weight: 700; color: #f8fafc; margin-bottom: 4px; }
+h2 { font-size: 1.1rem; font-weight: 600; color: #94a3b8; margin: 24px 0 10px;
+     text-transform: uppercase; letter-spacing: .08em; }
+h3 { font-size: 1rem; font-weight: 600; color: #cbd5e1; margin: 16px 0 8px; }
+.subtitle { color: #64748b; font-size: .9rem; margin-bottom: 32px; }
+
+/* Part divider */
+.part-header {
+  border-top: 2px solid #2d3748; margin: 48px 0 24px;
+  padding-top: 24px;
+}
+.part-header .part-num {
+  font-size: .75rem; font-weight: 700; letter-spacing: .15em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.part-header.part1 .part-num { color: #3b82f6; }
+.part-header.part2 .part-num { color: #f59e0b; }
+.part-header .part-title {
+  font-size: 1.4rem; font-weight: 700; color: #f1f5f9; margin-bottom: 6px;
+}
+.part-header .part-subtitle {
+  font-size: .9rem; color: #64748b; font-style: italic;
+}
+
+/* Cards */
+.card {
+  background: #1e2330; border: 1px solid #2d3748; border-radius: 10px;
+  padding: 20px 24px; margin-bottom: 20px;
+}
+.card-warn {
+  background: #1c1a0f; border: 1px solid #92400e; border-radius: 10px;
+  padding: 20px 24px; margin-bottom: 20px;
+}
+.warn-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1rem; font-weight: 700; color: #fbbf24; margin-bottom: 12px;
+}
+.warn-title .warn-icon { font-size: 1.3rem; }
+
+/* Stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;
+  margin-top: 12px;
+}
+.stat { background: #161b27; border-radius: 8px; padding: 14px 16px; text-align: center; }
+.stat-value { font-size: 1.6rem; font-weight: 700; color: #60a5fa; }
+.stat-label { font-size: .75rem; color: #64748b; margin-top: 2px; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th {
+  text-align: left; padding: 10px 14px; background: #161b27;
+  color: #94a3b8; font-weight: 600; border-bottom: 2px solid #2d3748;
+}
+td { padding: 9px 14px; border-bottom: 1px solid #1e2a3a; }
+tr:hover td { background: #1a2235; }
+.best { color: #34d399; font-weight: 700; }
+
+/* Bar */
+.bar-wrap { display: flex; align-items: center; gap: 8px; }
+.bar-bg { flex: 1; background: #1a2235; border-radius: 4px; height: 10px; overflow: hidden; }
+.bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 4px; }
+.bar-fill-amber { height: 100%; background: linear-gradient(90deg, #d97706, #fbbf24); border-radius: 4px; }
+
+/* Badges */
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: .75rem; font-weight: 600;
+}
+.badge-blue  { background: #1e3a5f; color: #60a5fa; }
+.badge-green { background: #14532d; color: #34d399; }
+.badge-amber { background: #451a03; color: #fbbf24; }
+
+/* Finding blocks */
+.finding { padding: 10px 16px; background: #161b27; border-left: 3px solid #3b82f6;
+           border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: .9rem; }
+.finding-warn { border-left-color: #f59e0b; }
+.finding-green { border-left-color: #34d399; }
+
+/* Layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 12px; }
+.col-label { color: #64748b; font-size: .78rem; font-weight: 600; text-transform: uppercase;
+             letter-spacing: .07em; margin-bottom: 8px; }
+
+/* Special rows */
+.row-star td { background: #1e1a00 !important; }
+.row-star:hover td { background: #2a2400 !important; }
+.star-badge { display:inline-block; padding:2px 7px; border-radius:4px;
+              background:#3d2d00; color:#fbbf24; font-size:.75rem; font-weight:700; }
+
+/* Misc */
+.leakage-note { background:#0f1e2a; border:1px solid #1d3a52; border-radius:7px;
+                padding:10px 14px; margin-top:14px; font-size:.85rem; color:#7dd3fc; }
+code { background:#1a2235; padding:1px 5px; border-radius:3px; font-size:.88em; }
+.footer { color: #374151; font-size: .8rem; text-align: center; margin-top: 40px; }
+.section-num { color: #475569; font-size: .7rem; font-weight: 700;
+               letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+.delta-pos { color: #34d399; font-weight: 700; }
+.delta-neg { color: #f87171; font-weight: 700; }
+.delta-neu { color: #64748b; }
+.highlight-box {
+  background: #12263a; border: 1px solid #1e4a6a; border-radius: 8px;
+  padding: 14px 18px; margin-top: 14px; font-size: .9rem;
+}
+.insight-md { color:#cbd5e1; font-size:.9rem; }
+.insight-md h1 { font-size:1.25rem; margin:0 0 12px; color:#f8fafc; }
+.insight-md h2 { font-size:1rem; color:#93c5fd; margin:24px 0 8px; text-transform:none; letter-spacing:0; }
+.insight-md p { margin:8px 0 12px; color:#cbd5e1; }
+.insight-md ul { margin:8px 0 14px; padding-left:1.2rem; color:#cbd5e1; }
+.insight-md li { margin:5px 0; }
+.insight-md table { margin:12px 0 18px; }
+.insight-md code { color:#7dd3fc; }
+
+  body { max-width: 920px; }
+  h1 { margin-bottom: 12px; }
+  h2 { color: #cbd5e1; text-transform: none; letter-spacing: 0; font-size: 1.15rem; margin-top: 28px; }
+  p, li { font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <p class="subtitle">2026-06-03 00:04 UTC &nbsp;·&nbsp; 渲染自 <code>reports/INSIGHTS.md</code></p>
+  <p>好的，这是根据您提供的 <code>diagnostic_summary.json</code> 生成的 OpenClaw INSIGHTS.md 分析报告。</p>
+<p>---</p>
+<h2>1. 实验结论</h2>
+<p>本次实验是一个<strong>历史回测</strong>，旨在利用仓库早期（前30天）的信号，预测该仓库最终是否能进入样本中按当前星标数排名的前20%（阈值：49星）。</p>
+<ul><li><strong>模型性能</strong>：逻辑回归（LR）在AUC（0.882965）和F1分数（0.63295）上表现最佳，同时在前10个预测中达到了80%的精确率（P@10=0.8）。随机森林（RF）在PR-AUC（0.661715）上表现最佳。</li><li><strong>超越基线</strong>：所有模型（AUC均&gt;0.87）都显著优于最佳单特征基线（<code>issues_30d</code>，AUC=0.662836），证明了多特征机器学习方法的有效性。</li><li><strong>关键发现</strong>：在特征组消融实验中，加入“历史README（30天）”特征组（C组）带来了最大的AUC提升（+0.01864），表明README的早期内容对预测最终成功至关重要。</li><li><strong>时间稳定性</strong>：在时间分割验证中，随机森林模型的AUC（0.881569）与交叉验证结果（0.881216）高度一致，AUC差距仅为0.000352，表明模型在时间维度上具有一定的稳定性。</li></ul>
+<h2>2. 模型行为解释</h2>
+<ul><li><strong>逻辑回归 (LR)</strong>：表现出高召回率（0.841905）和中等精确率（0.513465），意味着它倾向于“捕获”更多潜在的热门仓库，但会包含一些误报。其P@10为0.8，表明在最高置信度的10个预测中非常可靠，适合用作<strong>候选名单筛选</strong>。</li><li><strong>随机森林 (RF)</strong>：表现出高精确率（0.631987）和低召回率（0.489048），意味着它预测为正例的样本有很高的概率是真正的热门仓库，但会遗漏很多潜在目标。其P@20为0.85，表明在Top-20推荐中非常精准，适合用于<strong>精选推荐</strong>。</li><li><strong>XGBoost</strong>：性能介于LR和RF之间，在召回率和精确率上取得了平衡（F1=0.599388），P@10同样为0.8，也是一个可靠的候选模型。</li></ul>
+<p><strong>总结</strong>：LR更适合“广撒网”式的候选名单生成，而RF更适合“精准打击”式的精选推荐。XGBoost则提供了一个平衡的选择。</p>
+<h2>3. 数据集问题诊断</h2>
+<ul><li><strong>类别不平衡</strong>：正样本（<code>is_top20</code>）占比为20.4%（102/500），属于轻度不平衡。模型整体表现良好，但精确率-召回率权衡仍需关注。</li><li><strong>语言分布偏差</strong>：</li></ul>
+<p>    - <strong>Python</strong> 的正样本率（62%）远高于全局平均（20.4%），表明Python仓库在样本中更容易成为热门。这可能导致模型过度依赖<code>lang_Python</code>特征，并可能降低其在其他语言上的泛化能力。 - <strong>TypeScript</strong> 和 <strong>Other</strong> 在样本中没有正样本（正样本率为0%），导致无法计算其AUC。这意味着模型对这两种语言的预测能力未知，结论不可靠。</p>
+<ul><li><strong>特征高度相关</strong>：多个特征之间存在强相关性，例如 <code>commits_30d</code> 与 <code>activity_total_30d</code> 的相关系数高达0.967666。这会导致特征重要性解释不稳定，模型可能将重要性分散到相关特征上，而非识别出真正的因果特征。</li><li><strong>标签定义</strong>：标签 <code>is_top20</code> 是基于仓库的<strong>当前星标数</strong>，这是一个历史回测标签，并非对未来成功的预测。实验结论不能直接等同于“发现未来的热门项目”。</li></ul>
+<h2>4. 真正有意义的特征</h2>
+<p>综合Gini重要性、SHAP值和XGBoost重要性，以下特征被一致认为是重要的：</p>
+<p>1.  <strong><code>lang_Python</code></strong>：在所有重要性排名中均位列第一，是预测能力最强的特征。这与Python子集极高的正样本率（62%）相符。 2.  <strong><code>activity_total_30d</code></strong>：早期总活动量是强有力的预测指标，在所有模型中重要性都很高。 3.  <strong><code>issues_30d</code></strong>：早期Issue数量在SHAP和XGBoost重要性中排名靠前，且作为单特征基线时AUC最高（0.662836），表明它是一个稳健且独立的预测因子。 4.  <strong><code>readme_len_30d</code></strong>：早期README的长度在Gini和SHAP重要性中均排名前五，并且消融实验证明加入README特征组带来了最大的性能提升，证实了其价值。 5.  <strong><code>commits_30d</code></strong>：早期提交次数在Gini重要性中排名第三，是衡量早期开发活跃度的核心指标。</p>
+<p><strong>注意</strong>：<code>lang_JavaScript</code> 和 <code>lang_TypeScript</code> 在Gini重要性中排名靠前，但鉴于其正样本率极低或为零，其重要性可能反映了模型学习到了“非Python”的模式，而非其本身是成功的驱动因素。</p>
+<h2>5. 不能过度相信的结论</h2>
+<ul><li><strong>“模型能预测未来的热门项目”</strong>：<strong>不能</strong>。这是一个历史回测，标签是“当前星标数”，而非未来的星标数。模型学到的是早期特征与<strong>当前</strong>成功之间的相关性，而非因果关系。</li><li><strong>“TypeScript/Other语言的预测是可靠的”</strong>：<strong>不能</strong>。由于样本中这两个语言的正样本数为0，模型无法学习其模式，任何相关预测都是不可信的。</li><li><strong>“<code>commits_30d</code> 比 <code>activity_total_30d</code> 更重要”</strong>：<strong>不能</strong>。这两个特征高度相关（r=0.967），重要性排名可能因模型和随机性而波动。更合理的解释是“早期开发活跃度”这个整体概念很重要。</li><li><strong>“Python仓库更容易成功是因为其早期行为”</strong>：<strong>不能</strong>。Python子集的高正样本率可能源于样本选择偏差（例如，样本中Python项目本身质量更高），而非其早期行为模式。模型可能只是学到了这种偏差。</li><li><strong>“AUC 0.88 意味着模型非常完美”</strong>：<strong>不能</strong>。虽然AUC很高，但精确率（特别是LR的0.513）表明仍有大量误报。在Top-10/20的精确率（0.7-0.85）才是更贴近实际应用场景的指标。</li></ul>
+<h2>6. 下一步实验建议</h2>
+<p>1.  <strong>P0: 验证特征数据质量</strong>：确认所有500个样本的特征都是通过“严格30天收集器（v2+）”获取的。当前数据表明所有特征都是严格30天的，但建议在数据管道中增加自动化校验。 2.  <strong>P1: 进行“Today Radar”模式实验</strong>：设计一个实验，使用最新的仓库数据（而非历史数据）作为输入，预测其未来（例如，未来6个月）的星标增长。这才能验证模型在真实世界中的前瞻性。 3.  <strong>P1: 处理语言偏差</strong>： - 对Python子集进行单独建模或分析，以理解其高正样本率的根本原因。 - 收集更多TypeScript和其他语言的样本，特别是正样本，以提升模型的泛化能力。 4.  <strong>P2: 特征工程与降维</strong>： - 考虑合并高度相关的特征（如 <code>commits_30d</code> 和 <code>activity_total_30d</code>），或使用PCA等降维技术，以提高模型的可解释性和稳定性。 - 探索更多有意义的早期特征，例如：README中是否包含特定关键词（如“AI”、“tool”）、早期Star的增长速度、是否有外部链接等。 5.  <strong>P2: 模型集成</strong>：考虑将LR（高召回）和RF（高精确率）进行集成，构建一个既能保证覆盖率又能保证精确率的混合模型。</p>
+<h2>7. 可追问问题</h2>
+<p>1.  在“Today Radar”模式下，我们如何定义和获取“未来成功”的标签？例如，是使用未来6个月的星标增长率，还是达到某个绝对星标数？ 2.  对于Python子集极高的正样本率（62%），我们能否获取更多关于这些Python仓库的元数据（如主题、所属组织类型）来分析其共性？ 3.  我们是否有计划为TypeScript和其他低样本语言补充数据？如果需要，数据采集的优先级和预算如何？ 4.  在特征工程中，我们是否可以尝试构建一些比率特征（如 <code>issues_per_contributor_30d</code>）来替代高度相关的原始计数特征，以提高模型鲁棒性？ 5.  对于“Today Radar”的候选名单，业务上期望的精确率和召回率目标是多少？这将决定我们最终选择哪个模型或阈值。</p>
+  <p class="footer">openclaw-project · INSIGHTS.md HTML 渲染版</p>
+</body>
+</html>

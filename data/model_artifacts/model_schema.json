@@ -1,0 +1,134 @@
+{
+  "model": "RF",
+  "model_file": "rf_model.joblib",
+  "feature_names": [
+    "lang_Python",
+    "lang_JavaScript",
+    "lang_Go",
+    "lang_Rust",
+    "lang_TypeScript",
+    "lang_Other",
+    "is_org",
+    "commits_30d",
+    "issues_30d",
+    "prs_30d",
+    "contributors_30d",
+    "has_readme_30d",
+    "readme_len_30d",
+    "readme_has_image_30d",
+    "readme_has_demo_url_30d",
+    "activity_total_30d",
+    "commits_per_contributor_30d",
+    "prs_per_issue_30d",
+    "has_pr_activity_30d"
+  ],
+  "feature_stats": {
+    "lang_Python": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.0
+    },
+    "lang_JavaScript": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.0
+    },
+    "lang_Go": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.0
+    },
+    "lang_Rust": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.0
+    },
+    "lang_TypeScript": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.0
+    },
+    "lang_Other": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 0.0
+    },
+    "is_org": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.0
+    },
+    "commits_30d": {
+      "median": 11.0,
+      "p75": 34.0,
+      "p90": 85.10000000000002
+    },
+    "issues_30d": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 2.1000000000000227
+    },
+    "prs_30d": {
+      "median": 0.0,
+      "p75": 1.0,
+      "p90": 9.0
+    },
+    "contributors_30d": {
+      "median": 1.0,
+      "p75": 2.0,
+      "p90": 3.0
+    },
+    "has_readme_30d": {
+      "median": 1.0,
+      "p75": 1.0,
+      "p90": 1.0
+    },
+    "readme_len_30d": {
+      "median": 2796.0,
+      "p75": 5670.25,
+      "p90": 9800.2
+    },
+    "readme_has_image_30d": {
+      "median": 0.0,
+      "p75": 1.0,
+      "p90": 1.0
+    },
+    "readme_has_demo_url_30d": {
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 0.0
+    },
+    "activity_total_30d": {
+      "median": 12.0,
+      "p75": 40.0,
+      "p90": 102.20000000000005
+    },
+    "commits_per_contributor_30d": {
+      "median": 8.166666666666668,
+      "p75": 22.125,
+      "p90": 50.200000000000045
+    },
+    "prs_per_issue_30d": {
+      "median": 0.0,
+      "p75": 0.75,
+      "p90": 5.0
+    },
+    "has_pr_activity_30d": {
+      "median": 0.0,
+      "p75": 1.0,
+      "p90": 1.0
+    }
+  },
+  "score_thresholds": {
+    "deep_dive": 0.6660000000000003,
+    "try": 0.06,
+    "watch": 0.01,
+    "_source": "RF predict_proba on full training set, p80/p60/p40"
+  },
+  "label": "is_top20",
+  "trained_on": "/Users/wenjun/openclaw-project/data/features.csv",
+  "n_samples": 500,
+  "n_features": 19,
+  "n_positive": 102,
+  "random_state": 42
+}

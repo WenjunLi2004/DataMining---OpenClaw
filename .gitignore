@@ -1,0 +1,49 @@
+# OS / editor junk
+.DS_Store
+*.swp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# PowerPoint lock files
+~$*.pptx
+~$*.docx
+
+# Large / historical / scratch dirs (not needed by the partner)
+# archive/ = 60M old/leaked/superseded; image/ = 15M source art (already embedded in the .pptx)
+archive/
+autosave_backups/
+image/
+presentation_builder/
+logs/
+
+# Runtime / pid / logs
+*.pid
+*.log
+
+# Non-canonical data (kept locally, excluded from the synced repo)
+data/repos_raw_1500.jsonl
+data/features_1500.csv
+data/model_results_1500.json
+data/repos_raw_500.jsonl
+data/repos_raw_500_early1.jsonl
+data/repos_raw_500_early2.jsonl
+data/features.csv.v2_backup_20260530_145011
+data/model_results.json.v2_backup_20260530_145011
+data/test_early1_30.jsonl
+data/test_early2_30.jsonl
+data/test_ts_5.jsonl
+data/today_repos_raw.jsonl
+data/today_repos_raw_strict_tmp.jsonl
+data/today_features.csv
+data/today_features_strict_tmp.csv
+data/dashboard_server.pid
+
+# Repo-review prompt (internal, not part of the project deliverable)
+CLAUDE_REVIEW_CURRENT_STATE.md
+
+# Claude Code local settings (tool config, not a project deliverable)
+.claude/

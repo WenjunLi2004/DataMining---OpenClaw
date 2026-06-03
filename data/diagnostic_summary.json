@@ -1,0 +1,624 @@
+{
+  "generated_at": "2026-05-30T12:51:37.092687+00:00",
+  "inputs": {
+    "model_results": "/Users/wenjun/openclaw-project/data/model_results.json",
+    "features": "/Users/wenjun/openclaw-project/data/features.csv"
+  },
+  "task": {
+    "mode": "historical_backtest",
+    "positioning": "Course-level historical backtest: use repository early-window signals to predict whether a repo lands in the sample top 20% by current stars.",
+    "not_a_claim": "This does not prove real-time discovery of today's future hits; a Today Radar mode should be framed as candidate shortlisting only.",
+    "label": "is_top20",
+    "label_definition": "1 if _current_stars is at or above the sample p80 threshold",
+    "top20_threshold_current_stars": 49,
+    "n_samples": 500,
+    "n_positive": 102,
+    "n_negative": 398,
+    "positive_rate": 0.204,
+    "language_counts": {
+      "Go": 99,
+      "JavaScript": 100,
+      "Other": 3,
+      "Python": 100,
+      "Rust": 99,
+      "TypeScript": 99
+    },
+    "snapshot_window_days": 30,
+    "known_caveats": [
+      "model uses 19 strict 30-day features; current-state fields (author followers/repos, has_license, current README, current contributors) are excluded",
+      "TypeScript has a small N500 sample and language-level conclusions should be weak",
+      "current_stars is a historical backtest label, not a live future label"
+    ]
+  },
+  "models": {
+    "metrics": {
+      "LR": {
+        "auc": 0.882965,
+        "auc_std": 0.019431,
+        "pr_auc": 0.624325,
+        "pr_auc_std": 0.048671,
+        "f1": 0.63295,
+        "precision": 0.513465,
+        "recall": 0.841905,
+        "accuracy": 0.8,
+        "precision_at_10": 0.8,
+        "precision_at_20": 0.75
+      },
+      "RF": {
+        "auc": 0.881216,
+        "auc_std": 0.02324,
+        "pr_auc": 0.661715,
+        "pr_auc_std": 0.088974,
+        "f1": 0.540222,
+        "precision": 0.631987,
+        "recall": 0.489048,
+        "accuracy": 0.836,
+        "precision_at_10": 0.7,
+        "precision_at_20": 0.85
+      },
+      "XGBoost": {
+        "auc": 0.875901,
+        "auc_std": 0.034647,
+        "pr_auc": 0.633894,
+        "pr_auc_std": 0.066452,
+        "f1": 0.599388,
+        "precision": 0.551667,
+        "recall": 0.684286,
+        "accuracy": 0.818,
+        "precision_at_10": 0.8,
+        "precision_at_20": 0.75
+      }
+    },
+    "best_auc": {
+      "model": "LR",
+      "value": 0.882965
+    },
+    "best_pr_auc": {
+      "model": "RF",
+      "value": 0.661715
+    },
+    "best_f1": {
+      "model": "LR",
+      "value": 0.63295
+    },
+    "best_p10": {
+      "model": "LR",
+      "value": 0.8
+    },
+    "tradeoffs": {
+      "LR": {
+        "high_precision_low_recall": false,
+        "good_for_shortlist": true,
+        "precision_minus_recall": -0.32844,
+        "details": "precision=0.513, recall=0.842, p@10=0.80"
+      },
+      "RF": {
+        "high_precision_low_recall": true,
+        "good_for_shortlist": true,
+        "precision_minus_recall": 0.142939,
+        "details": "precision=0.632, recall=0.489, p@10=0.70"
+      },
+      "XGBoost": {
+        "high_precision_low_recall": false,
+        "good_for_shortlist": true,
+        "precision_minus_recall": -0.132619,
+        "details": "precision=0.552, recall=0.684, p@10=0.80"
+      }
+    }
+  },
+  "baselines": {
+    "rankers": {
+      "random_positive_rate": {
+        "auc": 0.5,
+        "precision_at_10": 0.204,
+        "precision_at_20": 0.204,
+        "note": "expected random ranking baseline equals positive rate for P@K"
+      },
+      "readme_len_30d": {
+        "label": "30-day README length ranking",
+        "feature": "readme_len_30d",
+        "direction": "higher_is_better",
+        "auc": 0.560203,
+        "pr_auc": 0.283252,
+        "precision_at_10": 0.5,
+        "precision_at_20": 0.3
+      },
+      "commits_30d": {
+        "label": "first-30-day commit count ranking",
+        "feature": "commits_30d",
+        "direction": "higher_is_better",
+        "auc": 0.555929,
+        "pr_auc": 0.283584,
+        "precision_at_10": 0.5,
+        "precision_at_20": 0.25
+      },
+      "contributors_30d": {
+        "label": "first-30-day distinct commit-author count ranking",
+        "feature": "contributors_30d",
+        "direction": "higher_is_better",
+        "auc": 0.507562,
+        "pr_auc": 0.231057,
+        "precision_at_10": 0.3,
+        "precision_at_20": 0.4
+      },
+      "issues_30d": {
+        "label": "first-30-day issues ranking",
+        "feature": "issues_30d",
+        "direction": "higher_is_better",
+        "auc": 0.662836,
+        "pr_auc": 0.359889,
+        "precision_at_10": 0.6,
+        "precision_at_20": 0.6
+      },
+      "prs_30d": {
+        "label": "first-30-day PR ranking",
+        "feature": "prs_30d",
+        "direction": "higher_is_better",
+        "auc": 0.628067,
+        "pr_auc": 0.324428,
+        "precision_at_10": 0.6,
+        "precision_at_20": 0.45
+      },
+      "activity_total_30d": {
+        "label": "first-30-day total activity ranking",
+        "feature": "activity_total_30d",
+        "direction": "higher_is_better",
+        "auc": 0.593802,
+        "pr_auc": 0.307951,
+        "precision_at_10": 0.5,
+        "precision_at_20": 0.4
+      }
+    },
+    "best_single_feature_auc": {
+      "name": "issues_30d",
+      "auc": 0.662836
+    }
+  },
+  "per_language": {
+    "global_positive_rate": 0.204,
+    "languages": {
+      "Go": {
+        "n_samples": 99,
+        "n_positive": 22,
+        "positive_rate": 0.2222,
+        "positive_rate_vs_global": 0.0182,
+        "auc": 0.664062,
+        "auc_std": 0.189729,
+        "note": null
+      },
+      "JavaScript": {
+        "n_samples": 100,
+        "n_positive": 2,
+        "positive_rate": 0.02,
+        "positive_rate_vs_global": -0.184,
+        "auc": 0.704082,
+        "auc_std": 0.295918,
+        "note": null
+      },
+      "Other": {
+        "n_samples": 3,
+        "n_positive": 0,
+        "positive_rate": 0.0,
+        "positive_rate_vs_global": -0.204,
+        "auc": null,
+        "auc_std": null,
+        "note": null
+      },
+      "Python": {
+        "n_samples": 100,
+        "n_positive": 62,
+        "positive_rate": 0.62,
+        "positive_rate_vs_global": 0.416,
+        "auc": 0.673031,
+        "auc_std": 0.09145,
+        "note": null
+      },
+      "Rust": {
+        "n_samples": 99,
+        "n_positive": 16,
+        "positive_rate": 0.1616,
+        "positive_rate_vs_global": -0.0424,
+        "auc": 0.879596,
+        "auc_std": 0.070476,
+        "note": null
+      },
+      "TypeScript": {
+        "n_samples": 99,
+        "n_positive": 0,
+        "positive_rate": 0.0,
+        "positive_rate_vs_global": -0.204,
+        "auc": null,
+        "auc_std": null,
+        "note": "single_class"
+      }
+    },
+    "mean_auc_available_languages": 0.730193,
+    "anomaly": {
+      "language": "Go",
+      "reason": "lowest reliable per-language AUC",
+      "auc": 0.664062,
+      "positive_rate": 0.2222,
+      "positive_rate_vs_global": 0.0182,
+      "auc_drop_below_language_mean": 0.066131
+    }
+  },
+  "feature_importance": {
+    "top10_gini": [
+      {
+        "feature": "lang_Python",
+        "importance": 0.1610864388108186
+      },
+      {
+        "feature": "activity_total_30d",
+        "importance": 0.1354890890779243
+      },
+      {
+        "feature": "commits_30d",
+        "importance": 0.10571391115980153
+      },
+      {
+        "feature": "lang_JavaScript",
+        "importance": 0.09578582496940857
+      },
+      {
+        "feature": "readme_len_30d",
+        "importance": 0.08646978253828684
+      },
+      {
+        "feature": "lang_TypeScript",
+        "importance": 0.08097352127926699
+      },
+      {
+        "feature": "issues_30d",
+        "importance": 0.07425201717114789
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "importance": 0.06163530209576336
+      },
+      {
+        "feature": "prs_30d",
+        "importance": 0.05405935842215181
+      },
+      {
+        "feature": "is_org",
+        "importance": 0.040611455954510205
+      }
+    ],
+    "top10_shap": [
+      {
+        "feature": "lang_Python",
+        "mean_abs_shap": 0.1440345834385703
+      },
+      {
+        "feature": "lang_TypeScript",
+        "mean_abs_shap": 0.05156653831410939
+      },
+      {
+        "feature": "issues_30d",
+        "mean_abs_shap": 0.04894474466756042
+      },
+      {
+        "feature": "activity_total_30d",
+        "mean_abs_shap": 0.046685841517210606
+      },
+      {
+        "feature": "readme_len_30d",
+        "mean_abs_shap": 0.04109721602130821
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "mean_abs_shap": 0.03223661420185636
+      },
+      {
+        "feature": "commits_30d",
+        "mean_abs_shap": 0.031204735535754625
+      },
+      {
+        "feature": "lang_JavaScript",
+        "mean_abs_shap": 0.030331518587020524
+      },
+      {
+        "feature": "prs_30d",
+        "mean_abs_shap": 0.025550508179423365
+      },
+      {
+        "feature": "prs_per_issue_30d",
+        "mean_abs_shap": 0.016478872624232296
+      }
+    ],
+    "top10_xgboost": [
+      {
+        "feature": "lang_Python",
+        "importance": 0.3270154893398285
+      },
+      {
+        "feature": "lang_TypeScript",
+        "importance": 0.09062168002128601
+      },
+      {
+        "feature": "activity_total_30d",
+        "importance": 0.08105218410491943
+      },
+      {
+        "feature": "lang_JavaScript",
+        "importance": 0.07683973759412766
+      },
+      {
+        "feature": "lang_Go",
+        "importance": 0.0683048740029335
+      },
+      {
+        "feature": "issues_30d",
+        "importance": 0.049852170050144196
+      },
+      {
+        "feature": "readme_has_image_30d",
+        "importance": 0.04128535836935043
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "importance": 0.03766842931509018
+      },
+      {
+        "feature": "prs_30d",
+        "importance": 0.03178317844867706
+      },
+      {
+        "feature": "contributors_30d",
+        "importance": 0.031147923320531845
+      }
+    ],
+    "top10_lr_abs_coef": [],
+    "disagreements": [
+      "RF Gini top-5 only: commits_30d, lang_JavaScript",
+      "SHAP top-5 only: issues_30d, lang_TypeScript"
+    ],
+    "interpretation_warning": "Gini can over-weight continuous numeric features; SHAP is safer for interpretation."
+  },
+  "feature_correlations": {
+    "readme_len_30d_vs_commits_30d": 0.215042,
+    "high_correlations_abs_ge_0_45": [
+      {
+        "pair": [
+          "commits_30d",
+          "activity_total_30d"
+        ],
+        "value": 0.967666
+      },
+      {
+        "pair": [
+          "commits_30d",
+          "commits_per_contributor_30d"
+        ],
+        "value": 0.820285
+      },
+      {
+        "pair": [
+          "activity_total_30d",
+          "commits_per_contributor_30d"
+        ],
+        "value": 0.760779
+      },
+      {
+        "pair": [
+          "prs_30d",
+          "prs_per_issue_30d"
+        ],
+        "value": 0.635776
+      },
+      {
+        "pair": [
+          "issues_30d",
+          "prs_30d"
+        ],
+        "value": 0.548245
+      },
+      {
+        "pair": [
+          "prs_30d",
+          "activity_total_30d"
+        ],
+        "value": 0.49936
+      },
+      {
+        "pair": [
+          "issues_30d",
+          "contributors_30d"
+        ],
+        "value": 0.46849
+      },
+      {
+        "pair": [
+          "prs_per_issue_30d",
+          "has_pr_activity_30d"
+        ],
+        "value": 0.45873
+      },
+      {
+        "pair": [
+          "contributors_30d",
+          "activity_total_30d"
+        ],
+        "value": 0.453499
+      }
+    ]
+  },
+  "ablation": {
+    "groups": [
+      {
+        "id": "A_basic",
+        "label": "A: Language + Owner",
+        "n_features": 7,
+        "auc": 0.856197,
+        "f1": 0.50249,
+        "precision": 0.418932,
+        "recall": 0.682381
+      },
+      {
+        "id": "B_activity",
+        "label": "B: A + Early Activity (30d)",
+        "n_features": 11,
+        "auc": 0.869813,
+        "f1": 0.524019,
+        "precision": 0.560887,
+        "recall": 0.498571
+      },
+      {
+        "id": "C_readme",
+        "label": "C: B + Historical README (30d)",
+        "n_features": 15,
+        "auc": 0.888453,
+        "f1": 0.555579,
+        "precision": 0.656813,
+        "recall": 0.508095
+      },
+      {
+        "id": "D_all",
+        "label": "D: All Features (+ Derived)",
+        "n_features": 19,
+        "auc": 0.881216,
+        "f1": 0.540222,
+        "precision": 0.631987,
+        "recall": 0.489048
+      }
+    ],
+    "jumps": [
+      {
+        "from": "A_basic",
+        "to": "B_activity",
+        "delta_auc": 0.013616
+      },
+      {
+        "from": "B_activity",
+        "to": "C_readme",
+        "delta_auc": 0.01864
+      },
+      {
+        "from": "C_readme",
+        "to": "D_all",
+        "delta_auc": -0.007237
+      }
+    ],
+    "biggest_jump": {
+      "from": "B_activity",
+      "to": "C_readme",
+      "delta_auc": 0.01864
+    },
+    "smallest_jump": {
+      "from": "C_readme",
+      "to": "D_all",
+      "delta_auc": -0.007237
+    },
+    "interpretation_hint": "historical_readme_dominant"
+  },
+  "validation": {
+    "time_split": {
+      "model": "RF",
+      "train_size": 400,
+      "test_size": 100,
+      "split_date": "2025-04-18",
+      "test_positive_rate": 0.15,
+      "auc": 0.881569,
+      "pr_auc": 0.581807,
+      "f1": 0.5,
+      "precision_at_10": 0.6,
+      "precision_at_20": 0.5,
+      "random_cv_auc": 0.881216,
+      "auc_gap": 0.000352
+    }
+  },
+  "feature_provenance": {
+    "n_rows": 500,
+    "readme_approx_count": 0,
+    "readme_strict_30d_count": 500,
+    "contributors_approx_count": 0,
+    "contributors_strict_30d_count": 500,
+    "all_strict_30d": true
+  },
+  "anomalies": [
+    {
+      "severity": "medium",
+      "title": "Python subset has much higher positive rate than global",
+      "evidence": {
+        "n_samples": 100,
+        "n_positive": 62,
+        "positive_rate": 0.62,
+        "positive_rate_vs_global": 0.416,
+        "auc": 0.673031,
+        "auc_std": 0.09145,
+        "note": null
+      },
+      "implication": "Per-language Python AUC may be depressed by class distribution shift and within-language homogeneity."
+    },
+    {
+      "severity": "low",
+      "title": "Some features are strongly correlated",
+      "evidence": [
+        {
+          "pair": [
+            "commits_30d",
+            "activity_total_30d"
+          ],
+          "value": 0.967666
+        },
+        {
+          "pair": [
+            "commits_30d",
+            "commits_per_contributor_30d"
+          ],
+          "value": 0.820285
+        },
+        {
+          "pair": [
+            "activity_total_30d",
+            "commits_per_contributor_30d"
+          ],
+          "value": 0.760779
+        },
+        {
+          "pair": [
+            "prs_30d",
+            "prs_per_issue_30d"
+          ],
+          "value": 0.635776
+        },
+        {
+          "pair": [
+            "issues_30d",
+            "prs_30d"
+          ],
+          "value": 0.548245
+        }
+      ],
+      "implication": "Feature importance should be interpreted as model attribution, not causal attribution."
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "P0",
+      "action": "Keep the default experiment as a fixed historical backtest.",
+      "reason": "It avoids unstable live labels and makes course evaluation reproducible."
+    },
+    {
+      "priority": "P0",
+      "action": "Present Today Radar, if used, as a candidate shortlist rather than verified prediction.",
+      "reason": "Recent repositories do not yet have future labels."
+    },
+    {
+      "priority": "P1",
+      "action": "Compare model ranking against simple single-feature baselines.",
+      "reason": "This shows whether the ML pipeline beats simple heuristics."
+    },
+    {
+      "priority": "P1",
+      "action": "Verify that raw data was collected with the strict-30d collector (v2+).",
+      "reason": "The 19-feature model assumes all features are bounded to the first 30 days; approximate values reduce model validity."
+    },
+    {
+      "priority": "P2",
+      "action": "Treat TypeScript and per-language results as caveated unless more samples are collected.",
+      "reason": "N500 TypeScript count is small."
+    }
+  ]
+}

@@ -1,0 +1,544 @@
+{
+  "models": {
+    "LR": {
+      "auc": {
+        "mean": 0.8829647754671489,
+        "std": 0.019430751967805304
+      },
+      "pr_auc": {
+        "mean": 0.6243252741730572,
+        "std": 0.04867148974826081
+      },
+      "f1": {
+        "mean": 0.6329499072356215,
+        "std": 0.02037398402620627
+      },
+      "precision": {
+        "mean": 0.5134652757654786,
+        "std": 0.04312948762658148
+      },
+      "recall": {
+        "mean": 0.8419047619047619,
+        "std": 0.08683917942898946
+      },
+      "accuracy": {
+        "mean": 0.8,
+        "std": 0.02966479394838263
+      },
+      "precision_at_10": 0.8,
+      "precision_at_20": 0.75
+    },
+    "RF": {
+      "auc": {
+        "mean": 0.8812162070524412,
+        "std": 0.023239959217844077
+      },
+      "pr_auc": {
+        "mean": 0.6617145460687641,
+        "std": 0.08897402177128963
+      },
+      "f1": {
+        "mean": 0.540222129562943,
+        "std": 0.10770694599529401
+      },
+      "precision": {
+        "mean": 0.6319866310160427,
+        "std": 0.09401288058759481
+      },
+      "recall": {
+        "mean": 0.489047619047619,
+        "std": 0.14476190476190476
+      },
+      "accuracy": {
+        "mean": 0.836,
+        "std": 0.03072458299147442
+      },
+      "precision_at_10": 0.7,
+      "precision_at_20": 0.85
+    },
+    "XGBoost": {
+      "auc": {
+        "mean": 0.8759014843279083,
+        "std": 0.034647212479727525
+      },
+      "pr_auc": {
+        "mean": 0.633894305179157,
+        "std": 0.06645170783010272
+      },
+      "f1": {
+        "mean": 0.5993877778707499,
+        "std": 0.04841511908234907
+      },
+      "precision": {
+        "mean": 0.5516665160687931,
+        "std": 0.042144708095793765
+      },
+      "recall": {
+        "mean": 0.6842857142857144,
+        "std": 0.15119778759974198
+      },
+      "accuracy": {
+        "mean": 0.818,
+        "std": 0.017204650534085222
+      },
+      "precision_at_10": 0.8,
+      "precision_at_20": 0.75
+    }
+  },
+  "feature_importance": {
+    "RF": [
+      {
+        "feature": "lang_Python",
+        "importance": 0.1610864388108186
+      },
+      {
+        "feature": "activity_total_30d",
+        "importance": 0.1354890890779243
+      },
+      {
+        "feature": "commits_30d",
+        "importance": 0.10571391115980153
+      },
+      {
+        "feature": "lang_JavaScript",
+        "importance": 0.09578582496940857
+      },
+      {
+        "feature": "readme_len_30d",
+        "importance": 0.08646978253828684
+      },
+      {
+        "feature": "lang_TypeScript",
+        "importance": 0.08097352127926699
+      },
+      {
+        "feature": "issues_30d",
+        "importance": 0.07425201717114789
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "importance": 0.06163530209576336
+      },
+      {
+        "feature": "prs_30d",
+        "importance": 0.05405935842215181
+      },
+      {
+        "feature": "is_org",
+        "importance": 0.040611455954510205
+      }
+    ],
+    "XGBoost": [
+      {
+        "feature": "lang_Python",
+        "importance": 0.3270154893398285
+      },
+      {
+        "feature": "lang_TypeScript",
+        "importance": 0.09062168002128601
+      },
+      {
+        "feature": "activity_total_30d",
+        "importance": 0.08105218410491943
+      },
+      {
+        "feature": "lang_JavaScript",
+        "importance": 0.07683973759412766
+      },
+      {
+        "feature": "lang_Go",
+        "importance": 0.0683048740029335
+      },
+      {
+        "feature": "issues_30d",
+        "importance": 0.049852170050144196
+      },
+      {
+        "feature": "readme_has_image_30d",
+        "importance": 0.04128535836935043
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "importance": 0.03766842931509018
+      },
+      {
+        "feature": "prs_30d",
+        "importance": 0.03178317844867706
+      },
+      {
+        "feature": "contributors_30d",
+        "importance": 0.031147923320531845
+      }
+    ],
+    "LR": []
+  },
+  "ablation": {
+    "A_basic": {
+      "label": "A: Language + Owner",
+      "n_features": 7,
+      "features": [
+        "lang_Python",
+        "lang_JavaScript",
+        "lang_Go",
+        "lang_Rust",
+        "lang_TypeScript",
+        "lang_Other",
+        "is_org"
+      ],
+      "auc": {
+        "mean": 0.8561968429776974,
+        "std": 0.01985685175944404
+      },
+      "f1": {
+        "mean": 0.5024899811930339,
+        "std": 0.057058301293529096
+      },
+      "precision": {
+        "mean": 0.4189324618736384,
+        "std": 0.04982377896169629
+      },
+      "recall": {
+        "mean": 0.6823809523809523,
+        "std": 0.19320427313199512
+      },
+      "accuracy": {
+        "mean": 0.7300000000000001,
+        "std": 0.061644140029689785
+      }
+    },
+    "B_activity": {
+      "label": "B: A + Early Activity (30d)",
+      "n_features": 11,
+      "features": [
+        "lang_Python",
+        "lang_JavaScript",
+        "lang_Go",
+        "lang_Rust",
+        "lang_TypeScript",
+        "lang_Other",
+        "is_org",
+        "commits_30d",
+        "issues_30d",
+        "prs_30d",
+        "contributors_30d"
+      ],
+      "auc": {
+        "mean": 0.8698132157926463,
+        "std": 0.008051558250356548
+      },
+      "f1": {
+        "mean": 0.5240186419119388,
+        "std": 0.08629463227928155
+      },
+      "precision": {
+        "mean": 0.5608866155157715,
+        "std": 0.07644090887401034
+      },
+      "recall": {
+        "mean": 0.49857142857142855,
+        "std": 0.10698506899872585
+      },
+      "accuracy": {
+        "mean": 0.818,
+        "std": 0.027856776554368225
+      }
+    },
+    "C_readme": {
+      "label": "C: B + Historical README (30d)",
+      "n_features": 15,
+      "features": [
+        "lang_Python",
+        "lang_JavaScript",
+        "lang_Go",
+        "lang_Rust",
+        "lang_TypeScript",
+        "lang_Other",
+        "is_org",
+        "commits_30d",
+        "issues_30d",
+        "prs_30d",
+        "contributors_30d",
+        "has_readme_30d",
+        "readme_len_30d",
+        "readme_has_image_30d",
+        "readme_has_demo_url_30d"
+      ],
+      "auc": {
+        "mean": 0.8884528707052441,
+        "std": 0.019884516487666246
+      },
+      "f1": {
+        "mean": 0.555579133510168,
+        "std": 0.1170823015640997
+      },
+      "precision": {
+        "mean": 0.656812865497076,
+        "std": 0.06266100291142597
+      },
+      "recall": {
+        "mean": 0.508095238095238,
+        "std": 0.17242830183695604
+      },
+      "accuracy": {
+        "mean": 0.844,
+        "std": 0.026532998322843192
+      }
+    },
+    "D_all": {
+      "label": "D: All Features (+ Derived)",
+      "n_features": 19,
+      "features": [
+        "lang_Python",
+        "lang_JavaScript",
+        "lang_Go",
+        "lang_Rust",
+        "lang_TypeScript",
+        "lang_Other",
+        "is_org",
+        "commits_30d",
+        "issues_30d",
+        "prs_30d",
+        "contributors_30d",
+        "has_readme_30d",
+        "readme_len_30d",
+        "readme_has_image_30d",
+        "readme_has_demo_url_30d",
+        "activity_total_30d",
+        "commits_per_contributor_30d",
+        "prs_per_issue_30d",
+        "has_pr_activity_30d"
+      ],
+      "auc": {
+        "mean": 0.8812162070524412,
+        "std": 0.023239959217844077
+      },
+      "f1": {
+        "mean": 0.540222129562943,
+        "std": 0.10770694599529401
+      },
+      "precision": {
+        "mean": 0.6319866310160427,
+        "std": 0.09401288058759481
+      },
+      "recall": {
+        "mean": 0.489047619047619,
+        "std": 0.14476190476190476
+      },
+      "accuracy": {
+        "mean": 0.836,
+        "std": 0.03072458299147442
+      }
+    }
+  },
+  "time_split": {
+    "model": "RF",
+    "train_size": 400,
+    "test_size": 100,
+    "split_date": "2025-04-18",
+    "test_positive_rate": 0.15,
+    "metrics": {
+      "auc": 0.8815686274509804,
+      "pr_auc": 0.581807015772021,
+      "f1": 0.5,
+      "precision_at_10": 0.6,
+      "precision_at_20": 0.5
+    },
+    "random_cv_auc": 0.8812162070524412,
+    "auc_gap": 0.0003524203985392216
+  },
+  "language_auc": {
+    "Python": {
+      "n_samples": 100,
+      "n_positive": 62,
+      "n_folds": 5,
+      "auc": 0.6730311355311355,
+      "auc_std": 0.0914497439398822,
+      "note": null
+    },
+    "Go": {
+      "n_samples": 99,
+      "n_positive": 22,
+      "n_folds": 5,
+      "auc": 0.6640625,
+      "auc_std": 0.1897288132294208,
+      "note": null
+    },
+    "Rust": {
+      "n_samples": 99,
+      "n_positive": 16,
+      "n_folds": 5,
+      "auc": 0.8795955882352942,
+      "auc_std": 0.0704763419053396,
+      "note": null
+    },
+    "JavaScript": {
+      "n_samples": 100,
+      "n_positive": 2,
+      "n_folds": 2,
+      "auc": 0.7040816326530612,
+      "auc_std": 0.29591836734693877,
+      "note": null
+    },
+    "TypeScript": {
+      "n_samples": 99,
+      "n_positive": 0,
+      "auc": null,
+      "auc_std": null,
+      "note": "single_class"
+    }
+  },
+  "shap": {
+    "n_samples": 300,
+    "top10": [
+      {
+        "feature": "lang_Python",
+        "mean_abs_shap": 0.1440345834385703
+      },
+      {
+        "feature": "lang_TypeScript",
+        "mean_abs_shap": 0.05156653831410939
+      },
+      {
+        "feature": "issues_30d",
+        "mean_abs_shap": 0.04894474466756042
+      },
+      {
+        "feature": "activity_total_30d",
+        "mean_abs_shap": 0.046685841517210606
+      },
+      {
+        "feature": "readme_len_30d",
+        "mean_abs_shap": 0.04109721602130821
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "mean_abs_shap": 0.03223661420185636
+      },
+      {
+        "feature": "commits_30d",
+        "mean_abs_shap": 0.031204735535754625
+      },
+      {
+        "feature": "lang_JavaScript",
+        "mean_abs_shap": 0.030331518587020524
+      },
+      {
+        "feature": "prs_30d",
+        "mean_abs_shap": 0.025550508179423365
+      },
+      {
+        "feature": "prs_per_issue_30d",
+        "mean_abs_shap": 0.016478872624232296
+      }
+    ]
+  },
+  "top10": [
+    {
+      "rank": 1,
+      "full_name": "Eng-Hasan-Hajjar/Digital-Currency-Price-Prediction-using-Neural-Networks-and-Artificial-Intelligence",
+      "language": "Python",
+      "prob": 0.9689984936770349,
+      "current_stars": 19,
+      "is_top20": 0
+    },
+    {
+      "rank": 2,
+      "full_name": "harrystuart/flintml",
+      "language": "Python",
+      "prob": 0.9689984936770349,
+      "current_stars": 139,
+      "is_top20": 1
+    },
+    {
+      "rank": 3,
+      "full_name": "Otutu11/Extreme-Weather-Event-Classification",
+      "language": "Python",
+      "prob": 0.9689984936770349,
+      "current_stars": 47,
+      "is_top20": 0
+    },
+    {
+      "rank": 4,
+      "full_name": "Okes2024/Analyzing-Behavioral-Patterns-in-ADHD-Patients",
+      "language": "Python",
+      "prob": 0.9689984936770349,
+      "current_stars": 55,
+      "is_top20": 1
+    },
+    {
+      "rank": 5,
+      "full_name": "Okes2024/Machine-Learning-to-Predict-Suicide-Risk",
+      "language": "Python",
+      "prob": 0.9689984936770349,
+      "current_stars": 52,
+      "is_top20": 1
+    },
+    {
+      "rank": 6,
+      "full_name": "Otutu11/Client-Satisfaction-Score-Predictor",
+      "language": "Python",
+      "prob": 0.965,
+      "current_stars": 53,
+      "is_top20": 1
+    },
+    {
+      "rank": 7,
+      "full_name": "Otutu11/-Chlorophyll-a-and-Ocean-Productivity-Prediction",
+      "language": "Python",
+      "prob": 0.9520667856663136,
+      "current_stars": 47,
+      "is_top20": 0
+    },
+    {
+      "rank": 8,
+      "full_name": "Okes2024/EEG-Signal-Classification-for-Stress-Level-Detection",
+      "language": "Python",
+      "prob": 0.9520667856663136,
+      "current_stars": 53,
+      "is_top20": 1
+    },
+    {
+      "rank": 9,
+      "full_name": "pritampanda15/PandaDock",
+      "language": "Python",
+      "prob": 0.9168124123726177,
+      "current_stars": 97,
+      "is_top20": 1
+    },
+    {
+      "rank": 10,
+      "full_name": "Okes2024/Predicting-Depression-from-Social-Media-Activity",
+      "language": "Python",
+      "prob": 0.9136565622637779,
+      "current_stars": 64,
+      "is_top20": 1
+    }
+  ],
+  "meta": {
+    "n_samples": 500,
+    "n_features": 19,
+    "n_positive": 102,
+    "cv_folds": 5,
+    "feature_names": [
+      "lang_Python",
+      "lang_JavaScript",
+      "lang_Go",
+      "lang_Rust",
+      "lang_TypeScript",
+      "lang_Other",
+      "is_org",
+      "commits_30d",
+      "issues_30d",
+      "prs_30d",
+      "contributors_30d",
+      "has_readme_30d",
+      "readme_len_30d",
+      "readme_has_image_30d",
+      "readme_has_demo_url_30d",
+      "activity_total_30d",
+      "commits_per_contributor_30d",
+      "prs_per_issue_30d",
+      "has_pr_activity_30d"
+    ]
+  }
+}

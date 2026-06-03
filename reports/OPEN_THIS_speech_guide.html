@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenClaw PPT 演讲逻辑讲稿</title>
+  <style>
+    :root {
+      --ink: #232a31;
+      --muted: #5d6977;
+      --line: #d8e1ec;
+      --soft: #f6f8fb;
+      --green: #2ca25f;
+      --blue: #1f76d3;
+      --orange: #f28500;
+      --purple: #7a45e5;
+      --red: #d92d20;
+      --teal: #0f766e;
+      --dark: #1f232a;
+      --shadow: 0 14px 34px rgba(31, 41, 55, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 5% 0%, rgba(44, 162, 95, 0.12), transparent 32rem),
+        radial-gradient(circle at 95% 5%, rgba(31, 118, 211, 0.12), transparent 34rem),
+        #fbfcfe;
+      font-family: "LXGW WenKai", "霞鹜文楷", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+    }
+    .page { width: min(1220px, calc(100vw - 48px)); margin: 0 auto; padding: 42px 0 72px; }
+    header, section {
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    header { padding: 36px 38px; }
+    section { margin-top: 26px; padding: 30px; }
+    h1 { margin: 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.08; }
+    h2 { margin: 0 0 14px; font-size: 29px; line-height: 1.22; }
+    h3 { margin: 0 0 8px; font-size: 20px; }
+    p { margin: 0; }
+    .eyebrow { margin: 0 0 8px; color: var(--green); font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .lead { max-width: 960px; margin-top: 18px; color: var(--muted); font-size: 21px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    button, .link-btn {
+      appearance: none; border: 1px solid var(--line); border-radius: 999px; background: #fff;
+      padding: 9px 14px; font: inherit; font-weight: 900; color: #334155; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    button.primary { background: var(--dark); color: #fff; border-color: var(--dark); }
+    button:hover, .link-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(31,41,55,.08); }
+    .note { margin-top: 14px; color: var(--muted); font-size: 15px; }
+    .grid { display: grid; gap: 16px; }
+    .two { grid-template-columns: 1fr 1fr; }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card { padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
+    .green { border-top: 6px solid var(--green); background: #f1fbf5; }
+    .blue { border-top: 6px solid var(--blue); background: #f1f7ff; }
+    .orange { border-top: 6px solid var(--orange); background: #fff7ec; }
+    .purple { border-top: 6px solid var(--purple); background: #f7f2ff; }
+    .red { border-top: 6px solid var(--red); background: #fff5f5; }
+    .teal { border-top: 6px solid var(--teal); background: #effcf9; }
+    .gray { background: #f8fafc; }
+    .slide {
+      display: grid; grid-template-columns: 170px 1fr; gap: 22px; align-items: start;
+      border-left: 8px solid var(--blue);
+    }
+    .slide:nth-of-type(3n) { border-left-color: var(--green); }
+    .slide:nth-of-type(3n+1) { border-left-color: var(--orange); }
+    .slide-num {
+      width: 132px; height: 132px; border-radius: 24px; background: var(--dark); color: #fff;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      position: sticky; top: 150px;
+    }
+    .slide-num b { font-size: 42px; line-height: 1; }
+    .slide-num span { font-size: 14px; color: #cbd5e1; margin-top: 8px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
+    .pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; background: #edf2f7; color: #475569; font-weight: 900; font-size: 13px; }
+    .script { padding: 18px; border-radius: 18px; border: 1px solid #c7ddfb; background: #f8fbff; font-size: 18px; }
+    .script strong { color: var(--ink); }
+    ul { margin: 10px 0 0; padding-left: 20px; color: var(--muted); }
+    li { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 15px; }
+    th { background: #f1f5f9; color: #334155; font-weight: 900; }
+    tr:last-child td { border-bottom: 0; }
+    code { font-family: "SFMono-Regular", Consolas, monospace; background: #edf2f7; padding: 2px 6px; border-radius: 7px; }
+    .callout { margin-top: 18px; padding: 18px 20px; border: 1px solid #f4c8a4; background: #fff7ec; border-radius: 18px; color: #5a3b12; }
+    .decision { border: 1px solid #bfe7cf; background: #f1fbf5; color: #174c2c; }
+    .feature-cloud { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .bubble { padding: 9px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-weight: 900; font-size: 14px; }
+    .bubble.green { border-top: 0; color: var(--green); background: #f1fbf5; }
+    .bubble.blue { border-top: 0; color: var(--blue); background: #f1f7ff; }
+    .bubble.orange { border-top: 0; color: var(--orange); background: #fff7ec; }
+    .bubble.purple { border-top: 0; color: var(--purple); background: #f7f2ff; }
+    .editable[contenteditable="true"] { outline: 2px dashed var(--orange); outline-offset: 6px; border-radius: 10px; }
+    .edit-on .editable:hover { background: rgba(251,133,0,.08); }
+    @media (max-width: 860px) { .two, .three, .four, .slide { grid-template-columns: 1fr; } .slide-num { position: static; width: 100%; height: auto; padding: 18px; } header { position: static; } }
+  </style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <p class="eyebrow">OpenClaw PPT Speech Guide</p>
+    <h1>按照 PPT 每一页组织的展示讲稿</h1>
+    <p class="lead editable" data-edit-id="lead">这份 HTML 按当前 13 页 PPT 的顺序，把每一页的讲述逻辑串起来。重点不是背稿，而是知道每一页承担什么任务、讲到哪里就自然转到下一页。</p>
+    <div class="toolbar">
+      <button class="primary" id="toggleEdit">开启编辑模式</button>
+      <button id="saveLocal">保存到浏览器缓存</button>
+      <button id="downloadHtml">导出修改版 HTML</button>
+      <a class="link-btn" href="./OPEN_THIS_latest_presentation.pptx">打开最新版 PPT</a>
+      <a class="link-btn" href="./OPEN_THIS_latest_presentation.pdf">打开最新版 PDF</a>
+    </div>
+    <p class="note">HTML 可以编辑：点“开启编辑模式”后直接改文字。浏览器不能直接覆盖原文件，所以可以保存到浏览器缓存，或导出一份修改版 HTML。要永久改源文件，也可以用 VS Code / 文本编辑器打开这个文件修改。</p>
+  </header>
+
+  <section>
+    <h2>这版讲稿怎么用</h2>
+    <div class="grid two">
+      <div class="card decision editable" data-edit-id="need-more-pages">
+        <h3>结构：13 页，一条主线</h3>
+        <p>提出问题（封面 + Motivation）→ 系统结构（OpenClaw 架构 + Agent 封装）→ 数据与特征（采集 / 样例 / 19 特征）→ 模型与结果（训练 / 指标 / 实验）→ OpenClaw 价值 → Today Radar → 总结。每页 45 秒左右，整套大约 9–10 分钟。</p>
+      </div>
+      <div class="card orange editable" data-edit-id="html-style-ppt">
+        <h3>节奏：一页讲清一个意思</h3>
+        <p>PPT 已经统一成“大标题 + 彩色卡片 / 流程块”的风格，不堆小字。讲的时候按这份稿子的口语版本说，每页讲到自然收尾就翻页，不要逐字念屏幕。</p>
+      </div>
+    </div>
+    <div class="callout editable" data-edit-id="expand-plan">
+      <strong>页面顺序：</strong>封面 → Motivation → OpenClaw 架构 → Agent 如何封装 → 数据采集 → 数据样例 → 19 特征全景 → 模型训练 → 指标解释 → 实验结果 → 事实诊断与洞察 → Today Radar → 总结。
+    </div>
+  </section>
+
+  <section>
+    <h2>13 页 PPT：逐页讲述逻辑</h2>
+    <p class="note">下面按当前 OPEN_THIS_latest_presentation.pptx 来写。每页都有一段可以直接照着讲的稿子。时间不用死记，按你自然语速讲完这一段即可。</p>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>01</b><span>Cover</span></div>
+    <div>
+      <h2>封面：先把项目定位讲准</h2>
+      <div class="meta"><span class="pill">开场</span><span class="pill">关键词：500 / 19 / 0.883 / 1 年标签窗口</span></div>
+      <div class="script editable" data-edit-id="slide1-script"><strong>讲稿：</strong>“我的项目是一个开源项目潜力发现系统。它关注的问题是：一个仓库刚创建时，还没有完全流行起来，我们能不能根据早期行为判断它是否值得继续观察？这页先给出四个核心数字：我采集了 500 个历史仓库，把每个仓库转换成 19 个早期特征，模型最好的 AUC 是 0.883，并且标签来自约一年后的星标表现。后面我会按数据采集、特征工程、模型训练、结果解释、OpenClaw 多智能体流程和 Today Radar 应用来讲。”</div>
+      <ul><li>这一页只讲项目定位，不展开“如何防泄漏”这类论文细节。</li><li>转场：为什么这个问题值得做？进入动机页。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>02</b><span>Motivation</span></div>
+    <div>
+      <h2>动机：为什么不只看 Trending</h2>
+      <div class="meta"><span class="pill">问题意识</span><span class="pill">研究支撑</span></div>
+      <div class="script editable" data-edit-id="slide2-script"><strong>讲法：</strong>“GitHub Trending 能看到已经获得关注的项目，但我想把目标往前移一点：在仓库还处于早期窗口时，能不能根据行为信号筛出值得观察的项目？下面三篇相关研究说明，仓库流行度不是完全随机的，stars 增长、语言领域、工程实践都和 popularity 有关系，所以这个问题适合做成数据挖掘流程。”</div>
+      <ul><li>这里不需要深入讲每篇论文，只说它们分别支撑“可预测”“特征有效”“前 20% 分类合理”。</li><li>转场：既然问题可做，下一步就是把它变成一个可复现系统。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>03</b><span>OpenClaw</span></div>
+    <div>
+      <h2>多智能体架构：总指挥 + 多个专职角色</h2>
+      <div class="meta"><span class="pill">架构解释</span><span class="pill">证据链</span></div>
+      <div class="script editable" data-edit-id="slide3-script"><strong>讲稿：</strong>“这一页是 OpenClaw 的多智能体架构。它不是把所有事情塞进一个大模型回答里，而是有一个总指挥负责调度，下面有多个专职角色。采集角色负责拿 GitHub 数据，特征角色负责把原始记录变成特征表，训练角色负责训练和评估模型，事实角色负责把实验结果整理成结构化事实，洞察和报告角色再把这些事实变成可读解释。这样的好处是每一步都有中间产物，出了问题也能定位到是哪一步。”</div>
+      <ul><li>总指挥的功能：检查状态、选择任务、启动角色、记录事件、把结果串起来。</li><li>转场：下一页解释“角色”在代码里是怎么封装的。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>04</b><span>Agent Packaging</span></div>
+    <div>
+      <h2>Agent 封装：每个角色都有清晰输入输出</h2>
+      <div class="meta"><span class="pill">系统实现</span><span class="pill">可复现</span></div>
+      <div class="script editable" data-edit-id="slide4-script"><strong>讲稿：</strong>“这里我想说明，OpenClaw 里的 Agent 不是只写一句提示词。每个角色都有自己的技能说明、执行脚本、输入文件、输出文件和事件记录。比如采集角色的输入是 GitHub 查询条件，输出是仓库原始记录；训练角色的输入是特征表，输出是模型指标；洞察角色的输入不是原始数据，而是已经算好的事实摘要。这样做的意义是把一次性的实验变成一套可以重复运行、可以检查结果来源的流程。”</div>
+      <ul><li>这一页回答“OpenClaw 到底发挥了什么作用”：组织复杂流程，而不是替代机器学习模型。</li><li>转场：系统架构讲完后，进入第一步数据采集。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>05</b><span>Data</span></div>
+    <div>
+      <h2>数据采集：30 天快照和未来标签分开</h2>
+      <div class="meta"><span class="pill">采集逻辑</span><span class="pill">时间边界</span></div>
+      <div class="script editable" data-edit-id="slide5-script"><strong>讲稿：</strong>“数据采集阶段最重要的是时间边界。对每个仓库，我只把创建后 30 天内能看到的信息放进模型输入，比如当时的说明文档、提交次数、问题数量、合并请求数量和贡献者数量。然后再用约一年后的星标数生成训练答案，也就是这个仓库后来有没有进入样本前 20%。所以左边是模型能看的早期快照，右边是未来标签。它们分开之后，模型学到的是早期信号和后续热度之间的关系。”</div>
+      <ul><li>日期窗：仓库创建于 2025-03-01 到 2025-04-30，保证有完整的 30 天观察期和约一年标签窗口。</li><li>转场：下一页用一条具体记录把这个切分讲清楚。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>06</b><span>Data Example</span></div>
+    <div>
+      <h2>数据样例：一条仓库记录怎么被拆开</h2>
+      <div class="meta"><span class="pill">样例解释</span><span class="pill">输入 / 答案</span></div>
+      <div class="script editable" data-edit-id="slide6-script"><strong>讲稿：</strong>“这一页是数据样例。左边叫 30 天快照，也就是模型输入。它记录的是仓库刚创建后 30 天内发生了什么：使用什么语言、有多少提交、有多少问题和合并请求、有多少贡献者、说明文档大概多长。右边是未来标签，也就是训练答案。它记录这个仓库一年后星标数是多少，是否进入前 20%。模型训练时只能看左边，右边只用来告诉模型答案。”</div>
+      <ul><li>这里直接说“30 天快照”和“未来标签”，不要讲内部字段名。</li><li>转场：有了原始记录，下一步要把它变成模型能处理的特征。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>07</b><span>Features</span></div>
+    <div>
+      <h2>特征工程：五类早期信号，合成 19 个特征</h2>
+      <div class="meta"><span class="pill">特征分类</span><span class="pill">19 个特征</span></div>
+      <div class="script editable" data-edit-id="slide7-script"><strong>讲稿：</strong>“特征工程的作用，是把每个仓库的原始记录整理成统一格式，这样不同仓库才能被模型比较。这里一共是 19 个特征，分成五类：第一类是语言信号，比如 Python、Go、Rust；第二类是归属信号，看仓库属于组织还是个人；第三类是早期活跃度，包括提交、问题、合并请求和贡献者；第四类是说明文档信号，比如有没有说明文档、长度、有没有图片和演示链接；第五类是派生信号，比如总活跃度和平均提交。”</div>
+      <div class="feature-cloud">
+        <span class="bubble blue">语言信号 6 个</span><span class="bubble purple">归属信号 1 个</span><span class="bubble orange">活跃信号 4 个</span><span class="bubble green">文档信号 4 个</span><span class="bubble">派生信号 4 个</span>
+      </div>
+      <ul><li>这一页的目标是“观众一眼看懂特征来自哪里”，不需要逐个字段背英文名。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>08</b><span>Training</span></div>
+    <div>
+      <h2>模型训练：三类模型各有作用</h2>
+      <div class="meta"><span class="pill">训练流程</span><span class="pill">模型特点</span></div>
+      <div class="script editable" data-edit-id="slide8-script"><strong>讲稿：</strong>“特征表准备好以后，我训练了三类模型。逻辑回归是线性模型，优点是稳定、容易解释；随机森林能处理非线性关系和特征组合，在候选排序里很有用；XGBoost 是更强的梯度提升模型，用来做对照。训练阶段不只是得到分数，还会保存模型文件、特征顺序和动态阈值，后面的 Today Radar 可以直接复用。”</div>
+      <table><tr><th>模型</th><th>特点</th><th>本项目里怎么理解</th></tr><tr><td>逻辑回归</td><td>线性、稳定</td><td>AUC 0.883，整体排序最好</td></tr><tr><td>随机森林</td><td>非线性、能处理组合关系</td><td>PR-AUC 0.662，适合候选排序</td></tr><tr><td>XGBoost</td><td>拟合能力强</td><td>AUC 0.876，作为强基线对照</td></tr></table>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>09</b><span>Metrics</span></div>
+    <div>
+      <h2>指标解释：为什么不能只看一个数字</h2>
+      <div class="meta"><span class="pill">AUC</span><span class="pill">PR-AUC</span><span class="pill">P@10</span><span class="pill">时间切分</span></div>
+      <div class="script editable" data-edit-id="slide9-script"><strong>讲稿：</strong>“这一页解释几个指标分别看什么。AUC 看整体排序能力，也就是模型能不能把更可能成功的项目排到前面。PR-AUC 更关注少数正例，因为进入前 20% 的项目本来就少。P@10 看模型排在最前面的 10 个候选里命中多少，更接近实际使用。时间切分是把较早创建的仓库用于训练，较晚创建的仓库用于测试，用来检查结果是否只是随机划分下好看。”</div>
+      <ul><li>这页的价值是让结果页不变成“报数字”。先解释指标，再展示结果。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>10</b><span>Results</span></div>
+    <div>
+      <h2>实验结果：早期信号确实有排序能力</h2>
+      <div class="meta"><span class="pill">核心数字</span><span class="pill">消融实验</span></div>
+      <div class="script editable" data-edit-id="slide10-script"><strong>讲稿：</strong>“实验结果主要看三点。第一，逻辑回归的 AUC 是 0.883，说明早期信号确实能把更有潜力的仓库排到前面。第二，随机森林的 PR-AUC 是 0.662，说明它对少数热门项目的识别能力不错。第三，时间切分差距只有 +0.0004，说明结果在这个时间窗口里比较稳定。下面的消融实验说明，加入早期说明文档后效果最好，AUC 到 0.8885；但继续加入派生比率后略微下降，说明并不是特征越多越好。”</div>
+      <ul><li>转场：模型有效之后，才讲 OpenClaw 的额外价值。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>11</b><span>OpenClaw</span></div>
+    <div>
+      <h2>事实诊断 + 洞察分析：OpenClaw 的核心价值</h2>
+      <div class="meta"><span class="pill">事实先行</span><span class="pill">受约束推理</span></div>
+      <div class="script editable" data-edit-id="slide11-script"><strong>讲稿：</strong>“这一页回答一个关键问题：为什么不是直接把实验结果丢给大模型？直接问大模型当然能生成一段分析，但它没有稳定的流程，也可能引用不存在的数字。OpenClaw 的做法是先由事实诊断模块计算结构化事实，比如哪个模型最好、哪些语言异常、哪些特征重要；然后洞察分析模块只能基于这些事实做解释，并且引用数字要能在事实摘要里找到。这样大模型的作用就从‘编故事’变成‘基于证据推理’。”</div>
+      <ul><li>这里可以强调：OpenClaw 的不可替代性不是“更聪明”，而是把复杂任务组织成可靠工作流。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>12</b><span>Today Radar</span></div>
+    <div>
+      <h2>Today Radar：把历史模型用于今天的候选发现</h2>
+      <div class="meta"><span class="pill">应用闭环</span><span class="pill">候选榜单</span></div>
+      <div class="script editable" data-edit-id="slide12-script"><strong>讲稿：</strong>“Today Radar 是应用层。它不会重新训练模型，而是扫描创建 30 到 45 天的近期仓库，用同一套 19 个特征生成输入，再用训练好的随机森林模型打分。右边的排行榜展示了一个小规模实时扫描结果，每个仓库都有关注分数和行动分层。它的意义是把前面的历史回测变成今天可以使用的观察清单，后续可以继续回看这些仓库的星标增长。”</div>
+      <ul><li>这里不用反复强调边界，只说“观察清单”和“后续回看”即可。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>13</b><span>Summary</span></div>
+    <div>
+      <h2>总结：回到完整闭环</h2>
+      <div class="meta"><span class="pill">收束</span><span class="pill">三层价值</span></div>
+      <div class="script editable" data-edit-id="slide13-script"><strong>讲稿：</strong>“最后我把项目总结成三层。第一是模型层：创建后 30 天内的早期信号，确实可以用于排序潜力仓库。第二是系统层：OpenClaw 把采集、特征、训练、诊断、洞察和报告拆成多个角色，让流程可复现、可检查。第三是应用层：Today Radar 复用同一套模型和特征格式，生成今天值得观察的候选项目。也就是说，这个项目不只是训练了一个模型，而是完成了一个从历史验证到今日应用的数据挖掘闭环。”</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>现在这版展示的讲述顺序</h2>
+    <table>
+      <tr><th>阶段</th><th>对应页面</th><th>展示重点</th></tr>
+      <tr><td>提出问题</td><td>1–2</td><td>为什么要从 GitHub 早期信号里发现潜力项目</td></tr>
+      <tr><td>系统结构</td><td>3–4</td><td>OpenClaw 如何把任务拆成总指挥和多个专职角色</td></tr>
+      <tr><td>数据与特征</td><td>5–7</td><td>30 天快照、未来标签、19 个早期特征</td></tr>
+      <tr><td>模型与结果</td><td>8–10</td><td>模型选择、指标含义、实验结果</td></tr>
+      <tr><td>OpenClaw 价值</td><td>11</td><td>先算事实，再让大模型基于证据解释</td></tr>
+      <tr><td>应用闭环</td><td>12–13</td><td>Today Radar 和最终总结</td></tr>
+    </table>
+    <div class="callout editable" data-edit-id="final-recommendation"><strong>最终建议：</strong>展示时不要从“严格 30 天”这种实现细节开场。它是实验设计的基本要求，可以在报告里展开；PPT 里只需要自然地讲“模型只看创建后 30 天快照，标签来自未来表现”。</div>
+  </section>
+</main>
+<script>
+  const key = 'openclaw-ppt-speech-guide-edits-v1';
+  const editables = [...document.querySelectorAll('.editable')];
+  let editMode = false;
+  function loadEdits() {
+    try {
+      const data = JSON.parse(localStorage.getItem(key) || '{}');
+      editables.forEach(el => { if (data[el.dataset.editId]) el.innerHTML = data[el.dataset.editId]; });
+    } catch (e) {}
+  }
+  function collectEdits() {
+    const data = {};
+    editables.forEach(el => { data[el.dataset.editId] = el.innerHTML; });
+    return data;
+  }
+  document.getElementById('toggleEdit').addEventListener('click', () => {
+    editMode = !editMode;
+    document.body.classList.toggle('edit-on', editMode);
+    editables.forEach(el => el.contentEditable = editMode ? 'true' : 'false');
+    document.getElementById('toggleEdit').textContent = editMode ? '关闭编辑模式' : '开启编辑模式';
+  });
+  document.getElementById('saveLocal').addEventListener('click', () => {
+    localStorage.setItem(key, JSON.stringify(collectEdits()));
+    alert('已保存到浏览器缓存。刷新页面后仍会保留，但这不是覆盖原文件。');
+  });
+  document.getElementById('downloadHtml').addEventListener('click', () => {
+    editables.forEach(el => el.removeAttribute('contenteditable'));
+    const blob = new Blob(['<!doctype html>\n' + document.documentElement.outerHTML], {type: 'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'openclaw_ppt_speech_guide_edited.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  loadEdits();
+</script>
+</body>
+</html>

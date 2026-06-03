@@ -1,0 +1,43 @@
+{
+  "feature_names": [
+    "lang_Python",
+    "lang_JavaScript",
+    "lang_Go",
+    "lang_Rust",
+    "lang_TypeScript",
+    "lang_Other",
+    "is_org",
+    "commits_30d",
+    "issues_30d",
+    "prs_30d",
+    "contributors_30d",
+    "has_readme_30d",
+    "readme_len_30d",
+    "readme_has_image_30d",
+    "readme_has_demo_url_30d",
+    "activity_total_30d",
+    "commits_per_contributor_30d",
+    "prs_per_issue_30d",
+    "has_pr_activity_30d"
+  ],
+  "meta_cols": [
+    "_batch",
+    "_contributors_source",
+    "_created_at",
+    "_current_stars",
+    "_full_name",
+    "_language",
+    "_readme_source",
+    "is_top20"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "Go",
+    "Rust",
+    "TypeScript"
+  ],
+  "version": "strict_30d_v3",
+  "tfidf_features": 0,
+  "notes": "All model features are restricted to the first-30-day window of the repo. Current-state fields (author_followers/public_repos, has_license, current README, current contributors count) are deliberately excluded to reduce posterior-information leakage."
+}

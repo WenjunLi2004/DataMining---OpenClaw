@@ -1,31 +1,60 @@
 {
-  "run_at": "2026-06-03T00:05:03.729887Z",
-  "trigger": "cron_daily_analysis",
-  "decisions": {
-    "repo_collector": {
-      "action": "skip",
-      "reason": "fixed historical snapshot exists (500 records)"
+  "run_at": "2026-06-03T11:02:26Z",
+  "trigger": "manual_strict_30d_refresh",
+  "state_snapshot": {
+    "raw_data": {
+      "exists": true,
+      "path": "data/repos_raw_500_strict.jsonl",
+      "record_count": 500
     },
-    "feature_extractor": {
-      "action": "skip",
-      "reason": "features.csv is newer than raw data"
+    "features": {
+      "exists": true,
+      "path": "data/features.csv",
+      "feature_count": 19
     },
-    "model_trainer": {
-      "action": "skip",
-      "reason": "model_results.json is up to date (LR/RF/XGBoost)"
-    },
-    "diagnostic_builder": {
-      "action": "skip",
-      "reason": "diagnostic_summary.json is up to date"
-    },
-    "insight_analysis": {
-      "action": "skip",
-      "reason": "INSIGHTS.md is up to date"
-    },
-    "report_generator": {
-      "action": "executed",
-      "reason": "always runs per scheduling rule"
+    "diagnostic_summary": {
+      "exists": true,
+      "path": "data/diagnostic_summary.json",
+      "all_strict_30d": true
     }
   },
-  "output_report": "2026-06-03_two_part_report.html"
+  "decisions": [
+    {
+      "step": "Data Collection",
+      "action": "skipped",
+      "reason": "fixed strict-30d raw data already exists"
+    },
+    {
+      "step": "Feature Extraction",
+      "action": "executed",
+      "reason": "refreshed 19-feature matrix from strict raw data"
+    },
+    {
+      "step": "Model Training",
+      "action": "executed",
+      "reason": "refreshed LR/RF/XGBoost metrics and model artifacts"
+    },
+    {
+      "step": "Diagnostic Builder",
+      "action": "executed",
+      "reason": "rebuilt fact-grounded diagnostic summary"
+    },
+    {
+      "step": "Insight Analysis",
+      "action": "executed",
+      "reason": "generated deterministic template insights"
+    },
+    {
+      "step": "Report Generation",
+      "action": "executed",
+      "reason": "regenerated light-themed HTML reports"
+    }
+  ],
+  "tool_calls_sequence": [
+    "feature_extractor",
+    "model_trainer",
+    "diagnostic_builder",
+    "insight_analysis",
+    "report_generator"
+  ]
 }

@@ -1,11 +1,7 @@
-{"timestamp": "2026-05-19T06:09:33Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_start", "duration_ms": 0, "message": "Pipeline started by orchestrator"}
-{"timestamp": "2026-05-19T06:09:44Z", "agent_id": "model-trainer", "event_type": "agent_start", "duration_ms": 0, "message": "训练 LR/RF/XGBoost 模型，包含消融实验、SHAP 分析和时间切分验证"}
-{"timestamp": "2026-05-19T06:09:44Z", "agent_id": "report-generator", "event_type": "agent_start", "duration_ms": 0, "message": "生成最终 HTML 分析报告（含 Decision Log 和 Run History）"}
-{"timestamp": "2026-05-19T06:11:37Z", "agent_id": "report-generator", "event_type": "agent_completed", "duration_ms": 112609, "message": "Now let me check that the data files exist and run the report generator."}
-{"timestamp": "2026-05-19T06:11:37Z", "agent_id": "model-trainer", "event_type": "agent_completed", "duration_ms": 112948, "message": "数据文件已就位（500 样本 × 38 特征）。脚本已内置全部 8 个步骤，直接执行训练："}
-{"timestamp": "2026-05-19T06:12:00Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_complete", "duration_ms": 0, "message": "All pipeline steps completed"}
-{"timestamp": "2026-05-24T14:25:30Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_start", "duration_ms": 0, "message": "Pipeline started by orchestrator"}
-{"timestamp": "2026-05-24T14:25:41Z", "agent_id": "report-generator", "event_type": "agent_start", "duration_ms": 0, "message": "生成最终 HTML 分析报告（含 Decision Log 和 Run History）"}
-{"timestamp": "2026-05-24T14:26:25Z", "agent_id": "report-generator", "event_type": "agent_completed", "duration_ms": 43917, "message": "STATUS: completed | path=~/openclaw-project/reports/2026-05-24_final.html | size=60KB"}
-{"timestamp": "2026-05-24T14:26:36Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_complete", "duration_ms": 0, "message": "All pipeline steps completed"}
-{"timestamp": "2026-06-03T08:05:03+08:00", "event": "pipeline_complete", "report": "2026-06-03_two_part_report.html", "steps_skipped": 5, "steps_executed": 1}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_start", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "feature-engineer", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "model-trainer", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "diagnostic-builder", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "insight-analyst", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "report-generator", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_complete", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}

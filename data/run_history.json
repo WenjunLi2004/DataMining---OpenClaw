@@ -1,13 +1,13 @@
 [
   {
-    "run_at": "2026-06-03T07:07:56Z",
+    "run_at": "2026-06-03T11:02:26Z",
     "trigger": "strict_30d_current_cleanup",
     "steps_executed": [
-      "run_model_trainer",
-      "run_diagnostic_builder",
-      "run_insight_analysis",
-      "run_report_generator",
-      "run_today_radar"
+      "feature_extractor",
+      "model_trainer",
+      "diagnostic_builder",
+      "insight_analysis_template",
+      "report_generator"
     ],
     "rf_auc": 0.8812162070524412,
     "rf_pr_auc": 0.6617145460687641,
@@ -18,6 +18,6 @@
       "commits_30d"
     ],
     "n_samples": 500,
-    "notes": "Current clean strict-30d run only; older leakage-era run history is intentionally not shipped."
+    "notes": "Current clean strict-30d run only; older leakage-era data and histories were removed from the project workspace."
   }
 ]

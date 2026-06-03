@@ -36,11 +36,8 @@ python3 ~/.openclaw/workspace/skills/repo-collector/collect.py --target 500
 | 文件 | 描述 |
 |------|------|
 | `data/repos_raw_500_strict.jsonl` | **正式数据**：500 条 strict-30d 记录（2026-05-30 采集，created 2025-03-01..2025-04-30，batch=strict_30d_1y_2025_03_04） |
-| `data/repos_raw_500.jsonl` | 本地旧版历史备份（2026-05-18 采集，created 2025-05-01..2025-06-30）——**不含 30d 字段，已从仓库排除，不再作为主数据源** |
 | `data/repos_raw.jsonl` | 20 条 strict-30d 样例记录（快速测试 / schema 查看用） |
 | `data/summary.md` | 最近一次采集的统计报告 |
-| `data/collect_500_strict.log` | strict 采集的本地完整运行日志（`.gitignore` 排除，不随仓库提交） |
-| `data/collect_500.log` | 旧版本地采集日志（历史存档，不随仓库提交） |
 
 ### 数据规模（strict-30d，2026-05-30）
 - 采集成功：500 / 500，失败：0

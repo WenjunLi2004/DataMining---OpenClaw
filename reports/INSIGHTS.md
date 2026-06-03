@@ -1,6 +1,6 @@
 # OpenClaw Insight Analysis
 
-生成时间：2026-06-03 07:11 UTC  
+生成时间：2026-06-03 11:00 UTC  
 生成方式：deterministic-template  
 事实来源：`data/diagnostic_summary.json`
 

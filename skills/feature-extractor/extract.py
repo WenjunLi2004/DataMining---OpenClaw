@@ -39,6 +39,10 @@ import pandas as pd
 
 LANGUAGES = ["Python", "JavaScript", "Go", "Rust", "TypeScript"]
 
+# Number of PCA dimensions for embedding features
+EMBEDDING_DIM = 8
+EMBEDDING_FEATURE_NAMES = [f"emb_{i}" for i in range(EMBEDDING_DIM)]
+
 # Exactly 19 model features, in the order they will appear in feature_schema.
 FEATURE_NAMES = [
     # language / owner
@@ -186,7 +190,13 @@ def build_dataframe(records: List[dict], allow_legacy: bool = False) -> Tuple[pd
         prs_per_issue_30d = prs_30d / max(issues_30d, 1)
         has_pr_activity_30d = int(prs_30d > 0)
 
+        # Raw text for optional embedding (not a model feature itself)
+        desc    = (s.get("description") or "").strip()
+        topics  = " ".join(s.get("topics") or [])
+        raw_text = f"{desc} {topics}".strip()
+
         row: Dict[str, Any] = {
+            "_embed_text": raw_text,
             # language one-hot (6)
             "lang_Python":     int(language == "Python"),
             "lang_JavaScript": int(language == "JavaScript"),
@@ -232,15 +242,88 @@ def align_to_schema(df: pd.DataFrame, feature_names: List[str]) -> pd.DataFrame:
     """Ensure prediction data has exactly the trained feature columns, in order.
 
     Missing columns are added as 0; extra non-meta columns are dropped.
+    Embedding columns (emb_*) are preserved if present.
     """
     for col in feature_names:
         if col not in df.columns:
             df[col] = 0
     ordered = [c for c in df.columns if c in META_COLS or c.startswith("_")]
     ordered += [c for c in feature_names if c in df.columns]
+    # Preserve embedding columns appended by --with-embeddings
+    emb_cols = [c for c in df.columns if c.startswith("emb_") and c not in ordered]
+    ordered += emb_cols
     if "is_top20" in df.columns and "is_top20" not in ordered:
         ordered.append("is_top20")
     return df.loc[:, list(dict.fromkeys(ordered))]
+
+
+def compute_embeddings(texts: list, cache_path: Path, full_names: list) -> np.ndarray | None:
+    """Call DeepSeek embedding API for each text, cache results, return (n, EMBEDDING_DIM) PCA array."""
+    import os
+    api_key  = os.environ.get("DEEPSEEK_API_KEY") or os.environ.get("OPENAI_API_KEY")
+    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+
+    if not api_key:
+        print("  [SKIP] No DEEPSEEK_API_KEY — embeddings skipped.", flush=True)
+        return None
+
+    try:
+        from openai import OpenAI
+    except ImportError:
+        print("  [SKIP] openai package not installed — embeddings skipped.", flush=True)
+        return None
+
+    # Load cache
+    cache: Dict[str, list] = {}
+    if cache_path.exists():
+        try:
+            cache = json.loads(cache_path.read_text(encoding="utf-8"))
+        except Exception:
+            cache = {}
+
+    client    = OpenAI(api_key=api_key, base_url=base_url)
+    model     = "deepseek-embedding"
+    raw_vecs  = []
+    new_count = 0
+
+    print(f"  Fetching embeddings for {len(texts)} texts (cache has {len(cache)} entries)...", flush=True)
+    for name, text in zip(full_names, texts):
+        if name in cache:
+            raw_vecs.append(cache[name])
+            continue
+        try:
+            resp = client.embeddings.create(model=model, input=text or "(empty)")
+            vec  = resp.data[0].embedding
+            cache[name] = vec
+            raw_vecs.append(vec)
+            new_count += 1
+            if new_count % 50 == 0:
+                print(f"    {new_count} new embeddings fetched...", flush=True)
+        except Exception as e:
+            print(f"  [WARN] embedding failed for {name}: {e}", flush=True)
+            raw_vecs.append(None)
+
+    # Save cache
+    try:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+        if new_count:
+            print(f"  Saved {new_count} new embeddings to cache ({cache_path})", flush=True)
+    except Exception as e:
+        print(f"  [WARN] could not write embedding cache: {e}", flush=True)
+
+    # Fill missing with zeros, then PCA → EMBEDDING_DIM dims
+    arr = np.array([v if v is not None else [0.0] * len(raw_vecs[0])
+                    for v in raw_vecs], dtype=float)
+    if arr.shape[1] <= EMBEDDING_DIM:
+        return arr[:, :EMBEDDING_DIM]
+
+    from sklearn.decomposition import PCA
+    pca = PCA(n_components=EMBEDDING_DIM, random_state=42)
+    reduced = pca.fit_transform(arr)
+    var = sum(pca.explained_variance_ratio_) * 100
+    print(f"  PCA {arr.shape[1]}→{EMBEDDING_DIM}: explained variance {var:.1f}%", flush=True)
+    return reduced
 
 
 def write_artifacts(artifacts_dir: Path, df: pd.DataFrame):
@@ -332,12 +415,24 @@ def main():
             "Requires recollection with the updated repo-collector to remove this flag."
         ),
     )
+    parser.add_argument(
+        "--with-embeddings",
+        action="store_true",
+        default=False,
+        help=(
+            "Call DeepSeek embedding API for each repo's description+topics, "
+            f"PCA-reduce to {EMBEDDING_DIM} dims, and append emb_0..emb_{EMBEDDING_DIM-1} "
+            "columns. Requires DEEPSEEK_API_KEY. Results are cached in data/embeddings_cache.json."
+        ),
+    )
     args = parser.parse_args()
 
-    in_path = Path(args.input)
-    out_path = Path(args.output)
+    in_path       = Path(args.input)
+    out_path      = Path(args.output)
     artifacts_dir = Path(args.artifacts_dir).expanduser()
-    allow_legacy: bool = args.allow_legacy_fallback
+    allow_legacy: bool       = args.allow_legacy_fallback
+    with_embeddings: bool    = args.with_embeddings
+    cache_path = in_path.parent / "embeddings_cache.json"
 
     if not in_path.exists():
         print(f"[ERROR] Input file not found: {in_path}", flush=True)
@@ -375,6 +470,22 @@ def main():
             f"  [warn] Contributors fallback: {fallback_counts['contributors_legacy']}/{len(records)} rows used current-state count.",
             flush=True,
         )
+
+    # ── optional: compute DeepSeek embeddings ──────────────────────────────
+    if with_embeddings:
+        print(f"[2b/4] Computing DeepSeek embeddings (PCA→{EMBEDDING_DIM}d)...", flush=True)
+        texts      = df["_embed_text"].tolist() if "_embed_text" in df.columns else [""] * len(df)
+        full_names = df["_full_name"].tolist()  if "_full_name" in df.columns else [f"r{i}" for i in range(len(df))]
+        emb_arr = compute_embeddings(texts, cache_path, full_names)
+        if emb_arr is not None:
+            for i, col in enumerate(EMBEDDING_FEATURE_NAMES):
+                df[col] = emb_arr[:, i]
+            print(f"  Added {EMBEDDING_DIM} embedding columns: {EMBEDDING_FEATURE_NAMES}", flush=True)
+        else:
+            print("  Embeddings unavailable — skipping (19-feature CSV will be written).", flush=True)
+
+    # Drop internal helper column before writing
+    df.drop(columns=["_embed_text"], errors="ignore", inplace=True)
 
     print("[3/4] Aligning columns to the 19-feature schema...", flush=True)
     if args.mode == "predict":

@@ -58,12 +58,15 @@ _GROUP_C = _GROUP_B + [
 ]
 
 # Group D: full 19-feature set (C + derived activity).  None ⇒ use all model
-# features detected at runtime.
+# features detected at runtime (excludes emb_ columns even if present).
+# Group E: D + DeepSeek embedding features (emb_0..emb_7).
+#   Only included when emb_ columns are detected in the CSV.
 ABLATION_GROUPS = {
-    "A_basic":    ("A: Language + Owner",                 _GROUP_A),
-    "B_activity": ("B: A + Early Activity (30d)",         _GROUP_B),
-    "C_readme":   ("C: B + Historical README (30d)",      _GROUP_C),
-    "D_all":      ("D: All Features (+ Derived)",         None),
+    "A_basic":    ("A: Language + Owner",                          _GROUP_A),
+    "B_activity": ("B: A + Early Activity (30d)",                  _GROUP_B),
+    "C_readme":   ("C: B + Historical README (30d)",               _GROUP_C),
+    "D_all":      ("D: All 19 Features (+ Derived)",               None),
+    # E_embed is added dynamically in run_ablation() if emb_ columns exist
 }
 
 
@@ -238,15 +241,26 @@ def build_models():
 
 def run_ablation(df: pd.DataFrame, y) -> dict:
     """Run RF on each ablation feature group; return metrics dict keyed by group id."""
-    all_feature_cols = [
-        c for c in df.columns if c not in META_COLS and not c.startswith("_")
+    # Separate base features (19) from embedding columns (emb_*)
+    base_feature_cols = [
+        c for c in df.columns
+        if c not in META_COLS and not c.startswith("_") and not c.startswith("emb_")
     ]
-    results = {}
+    emb_cols = [c for c in df.columns if c.startswith("emb_")]
 
-    for group_id, (label, col_list) in ABLATION_GROUPS.items():
-        # Resolve feature columns for this group
+    groups = dict(ABLATION_GROUPS)
+    # Dynamically add Group E when embedding columns are present
+    if emb_cols:
+        e_cols = base_feature_cols + emb_cols
+        groups["E_embed"] = (
+            f"E: D + DeepSeek Embedding ({len(emb_cols)}d)",
+            e_cols,
+        )
+
+    results = {}
+    for group_id, (label, col_list) in groups.items():
         if col_list is None:
-            cols = all_feature_cols          # Group D: everything
+            cols = base_feature_cols          # Group D: 19 base features only
         else:
             cols = [c for c in col_list if c in df.columns]
 
@@ -261,7 +275,7 @@ def run_ablation(df: pd.DataFrame, y) -> dict:
         }
         auc = metrics["auc"]["mean"]
         f1  = metrics["f1"]["mean"]
-        print(f"    {label:<40s}  n={len(cols):>2d}  AUC={auc:.4f}  F1={f1:.4f}", flush=True)
+        print(f"    {label:<48s}  n={len(cols):>2d}  AUC={auc:.4f}  F1={f1:.4f}", flush=True)
 
     return results
 
@@ -367,6 +381,71 @@ def run_shap(rf_model, X: np.ndarray, feature_names: List[str], n_samples: int =
     }
 
 
+def run_clustering(df: pd.DataFrame, y, feature_names: List[str]) -> dict:
+    """KMeans (k=4) on 19 features + PCA 2D scatter for visualization."""
+    try:
+        from sklearn.cluster import KMeans
+        from sklearn.decomposition import PCA
+        from sklearn.preprocessing import StandardScaler as _SS
+    except ImportError:
+        print("  [SKIP] sklearn.cluster not available", flush=True)
+        return {}
+
+    X = df[feature_names].values
+    scaler = _SS()
+    X_scaled = scaler.fit_transform(X)
+
+    k = 4
+    km = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=20, max_iter=300)
+    labels = km.fit_predict(X_scaled)
+
+    pca = PCA(n_components=2, random_state=RANDOM_STATE)
+    X_2d = pca.fit_transform(X_scaled)
+
+    key_features = ["commits_30d", "issues_30d", "prs_30d", "contributors_30d",
+                    "readme_len_30d", "activity_total_30d"]
+
+    clusters = []
+    for c in range(k):
+        mask = labels == c
+        n = int(mask.sum())
+        pos = int(y[mask].sum())
+        feat_means = {}
+        for feat in key_features:
+            if feat in feature_names:
+                idx = feature_names.index(feat)
+                feat_means[feat] = round(float(X[mask, idx].mean()), 3)
+        clusters.append({
+            "id": c,
+            "size": n,
+            "positive_count": pos,
+            "positive_rate": round(pos / n, 4) if n > 0 else 0.0,
+            "feature_means": feat_means,
+        })
+
+    clusters.sort(key=lambda x: -x["positive_rate"])
+    # Re-label by rank so cluster 0 = highest positive rate
+    for rank, c in enumerate(clusters):
+        c["id"] = rank
+
+    scatter = [
+        {"x": round(float(X_2d[i, 0]), 4), "y": round(float(X_2d[i, 1]), 4),
+         "c": int(labels[i]), "t": int(y[i])}
+        for i in range(len(y))
+    ]
+
+    result = {
+        "k": k,
+        "clusters": clusters,
+        "scatter": scatter,
+        "pca_variance_explained": [round(float(v), 4) for v in pca.explained_variance_ratio_],
+    }
+    rates = [f"{c['positive_rate']:.0%}" for c in clusters]
+    sizes = [c["size"] for c in clusters]
+    print(f"  KMeans k={k}: sizes={sizes}, positive_rates={rates}", flush=True)
+    return result
+
+
 def collect_oof_top10(df: pd.DataFrame, y, oof_probs: np.ndarray) -> List[dict]:
     """Return top-10 repos by OOF predicted probability with display metadata."""
     top_idx = np.argsort(oof_probs)[::-1][:10]
@@ -404,7 +483,7 @@ def main():
         print(f"[ERROR] features file not found: {in_path}", flush=True)
         sys.exit(1)
 
-    print(f"[1/8] Loading features from {in_path}", flush=True)
+    print(f"[1/9] Loading features from {in_path}", flush=True)
     X, y, feature_names, df = load_data(in_path)
     print(f"  {X.shape[0]} samples × {X.shape[1]} features | pos={y.sum()} neg={(y==0).sum()}", flush=True)
 
@@ -412,11 +491,12 @@ def main():
     output   = {
         "models": {}, "feature_importance": {}, "ablation": {},
         "time_split": None, "language_auc": {}, "shap": {}, "top10": [],
+        "clustering": {}, "oof_probs_rf": [],
         "meta": {},
     }
     oof_probs_rf = None
 
-    print(f"[2/8] Running {CV_FOLDS}-fold CV for each model (+ PR-AUC + P@K)...", flush=True)
+    print(f"[2/9] Running {CV_FOLDS}-fold CV for each model (+ PR-AUC + P@K)...", flush=True)
     for name, model in models.items():
         print(f"  Training {name}...", flush=True)
         metrics, oof_probs = cv_metrics_with_oof(model, X, y)
@@ -431,34 +511,38 @@ def main():
             flush=True,
         )
 
-    print("[3/8] Computing feature importance (RF + XGBoost + LR)...", flush=True)
+    print("[3/9] Computing feature importance (RF + XGBoost + LR)...", flush=True)
     for name in ["RF", "XGBoost"]:
         models[name].fit(X, y)
         output["feature_importance"][name] = feature_importance(models[name], feature_names)
     models["LR"].fit(X, y)
     output["feature_importance"]["LR"] = feature_importance(models["LR"], feature_names)
 
-    print("[4/8] Running ablation study (RF, 4 feature groups)...", flush=True)
+    print("[4/9] Running ablation study (RF, feature groups)...", flush=True)
     output["ablation"] = run_ablation(df, y)
 
-    print("[5/8] Running time-aware split (RF, chrono 80/20)...", flush=True)
+    print("[5/9] Running time-aware split (RF, chrono 80/20)...", flush=True)
     output["time_split"] = run_time_split(df, y, feature_names, output["models"]["RF"]["auc"]["mean"])
 
-    print("[6/8] Per-language AUC (RF, 5-fold)...", flush=True)
+    print("[6/9] Per-language AUC (RF, 5-fold)...", flush=True)
     output["language_auc"] = run_language_auc(df, y, feature_names)
 
-    print("[7/8] SHAP analysis (RF, TreeExplainer)...", flush=True)
+    print("[7/9] SHAP analysis (RF, TreeExplainer)...", flush=True)
     output["shap"] = run_shap(models["RF"], X, feature_names)
     if output["shap"].get("top10"):
         print(f"  Top feature: {output['shap']['top10'][0]['feature']}"
               f"  mean|SHAP|={output['shap']['top10'][0]['mean_abs_shap']:.4f}", flush=True)
 
-    print("[8/8] Collecting OOF Top-10 Rising Stars...", flush=True)
+    print("[8/9] Collecting OOF Top-10 Rising Stars...", flush=True)
     if oof_probs_rf is not None:
         output["top10"] = collect_oof_top10(df, y, oof_probs_rf)
+        output["oof_probs_rf"] = [round(float(p), 6) for p in oof_probs_rf]
         for item in output["top10"]:
             tag = "✓" if item["is_top20"] else "✗"
             print(f"  #{item['rank']} {item['full_name']:<45s} prob={item['prob']:.3f} stars={item['current_stars']} {tag}", flush=True)
+
+    print("[9/9] Running KMeans clustering (k=4) + PCA visualization...", flush=True)
+    output["clustering"] = run_clustering(df, y, feature_names)
 
     output["meta"] = {
         "n_samples":    int(X.shape[0]),

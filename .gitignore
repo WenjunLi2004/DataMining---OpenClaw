@@ -50,3 +50,6 @@ CLAUDE_REVIEW_CURRENT_STATE.md
 
 # reproduce.sh scratch output
 repro/
+
+# temporary full local reruns
+tmp/

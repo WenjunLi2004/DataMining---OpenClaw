@@ -254,6 +254,7 @@ openclaw-project/
 | 路径 | 命令 | 需要 | 适用场景 |
 |---|---|---|---|
 | 最简离线复现 | `bash reproduce.sh` | 仅 pip 依赖 | 验证数字、检查代码 |
+| 临时完整重跑 | `bash scripts/run_tmp_pipeline.sh` | 仅 pip 依赖 | 跳过采集，重跑特征/训练/诊断/洞察/报告到 `tmp/` |
 | 完整系统复现 | `bash setup_openclaw.sh` + orchestrator | `DEEPSEEK_API_KEY` 可选（仅 LLM 洞察需要） | 跑 pipeline + Console |
 
 ---
@@ -295,7 +296,40 @@ python3 skills/diagnostic-builder/diagnose.py --results repro/model_results.json
 ```
 > 注意：新版 `extract.py` 的默认 `--input` 已指向 `repos_raw_500_strict.jsonl`；这里显式传参只是为了让复现命令更清楚。
 
-### ③ 完整系统复现（含洞察 + 报告 + Console）
+### ③ 临时完整重跑（跳过采集，结果进 tmp）
+
+如果想强制执行除数据采集以外的完整本地链路，同时不污染正式 `data/` 和 `reports/`，运行：
+
+```bash
+bash scripts/run_tmp_pipeline.sh
+```
+
+它固定读取 `data/repos_raw_500_strict.jsonl`，然后依次重跑：
+
+```
+特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 报告生成
+```
+
+默认输出目录为 `tmp/pipeline_latest/`，每次运行前会自动清空这个目录：
+
+```
+tmp/pipeline_latest/features.csv
+tmp/pipeline_latest/model_results.json
+tmp/pipeline_latest/diagnostic_summary.json
+tmp/pipeline_latest/reports/INSIGHTS.md
+tmp/pipeline_latest/reports/latest_final.html
+```
+
+如果想保留多次实验结果，可以传入自定义目录：
+
+```bash
+bash scripts/run_tmp_pipeline.sh tmp/run_01
+bash scripts/run_tmp_pipeline.sh tmp/run_02
+```
+
+`tmp/` 已加入 `.gitignore`，这些临时结果不会进入仓库。
+
+### ④ 完整系统复现（含洞察 + 报告 + Console）
 
 完整链路里的编排器默认读写 `~/openclaw-project/`，从 `~/.openclaw/workspace/skills/` 找各 Agent。
 `setup_openclaw.sh` 会自动完成环境搭建：

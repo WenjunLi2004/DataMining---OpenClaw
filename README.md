@@ -250,34 +250,63 @@ openclaw-project/
 
 ## 8. 如何复现 / 运行
 
-> ⚠️ **路径说明**：运行时编排器默认从 `~/.openclaw/workspace/skills/` 找各 Agent。
-> 本仓库把这些技能也复制到了 `skills/` 方便阅读；partner 要实际运行 pipeline，
-> 需要把 `skills/*` 放到 `~/.openclaw/workspace/skills/` 下（或相应调整脚本里的路径）。
+### ① 最简复现（推荐，已验证 bit-exact）
+
+克隆后一条命令，从固定历史快照重算「特征 → 模型 → 事实诊断」，并自动和已提交结果对比：
 
 ```bash
-# 0) 依赖：Python 3 + scikit-learn / xgboost / pandas / numpy / joblib（建模），requests（采集）
-#    采集需要 GITHUB_TOKEN；编排器/洞察需要 DEEPSEEK_API_KEY
-export DEEPSEEK_API_KEY=sk-...
-export GITHUB_TOKEN=ghp_...        # 仅在需要重新采集时
-
-# 1) 跑完整 pipeline（编排器自动按依赖调度，缺产物才重算）
-python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py "开始分析"
-
-# 2) 演示用：保留固定历史原始数据，强制重算本地分析链路（推荐复现方式）
-python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-local "开始分析"
-#   执行顺序：feature-extractor → model-trainer → diagnostic-builder → insight-analysis → report-generator
-
-# 3) 单步直接跑（举例）
-python3 ~/.openclaw/workspace/skills/repo-collector/collect.py --target 500 --start 2025-03-01 --end 2025-04-30
-python3 ~/.openclaw/workspace/skills/model-trainer/train.py
-
-# 4) 启动 OpenClaw Console
-cd openclaw-project && python3 -m http.server 8080 --bind 127.0.0.1
-#   浏览器打开 http://127.0.0.1:8080/dashboard/
+git clone https://github.com/WenjunLi2004/DataMining---OpenClaw.git
+cd DataMining---OpenClaw
+pip install -r requirements.txt
+bash reproduce.sh
 ```
 
-**复现注意**：`data/repos_raw_500_strict.jsonl` 是**固定历史回测快照**，请勿重新采集覆盖
-（GitHub Search 结果不确定，覆盖后无法严格复现既有实验）。只重算下游分析即可得到相同指标。
+预期输出（在 numpy/pandas/scikit-learn/xgboost 较新版本下均一致）：
+
+```
+metric          committed  reproduced   match
+LR.auc             0.8830      0.8830   ✓
+RF.pr_auc          0.6617      0.6617   ✓
+XGBoost.auc        0.8759      0.8759   ✓
+✅ 复现成功，数字与仓库一致。
+```
+
+- **不需要任何 API key，也不联网**——用的是仓库里固定的 `data/repos_raw_500_strict.jsonl`。
+- 结果写到 `repro/`（已被 `.gitignore` 忽略），**不会改动任何已提交文件**。
+- ⚠️ 这份原始采集数据是**固定回测快照，请勿重新采集覆盖**（GitHub Search 不确定，覆盖后无法严格复现）。
+
+### ② 手动分步复现（等价于 reproduce.sh）
+
+```bash
+python3 skills/feature-extractor/extract.py  --input data/repos_raw_500_strict.jsonl \
+        --output repro/features.csv --artifacts-dir repro/artifacts
+python3 skills/model-trainer/train.py        --input repro/features.csv \
+        --output repro/model_results.json --artifacts-dir repro/artifacts
+python3 skills/diagnostic-builder/diagnose.py --results repro/model_results.json \
+        --features repro/features.csv --output repro/diagnostic_summary.json
+```
+> 注意：`extract.py` 的默认 `--input` 指向旧文件 `repos_raw_500.jsonl`，复现时**务必显式传** `repos_raw_500_strict.jsonl`。
+
+### ③ 跑完整 OpenClaw 编排器（含洞察 + 报告 + Console）
+
+完整链路里的 `diagnose / insight / report / orchestrator` 默认读写 `~/openclaw-project/`，
+且编排器从 `~/.openclaw/workspace/skills/` 找各 Agent。所以跑**完整** pipeline 建议把仓库放到 `~/openclaw-project`：
+
+```bash
+# 1) 克隆到 ~/openclaw-project（这样所有默认路径都对得上）
+git clone https://github.com/WenjunLi2004/DataMining---OpenClaw.git ~/openclaw-project
+# 2) 让编排器找得到技能
+mkdir -p ~/.openclaw/workspace && cp -r ~/openclaw-project/skills ~/.openclaw/workspace/skills
+# 3) 可选：洞察用 LLM（不设则回退确定性模板，仍可跑完）
+export DEEPSEEK_API_KEY=sk-...
+# 4) 保留固定原始数据，强制重算本地分析链路
+python3 ~/.openclaw/workspace/skills/pipeline-orchestrator/run.py --force-local "开始分析"
+# 5) 启动 OpenClaw Console
+cd ~/openclaw-project && python3 -m http.server 8080 --bind 127.0.0.1   # http://127.0.0.1:8080/dashboard/
+```
+> 只有在需要**重新采集**时才需要 `GITHUB_TOKEN`（不推荐——会破坏固定快照的可复现性）。
+
+**依赖**：Python 3.10+ 与 `requirements.txt`（numpy / pandas / scikit-learn / xgboost / joblib；`openai`、`python-pptx` 为可选）。
 
 ---
 

@@ -1,0 +1,13 @@
+# OpenClaw · reproduction dependencies
+# Verified working on numpy 2.4 / pandas 3.0 / scikit-learn 1.8 / xgboost 3.2,
+# but the floors below are enough to reproduce the backtest metrics exactly.
+
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.3
+xgboost>=2.0
+joblib>=1.3
+
+# Optional — only needed for specific steps:
+openai>=1.0        # insight-analysis LLM step (falls back to a deterministic template if absent / no API key)
+python-pptx>=0.6   # only if you want to rebuild the presentation .pptx

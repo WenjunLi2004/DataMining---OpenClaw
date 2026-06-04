@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-03T07:07:56.517842+00:00",
+  "generated_at": "2026-06-04T12:01:36.435783+00:00",
   "inputs": {
-    "model_results": "data/model_results.json",
-    "features": "data/features.csv"
+    "model_results": "data\\model_results.json",
+    "features": "data\\features.csv"
   },
   "task": {
     "mode": "historical_backtest",
@@ -45,16 +45,16 @@
         "precision_at_20": 0.75
       },
       "RF": {
-        "auc": 0.881216,
-        "auc_std": 0.02324,
-        "pr_auc": 0.661715,
-        "pr_auc_std": 0.088974,
-        "f1": 0.540222,
-        "precision": 0.631987,
-        "recall": 0.489048,
-        "accuracy": 0.836,
-        "precision_at_10": 0.7,
-        "precision_at_20": 0.85
+        "auc": 0.887922,
+        "auc_std": 0.022334,
+        "pr_auc": 0.651676,
+        "pr_auc_std": 0.086697,
+        "f1": 0.629284,
+        "precision": 0.584595,
+        "recall": 0.702857,
+        "accuracy": 0.838,
+        "precision_at_10": 0.8,
+        "precision_at_20": 0.65
       },
       "XGBoost": {
         "auc": 0.875901,
@@ -66,16 +66,16 @@
         "recall": 0.684286,
         "accuracy": 0.818,
         "precision_at_10": 0.8,
-        "precision_at_20": 0.75
+        "precision_at_20": 0.8
       }
     },
     "best_auc": {
-      "model": "LR",
-      "value": 0.882965
+      "model": "RF",
+      "value": 0.887922
     },
     "best_pr_auc": {
       "model": "RF",
-      "value": 0.661715
+      "value": 0.651676
     },
     "best_f1": {
       "model": "LR",
@@ -93,10 +93,10 @@
         "details": "precision=0.513, recall=0.842, p@10=0.80"
       },
       "RF": {
-        "high_precision_low_recall": true,
+        "high_precision_low_recall": false,
         "good_for_shortlist": true,
-        "precision_minus_recall": 0.142939,
-        "details": "precision=0.632, recall=0.489, p@10=0.70"
+        "precision_minus_recall": -0.118262,
+        "details": "precision=0.585, recall=0.703, p@10=0.80"
       },
       "XGBoost": {
         "high_precision_low_recall": false,
@@ -182,8 +182,8 @@
         "n_positive": 22,
         "positive_rate": 0.2222,
         "positive_rate_vs_global": 0.0182,
-        "auc": 0.664062,
-        "auc_std": 0.189729,
+        "auc": 0.648813,
+        "auc_std": 0.152763,
         "note": null
       },
       "JavaScript": {
@@ -191,8 +191,8 @@
         "n_positive": 2,
         "positive_rate": 0.02,
         "positive_rate_vs_global": -0.184,
-        "auc": 0.704082,
-        "auc_std": 0.295918,
+        "auc": 0.887755,
+        "auc_std": 0.112245,
         "note": null
       },
       "Other": {
@@ -209,8 +209,8 @@
         "n_positive": 62,
         "positive_rate": 0.62,
         "positive_rate_vs_global": 0.416,
-        "auc": 0.673031,
-        "auc_std": 0.09145,
+        "auc": 0.674416,
+        "auc_std": 0.102738,
         "note": null
       },
       "Rust": {
@@ -218,8 +218,8 @@
         "n_positive": 16,
         "positive_rate": 0.1616,
         "positive_rate_vs_global": -0.0424,
-        "auc": 0.879596,
-        "auc_std": 0.070476,
+        "auc": 0.884865,
+        "auc_std": 0.03063,
         "note": null
       },
       "TypeScript": {
@@ -232,101 +232,60 @@
         "note": "single_class"
       }
     },
-    "mean_auc_available_languages": 0.730193,
+    "mean_auc_available_languages": 0.773962,
     "anomaly": {
       "language": "Go",
       "reason": "lowest reliable per-language AUC",
-      "auc": 0.664062,
+      "auc": 0.648813,
       "positive_rate": 0.2222,
       "positive_rate_vs_global": 0.0182,
-      "auc_drop_below_language_mean": 0.066131
+      "auc_drop_below_language_mean": 0.125149
     }
   },
   "feature_importance": {
     "top10_gini": [
       {
         "feature": "lang_Python",
-        "importance": 0.1610864388108186
-      },
-      {
-        "feature": "activity_total_30d",
-        "importance": 0.1354890890779243
+        "importance": 0.1862298574942546
       },
       {
         "feature": "commits_30d",
-        "importance": 0.10571391115980153
-      },
-      {
-        "feature": "lang_JavaScript",
-        "importance": 0.09578582496940857
-      },
-      {
-        "feature": "readme_len_30d",
-        "importance": 0.08646978253828684
-      },
-      {
-        "feature": "lang_TypeScript",
-        "importance": 0.08097352127926699
-      },
-      {
-        "feature": "issues_30d",
-        "importance": 0.07425201717114789
-      },
-      {
-        "feature": "commits_per_contributor_30d",
-        "importance": 0.06163530209576336
-      },
-      {
-        "feature": "prs_30d",
-        "importance": 0.05405935842215181
-      },
-      {
-        "feature": "is_org",
-        "importance": 0.040611455954510205
-      }
-    ],
-    "top10_shap": [
-      {
-        "feature": "lang_Python",
-        "mean_abs_shap": 0.1440345834385703
-      },
-      {
-        "feature": "lang_TypeScript",
-        "mean_abs_shap": 0.05156653831410939
-      },
-      {
-        "feature": "issues_30d",
-        "mean_abs_shap": 0.04894474466756042
+        "importance": 0.16424490716699966
       },
       {
         "feature": "activity_total_30d",
-        "mean_abs_shap": 0.046685841517210606
-      },
-      {
-        "feature": "readme_len_30d",
-        "mean_abs_shap": 0.04109721602130821
-      },
-      {
-        "feature": "commits_per_contributor_30d",
-        "mean_abs_shap": 0.03223661420185636
-      },
-      {
-        "feature": "commits_30d",
-        "mean_abs_shap": 0.031204735535754625
+        "importance": 0.10167980577258698
       },
       {
         "feature": "lang_JavaScript",
-        "mean_abs_shap": 0.030331518587020524
+        "importance": 0.09978889045120928
       },
       {
-        "feature": "prs_30d",
-        "mean_abs_shap": 0.025550508179423365
+        "feature": "lang_TypeScript",
+        "importance": 0.08599454116733918
+      },
+      {
+        "feature": "commits_per_contributor_30d",
+        "importance": 0.08403746189608625
+      },
+      {
+        "feature": "readme_len_30d",
+        "importance": 0.07173742744274605
+      },
+      {
+        "feature": "issues_30d",
+        "importance": 0.07060679689671602
+      },
+      {
+        "feature": "lang_Go",
+        "importance": 0.043134505381523344
       },
       {
         "feature": "prs_per_issue_30d",
-        "mean_abs_shap": 0.016478872624232296
+        "importance": 0.028753022236563286
       }
     ],
+    "top10_shap": [],
     "top10_xgboost": [
       {
         "feature": "lang_Python",
@@ -362,7 +321,7 @@
       },
       {
         "feature": "prs_30d",
-        "importance": 0.03178317844867706
+        "importance": 0.031783174723386765
       },
       {
         "feature": "contributors_30d",
@@ -370,10 +329,7 @@
       }
     ],
     "top10_lr_abs_coef": [],
-    "disagreements": [
-      "RF Gini top-5 only: commits_30d, lang_JavaScript",
-      "SHAP top-5 only: issues_30d, lang_TypeScript"
-    ],
+    "disagreements": [],
     "interpretation_warning": "Gini can over-weight continuous numeric features; SHAP is safer for interpretation."
   },
   "feature_correlations": {
@@ -450,67 +406,67 @@
         "id": "A_basic",
         "label": "A: Language + Owner",
         "n_features": 7,
-        "auc": 0.856197,
-        "f1": 0.50249,
-        "precision": 0.418932,
-        "recall": 0.682381
+        "auc": 0.855715,
+        "f1": 0.512873,
+        "precision": 0.424118,
+        "recall": 0.702381
       },
       {
         "id": "B_activity",
         "label": "B: A + Early Activity (30d)",
         "n_features": 11,
-        "auc": 0.869813,
-        "f1": 0.524019,
-        "precision": 0.560887,
-        "recall": 0.498571
+        "auc": 0.871698,
+        "f1": 0.607241,
+        "precision": 0.55625,
+        "recall": 0.684286
       },
       {
         "id": "C_readme",
         "label": "C: B + Historical README (30d)",
         "n_features": 15,
-        "auc": 0.888453,
-        "f1": 0.555579,
-        "precision": 0.656813,
-        "recall": 0.508095
+        "auc": 0.886602,
+        "f1": 0.606295,
+        "precision": 0.567304,
+        "recall": 0.674762
       },
       {
         "id": "D_all",
-        "label": "D: All Features (+ Derived)",
+        "label": "D: All 19 Features (+ Derived)",
         "n_features": 19,
-        "auc": 0.881216,
-        "f1": 0.540222,
-        "precision": 0.631987,
-        "recall": 0.489048
+        "auc": 0.887922,
+        "f1": 0.629284,
+        "precision": 0.584595,
+        "recall": 0.702857
       }
     ],
     "jumps": [
       {
         "from": "A_basic",
         "to": "B_activity",
-        "delta_auc": 0.013616
+        "delta_auc": 0.015983
       },
       {
         "from": "B_activity",
         "to": "C_readme",
-        "delta_auc": 0.01864
+        "delta_auc": 0.014904
       },
       {
         "from": "C_readme",
         "to": "D_all",
-        "delta_auc": -0.007237
+        "delta_auc": 0.00132
       }
     ],
     "biggest_jump": {
-      "from": "B_activity",
-      "to": "C_readme",
-      "delta_auc": 0.01864
+      "from": "A_basic",
+      "to": "B_activity",
+      "delta_auc": 0.015983
     },
     "smallest_jump": {
       "from": "C_readme",
       "to": "D_all",
-      "delta_auc": -0.007237
+      "delta_auc": 0.00132
     },
-    "interpretation_hint": "historical_readme_dominant"
+    "interpretation_hint": "early_activity_dominant"
   },
   "validation": {
     "time_split": {
@@ -519,13 +475,13 @@
       "test_size": 100,
       "split_date": "2025-04-18",
       "test_positive_rate": 0.15,
-      "auc": 0.881569,
-      "pr_auc": 0.581807,
-      "f1": 0.5,
-      "precision_at_10": 0.6,
+      "auc": 0.883137,
+      "pr_auc": 0.547222,
+      "f1": 0.585366,
+      "precision_at_10": 0.7,
       "precision_at_20": 0.5,
-      "random_cv_auc": 0.881216,
-      "auc_gap": 0.000352
+      "random_cv_auc": 0.887922,
+      "auc_gap": -0.004784
     }
   },
   "feature_provenance": {
@@ -545,8 +501,8 @@
         "n_positive": 62,
         "positive_rate": 0.62,
         "positive_rate_vs_global": 0.416,
-        "auc": 0.673031,
-        "auc_std": 0.09145,
+        "auc": 0.674416,
+        "auc_std": 0.102738,
         "note": null
       },
       "implication": "Per-language Python AUC may be depressed by class distribution shift and within-language homogeneity."

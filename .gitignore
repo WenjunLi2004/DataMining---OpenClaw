@@ -48,6 +48,10 @@ CLAUDE_REVIEW_CURRENT_STATE.md
 # Claude Code local settings (tool config, not a project deliverable)
 .claude/
 
+# API keys — never commit
+.env
+*.env
+
 # reproduce.sh scratch output
 repro/
 

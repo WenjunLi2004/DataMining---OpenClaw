@@ -36,6 +36,14 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 import pandas as pd
 
+# Load .env before reading env vars
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).parent.parent))
+    from _dotenv import load_dotenv as _load_dotenv
+    _load_dotenv(Path(__file__).parent)
+except Exception:
+    pass
 
 LANGUAGES = ["Python", "JavaScript", "Go", "Rust", "TypeScript"]
 

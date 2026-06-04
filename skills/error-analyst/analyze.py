@@ -27,6 +27,17 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+# Load .env before reading env vars (supports OpenRouter and DeepSeek direct)
+try:
+    import sys as _sys, pathlib as _pl
+    _sys.path.insert(0, str(_pl.Path(__file__).parent.parent))
+    from _dotenv import load_dotenv as _load_dotenv
+    _loaded = _load_dotenv(_pl.Path(__file__).parent)
+    if _loaded:
+        print(f"  [env] loaded {_loaded}", flush=True)
+except Exception:
+    pass
+
 # ── thresholds ──────────────────────────────────────────────────────────────
 FP_PROB_THRESHOLD  = 0.65   # predicted ≥ this AND actually negative → FP
 FN_PROB_THRESHOLD  = 0.35   # predicted ≤ this AND actually positive → FN

@@ -19,6 +19,15 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
+# Load .env before reading env vars (supports OpenRouter and DeepSeek direct)
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).parent.parent))
+    from _dotenv import load_dotenv as _load_dotenv
+    _load_dotenv(Path(__file__).parent)
+except Exception:
+    pass
+
 DEFAULT_DIAGNOSTIC = Path.home() / "openclaw-project/data/diagnostic_summary.json"
 DEFAULT_OUTPUT = Path.home() / "openclaw-project/reports/INSIGHTS.md"
 OPENCLAW_CFG = Path.home() / ".openclaw/openclaw.json"

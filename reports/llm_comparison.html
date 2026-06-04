@@ -98,9 +98,9 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
   <table>
     <thead><tr><th>模型</th><th>服务商</th><th>定位</th><th>调用方式</th></tr></thead>
     <tbody>
-      <tr><td><span class="badge badge-ds">DeepSeek V3</span></td><td>DeepSeek / OpenRouter</td><td>代码与推理强模型</td><td><code>deepseek/deepseek-chat</code></td></tr>
-      <tr><td><span class="badge badge-kimi">Kimi K2</span></td><td>Moonshot / OpenRouter</td><td>长上下文、结构化输出</td><td><code>moonshotai/kimi-k2</code></td></tr>
-      <tr><td><span class="badge badge-qwen">Qwen3 Max</span></td><td>阿里云 / OpenRouter</td><td>多语言、精确引用</td><td><code>qwen/qwen3.7-max</code></td></tr>
+      <tr><td><span class="badge badge-ds">DeepSeek V4 Pro</span></td><td>DeepSeek / OpenRouter</td><td>DeepSeek 最新旗舰，代码与推理强模型</td><td><code>deepseek/deepseek-v4-pro</code></td></tr>
+      <tr><td><span class="badge badge-kimi">Kimi K2</span></td><td>Moonshot AI / OpenRouter</td><td>Moonshot 最新旗舰，长上下文、结构化输出</td><td><code>moonshotai/kimi-k2</code></td></tr>
+      <tr><td><span class="badge badge-qwen">Qwen3.7 Max</span></td><td>阿里云通义 / OpenRouter</td><td>Qwen3 系列旗舰，多语言、精确引用</td><td><code>qwen/qwen3.7-max</code></td></tr>
     </tbody>
   </table>
   <div class="callout">
@@ -113,7 +113,7 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
   <h2 id="metrics"><span class="n">2</span>量化指标对比</h2>
   <div class="cmp">
     <div class="cmp-card ds">
-      <h4><span class="badge badge-ds">DeepSeek V3</span></h4>
+      <h4><span class="badge badge-ds">DeepSeek V4 Pro</span></h4>
       <div class="metric-big">2 / 146</div>
       <p>未通过校验数 / 总引用数字数</p>
       <p>准确率 <b>98.6%</b></p>
@@ -125,7 +125,7 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
       <p>准确率 <b class="best">100%</b></p>
     </div>
     <div class="cmp-card qwen">
-      <h4><span class="badge badge-qwen">Qwen3 Max</span></h4>
+      <h4><span class="badge badge-qwen">Qwen3.7 Max</span></h4>
       <div class="metric-big">0 / 108</div>
       <p>未通过校验数 / 总引用数字数</p>
       <p>准确率 <b class="best">100%</b></p>
@@ -134,9 +134,9 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
   <table>
     <thead><tr>
       <th>维度</th>
-      <th><span class="badge badge-ds">DeepSeek V3</span></th>
+      <th><span class="badge badge-ds">DeepSeek V4 Pro</span></th>
       <th><span class="badge badge-kimi">Kimi K2</span></th>
-      <th><span class="badge badge-qwen">Qwen3 Max</span></th>
+      <th><span class="badge badge-qwen">Qwen3.7 Max</span></th>
     </tr></thead>
     <tbody>
       <tr><td>引用数字总量</td><td class="num best">146（最多）</td><td class="num">77（最少）</td><td class="num">108</td></tr>
@@ -202,7 +202,7 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
   <h2 id="style"><span class="n">4</span>风格特点总结</h2>
   <div class="cmp">
     <div class="cmp-card ds">
-      <h4><span class="badge badge-ds">DeepSeek V3</span></h4>
+      <h4><span class="badge badge-ds">DeepSeek V4 Pro</span></h4>
       <p><b>风格：</b>学术论文型</p>
       <p><b>优势：</b>分析最深入，会做二次推导（如计算均值差）；信息密度最高</p>
       <p><b>劣势：</b>有 2 个数字略偏差；篇幅最长，有重复信息</p>
@@ -216,7 +216,7 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
       <p><b>适合场景：</b>需要快速决策、给非技术人员看的汇报</p>
     </div>
     <div class="cmp-card qwen">
-      <h4><span class="badge badge-qwen">Qwen3 Max</span></h4>
+      <h4><span class="badge badge-qwen">Qwen3.7 Max</span></h4>
       <p><b>风格：</b>精确审计型</p>
       <p><b>优势：</b>100% 准确；唯一主动核查数据元数据；引用精确到小数点后 6 位</p>
       <p><b>劣势：</b>格式较模板化，洞察深度居中</p>
@@ -226,7 +226,7 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
 
   <!-- 5. 独特发现 -->
   <h2 id="unique"><span class="n">5</span>各模型独特发现</h2>
-  <h3><span class="badge badge-ds">DeepSeek V3</span> 独有观察</h3>
+  <h3><span class="badge badge-ds">DeepSeek V4 Pro</span> 独有观察</h3>
   <ul>
     <li>主动计算了 Python AUC 与"非 Python 语言平均 AUC"之间的差距（0.130），而原始数据中没有这个数字——说明它在做真正的推理，而不只是复述</li>
     <li>指出派生特征的冗余："从 C 组到 D 组仅 +0.0013 AUC，特征可减法"</li>
@@ -237,7 +237,7 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
     <li>唯一使用 <b>P0/P1/P2 优先级框架</b>，把学术建议转化为产品迭代计划</li>
     <li>明确指出 <code>readme_len_30d</code> 与 <code>commits_30d</code> 的相关系数仅 0.215，说明 README 特征是<b>独立信号</b>——这是对特征间关系的正面论证，其他模型只聚焦高相关问题</li>
   </ul>
-  <h3><span class="badge badge-qwen">Qwen3 Max</span> 独有观察</h3>
+  <h3><span class="badge badge-qwen">Qwen3.7 Max</span> 独有观察</h3>
   <ul>
     <li>唯一主动说明 SHAP 数据缺失："top10_shap 为空，无法从边际贡献角度验证"——说明它读取了 JSON 结构，而不只是数字</li>
     <li>注意到时间切分测试集正例率下降（0.15 vs 全局 0.204），并提出了有价值的假设："近期仓库 star 增长趋势是否整体放缓"</li>
@@ -265,19 +265,19 @@ footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:v
 
   <div class="callout g">
     <b>核心结论：三个模型体现了不同的权衡策略，没有绝对最优。</b><br><br>
-    <b>DeepSeek V3</b>："宁可多说，不怕偏差"——信息最密集，推理最深，2/146 的偏差率可接受，适合探索性分析。<br>
+    <b>DeepSeek V4 Pro</b>："宁可多说，不怕偏差"——信息最密集，推理最深，2/146 的偏差率可接受，适合探索性分析。<br>
     <b>Kimi K2</b>："只说有把握的"——数字最保守（仅引用 77 个），全部准确，结构最清晰，适合向非技术决策者汇报。<br>
-    <b>Qwen3 Max</b>："既要准确，也要溯源"——居中方案，唯一主动审计数据来源，精确引用，适合需要可审计性的场景。
+    <b>Qwen3.7 Max</b>："既要准确，也要溯源"——居中方案，唯一主动审计数据来源，精确引用，适合需要可审计性的场景。
   </div>
 
   <div class="callout">
     <b>对 OpenClaw 框架的启示：</b>这一对比验证了 OpenClaw 设计原则的必要性——
-    即使是最优秀的大模型（DeepSeek V3 98.6% 准确率），在 146 次引用中仍有 2 次偏差。
+    即使是最优秀的大模型（DeepSeek V4 Pro 98.6% 准确率），在 146 次引用中仍有 2 次偏差。
     在数据挖掘任务中，<b>先算事实、再让大模型基于事实推理</b>的受约束架构，
     能将模型的"编造"风险从不可控降低到可量化的程度。
   </div>
 
-  <footer>OpenClaw 大模型对比实验 · 输入：diagnostic_summary.json · 模型：DeepSeek V3 / Kimi K2 / Qwen3 Max · OpenRouter API</footer>
+  <footer>OpenClaw 大模型对比实验 · 输入：diagnostic_summary.json · 模型：deepseek/deepseek-v4-pro · moonshotai/kimi-k2 · qwen/qwen3.7-max · via OpenRouter API</footer>
 </main>
 </div>
 </body>

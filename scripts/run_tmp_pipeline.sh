@@ -66,7 +66,15 @@ python3 "$ROOT/skills/insight-analysis/analyze.py" \
   --mode template
 
 echo
-echo "［5/5］报告生成"
+echo "［5/6］错误案例分析"
+python3 "$ROOT/skills/error-analyst/analyze.py" \
+  --features "$OUT/features.csv" \
+  --results  "$OUT/model_results.json" \
+  --out-json "$OUT/error_analysis.json" \
+  --out-html "$REPORTS/error_analysis.html"
+
+echo
+echo "［6/6］报告生成"
 python3 "$ROOT/skills/report-generator/generate.py" \
   --results "$OUT/model_results.json" \
   --features "$OUT/features.csv" \
@@ -76,8 +84,9 @@ python3 "$ROOT/skills/report-generator/generate.py" \
 
 echo
 echo "✅ tmp pipeline complete"
-echo "  features:   $OUT/features.csv"
-echo "  results:    $OUT/model_results.json"
-echo "  diagnostic: $OUT/diagnostic_summary.json"
-echo "  insights:   $REPORTS/INSIGHTS.md"
-echo "  report:     $REPORTS/latest_final.html"
+echo "  features:       $OUT/features.csv"
+echo "  results:        $OUT/model_results.json"
+echo "  diagnostic:     $OUT/diagnostic_summary.json"
+echo "  insights:       $REPORTS/INSIGHTS.md"
+echo "  error_analysis: $REPORTS/error_analysis.html"
+echo "  report:         $REPORTS/latest_final.html"

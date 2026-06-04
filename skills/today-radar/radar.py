@@ -103,6 +103,114 @@ def run_feature_extractor(raw_path: Path, features_path: Path, artifacts_dir: Pa
         raise RuntimeError(f"feature extractor failed with exit code {result.returncode}")
 
 
+FEATURE_LABEL_CN: dict[str, str] = {
+    "commits_30d":              "前30天提交数",
+    "issues_30d":               "前30天Issue数",
+    "prs_30d":                  "前30天PR数",
+    "contributors_30d":         "前30天贡献者数",
+    "readme_len_30d":           "README长度",
+    "has_readme_30d":           "有README",
+    "readme_has_image_30d":     "README含图片",
+    "readme_has_demo_url_30d":  "README含演示链接",
+    "activity_total_30d":       "前30天总活跃度",
+    "commits_per_contributor_30d": "人均提交数",
+    "prs_per_issue_30d":        "PR/Issue比",
+    "has_pr_activity_30d":      "有PR活动",
+    "is_org":                   "组织账号维护",
+    "lang_Python":              "Python项目",
+    "lang_JavaScript":          "JavaScript项目",
+    "lang_Go":                  "Go项目",
+    "lang_Rust":                "Rust项目",
+    "lang_TypeScript":          "TypeScript项目",
+    "lang_Other":               "其他语言",
+}
+
+# Boolean features (value > 0 means "yes", no ratio needed)
+_BOOL_FEATURES = {
+    "has_readme_30d", "readme_has_image_30d", "readme_has_demo_url_30d",
+    "has_pr_activity_30d", "is_org",
+    "lang_Python", "lang_JavaScript", "lang_Go", "lang_Rust",
+    "lang_TypeScript", "lang_Other",
+}
+
+
+def build_shap_explanation_cn(
+    row: pd.Series,
+    model,
+    feature_names: list[str],
+    stats: dict[str, Any],
+) -> str:
+    """Return a concise Chinese explanation of why this repo scored high/low.
+
+    Uses SHAP TreeExplainer when available; falls back to threshold heuristic.
+    """
+    import numpy as _np
+
+    def _heuristic_explanation() -> str:
+        """Simple threshold-based fallback (no shap dependency)."""
+        signals: list[str] = []
+        for feat in ["commits_30d", "contributors_30d", "issues_30d",
+                     "readme_len_30d", "readme_has_demo_url_30d", "is_org",
+                     "has_pr_activity_30d"]:
+            val = feature_value(row, feat)
+            label = FEATURE_LABEL_CN.get(feat, feat)
+            if feat in _BOOL_FEATURES:
+                if val > 0:
+                    signals.append(label)
+            else:
+                p75 = stats.get(feat, {}).get("p75")
+                med = stats.get(feat, {}).get("median", 0)
+                if p75 and val >= float(p75) and val > 0:
+                    if med and float(med) > 0:
+                        ratio = val / float(med)
+                        signals.append(f"{label} {val:.0f}（均值{ratio:.1f}倍）")
+                    else:
+                        signals.append(f"{label} {val:.0f}")
+        return "、".join(signals[:4]) if signals else "综合多个早期信号"
+
+    try:
+        import shap as _shap
+        import numpy as _np2
+
+        X_row = _np2.array([[feature_value(row, f) for f in feature_names]])
+        explainer = _shap.TreeExplainer(model)
+        shap_vals = explainer.shap_values(X_row)
+
+        if isinstance(shap_vals, list):
+            sv = _np2.array(shap_vals[1][0]) if len(shap_vals) > 1 else _np2.array(shap_vals[0][0])
+        elif hasattr(shap_vals, "ndim") and shap_vals.ndim == 3:
+            sv = shap_vals[0, :, 1]
+        else:
+            sv = _np2.array(shap_vals[0])
+
+        # Top positive contributors to the score
+        top_idx = _np2.argsort(sv)[::-1][:5]
+        signals: list[str] = []
+        for i in top_idx:
+            if sv[i] <= 0.005:
+                break
+            feat  = feature_names[i]
+            val   = feature_value(row, feat)
+            label = FEATURE_LABEL_CN.get(feat, feat)
+            if feat in _BOOL_FEATURES:
+                if val > 0:
+                    signals.append(label)
+            elif val > 0:
+                med = stats.get(feat, {}).get("median", 0)
+                if med and float(med) > 0:
+                    ratio = val / float(med)
+                    signals.append(f"{label} {val:.0f}（均值{ratio:.1f}倍）")
+                else:
+                    signals.append(f"{label} {val:.0f}")
+            if len(signals) >= 3:
+                break
+
+        return "、".join(signals) if signals else _heuristic_explanation()
+
+    except Exception:
+        return _heuristic_explanation()
+
+
 def feature_value(row: pd.Series, name: str) -> float:
     try:
         return float(row.get(name, 0) or 0)
@@ -225,6 +333,7 @@ def score_features(features_path: Path, artifacts_dir: Path, top_k: int) -> list
     for rank, (_, row) in enumerate(df.iterrows(), 1):
         score = float(row["_attention_score"])
         reasons, risks, _ = build_reasons(row, stats)
+        explanation_cn = build_shap_explanation_cn(row, model, feature_names, stats)
         candidates.append({
             "rank": rank,
             "full_name": str(row.get("_full_name", "")),
@@ -234,6 +343,7 @@ def score_features(features_path: Path, artifacts_dir: Path, top_k: int) -> list
             "current_stars": int(row.get("_current_stars", 0) or 0),
             "created_at": str(row.get("_created_at", "")),
             "action": action_for_score(score, thresholds),
+            "explanation_cn": explanation_cn,
             "reasons": reasons,
             "risks": risks,
             "signals": {
@@ -291,7 +401,8 @@ def write_html_report(path: Path, json_payload: dict[str, Any]):
           <div class="main">
             <h3><a href="{esc(item['url'])}" target="_blank">{esc(item['full_name'])}</a></h3>
             <p class="meta">{esc(item['language'])} · {esc(item['created_at'])} · current stars {item['current_stars']}</p>
-            <div class="score">Attention Score <strong>{item['attention_score']:.3f}</strong> · action <strong>{esc(item['action'])}</strong></div>
+            <div class="score">关注度评分 <strong>{item['attention_score']:.3f}</strong> · 建议 <strong>{esc(item['action'])}</strong></div>
+            <div class="explanation">📌 主要信号：{esc(item.get('explanation_cn', '—'))}</div>
             <div class="cols">
               <div><h4>Why Watch</h4><ul>{reasons}</ul></div>
               <div><h4>Risks</h4><ul>{risks}</ul></div>
@@ -319,8 +430,10 @@ h3 {{ margin:0 0 2px; font-size:19px; }}
 a {{ color:#0969da; text-decoration:none; }}
 a:hover {{ text-decoration:underline; }}
 .meta {{ color:#656d76; margin:0 0 8px; font-size:14px; }}
-.score {{ color:#1f2328; margin:8px 0 12px; }}
+.score {{ color:#1f2328; margin:8px 0 6px; }}
 .score strong {{ color:#1a7f37; }}
+.explanation {{ background:#f0f6ff; border-left:3px solid #0969da; border-radius:6px;
+  padding:8px 12px; margin:6px 0 12px; font-size:14px; color:#1f2328; }}
 .cols {{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }}
 h4 {{ margin:0 0 6px; color:#57606a; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }}
 ul {{ margin:0; padding-left:18px; color:#24292f; font-size:14px; }}

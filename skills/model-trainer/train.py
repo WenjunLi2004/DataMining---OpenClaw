@@ -22,7 +22,7 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 
 
 CV_FOLDS = 5
@@ -381,6 +381,46 @@ def run_shap(rf_model, X: np.ndarray, feature_names: List[str], n_samples: int =
     }
 
 
+def run_regression(df: pd.DataFrame, feature_names: List[str]) -> dict:
+    """Ridge / RF / XGBoost regressor on log1p(current_stars), 5-fold CV."""
+    from sklearn.linear_model import Ridge
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.pipeline import Pipeline
+    from sklearn.model_selection import KFold, cross_val_score
+
+    if "_current_stars" not in df.columns:
+        print("  [SKIP] _current_stars not in features — re-run feature-extractor", flush=True)
+        return {}
+
+    y_log = np.log1p(df["_current_stars"].values.astype(float))
+    X     = df[feature_names].values
+    kf    = KFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
+
+    reg_models: dict = {
+        "Ridge":   Pipeline([("scaler", StandardScaler()), ("reg", Ridge(alpha=1.0))]),
+        "RF":      RandomForestRegressor(n_estimators=200, random_state=RANDOM_STATE, n_jobs=-1),
+        "XGBoost": XGBRegressor(n_estimators=200, learning_rate=0.05, max_depth=4,
+                                random_state=RANDOM_STATE, verbosity=0),
+    }
+
+    model_results: dict = {}
+    for name, model in reg_models.items():
+        rmse = np.sqrt(-cross_val_score(model, X, y_log, cv=kf, scoring="neg_mean_squared_error"))
+        mae  = -cross_val_score(model, X, y_log, cv=kf, scoring="neg_mean_absolute_error")
+        r2   = cross_val_score(model, X, y_log, cv=kf, scoring="r2")
+        model_results[name] = {
+            "rmse_log1p": {"mean": round(float(rmse.mean()), 4), "std": round(float(rmse.std()), 4)},
+            "mae_log1p":  {"mean": round(float(mae.mean()),  4), "std": round(float(mae.std()),  4)},
+            "r2":         {"mean": round(float(r2.mean()),   4), "std": round(float(r2.std()),   4)},
+        }
+        print(f"  {name:<10} RMSE={rmse.mean():.4f}  MAE={mae.mean():.4f}  R²={r2.mean():.4f}", flush=True)
+
+    best_r2 = max(model_results, key=lambda m: model_results[m]["r2"]["mean"])
+    print(f"  Best R²: {best_r2} ({model_results[best_r2]['r2']['mean']:.4f})", flush=True)
+    return {"models": model_results, "target": "log1p(current_stars)", "cv_folds": CV_FOLDS}
+
+
 def run_clustering(df: pd.DataFrame, y, feature_names: List[str]) -> dict:
     """KMeans (k=4) on 19 features + PCA 2D scatter for visualization."""
     try:
@@ -483,7 +523,7 @@ def main():
         print(f"[ERROR] features file not found: {in_path}", flush=True)
         sys.exit(1)
 
-    print(f"[1/9] Loading features from {in_path}", flush=True)
+    print(f"[1/10] Loading features from {in_path}", flush=True)
     X, y, feature_names, df = load_data(in_path)
     print(f"  {X.shape[0]} samples × {X.shape[1]} features | pos={y.sum()} neg={(y==0).sum()}", flush=True)
 
@@ -491,12 +531,12 @@ def main():
     output   = {
         "models": {}, "feature_importance": {}, "ablation": {},
         "time_split": None, "language_auc": {}, "shap": {}, "top10": [],
-        "clustering": {}, "oof_probs_rf": [],
+        "regression": {}, "clustering": {}, "oof_probs_rf": [],
         "meta": {},
     }
     oof_probs_rf = None
 
-    print(f"[2/9] Running {CV_FOLDS}-fold CV for each model (+ PR-AUC + P@K)...", flush=True)
+    print(f"[2/10] Running {CV_FOLDS}-fold CV for each model (+ PR-AUC + P@K)...", flush=True)
     for name, model in models.items():
         print(f"  Training {name}...", flush=True)
         metrics, oof_probs = cv_metrics_with_oof(model, X, y)
@@ -511,29 +551,29 @@ def main():
             flush=True,
         )
 
-    print("[3/9] Computing feature importance (RF + XGBoost + LR)...", flush=True)
+    print("[3/10] Computing feature importance (RF + XGBoost + LR)...", flush=True)
     for name in ["RF", "XGBoost"]:
         models[name].fit(X, y)
         output["feature_importance"][name] = feature_importance(models[name], feature_names)
     models["LR"].fit(X, y)
     output["feature_importance"]["LR"] = feature_importance(models["LR"], feature_names)
 
-    print("[4/9] Running ablation study (RF, feature groups)...", flush=True)
+    print("[4/10] Running ablation study (RF, feature groups)...", flush=True)
     output["ablation"] = run_ablation(df, y)
 
-    print("[5/9] Running time-aware split (RF, chrono 80/20)...", flush=True)
+    print("[5/10] Running time-aware split (RF, chrono 80/20)...", flush=True)
     output["time_split"] = run_time_split(df, y, feature_names, output["models"]["RF"]["auc"]["mean"])
 
-    print("[6/9] Per-language AUC (RF, 5-fold)...", flush=True)
+    print("[6/10] Per-language AUC (RF, 5-fold)...", flush=True)
     output["language_auc"] = run_language_auc(df, y, feature_names)
 
-    print("[7/9] SHAP analysis (RF, TreeExplainer)...", flush=True)
+    print("[7/10] SHAP analysis (RF, TreeExplainer)...", flush=True)
     output["shap"] = run_shap(models["RF"], X, feature_names)
     if output["shap"].get("top10"):
         print(f"  Top feature: {output['shap']['top10'][0]['feature']}"
               f"  mean|SHAP|={output['shap']['top10'][0]['mean_abs_shap']:.4f}", flush=True)
 
-    print("[8/9] Collecting OOF Top-10 Rising Stars...", flush=True)
+    print("[8/10] Collecting OOF Top-10 Rising Stars...", flush=True)
     if oof_probs_rf is not None:
         output["top10"] = collect_oof_top10(df, y, oof_probs_rf)
         output["oof_probs_rf"] = [round(float(p), 6) for p in oof_probs_rf]
@@ -541,7 +581,10 @@ def main():
             tag = "✓" if item["is_top20"] else "✗"
             print(f"  #{item['rank']} {item['full_name']:<45s} prob={item['prob']:.3f} stars={item['current_stars']} {tag}", flush=True)
 
-    print("[9/9] Running KMeans clustering (k=4) + PCA visualization...", flush=True)
+    print("[9/10] Running regression experiments (log1p(stars) target)...", flush=True)
+    output["regression"] = run_regression(df, feature_names)
+
+    print("[10/10] Running KMeans clustering (k=4) + PCA visualization...", flush=True)
     output["clustering"] = run_clustering(df, y, feature_names)
 
     output["meta"] = {

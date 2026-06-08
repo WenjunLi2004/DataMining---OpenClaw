@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenClaw · 大模型对比实验报告</title>
+<style>
+:root{
+  --bg:#fbfcfe;--ink:#232a31;--muted:#5d6977;--line:#e1e8f0;--soft:#f4f7fb;
+  --card:#fff;--green:#2ca25f;--blue:#1f76d3;--orange:#f28500;--purple:#7a45e5;
+  --red:#d92d20;--teal:#0f766e;
+  --ds:#1f76d3;--kimi:#2ca25f;--qwen:#f28500;
+}
+*{box-sizing:border-box;}
+body{margin:0;color:var(--ink);background:var(--bg);line-height:1.7;
+  font-family:"LXGW WenKai","霞鹜文楷","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;}
+.layout{display:flex;align-items:flex-start;}
+nav.side{position:sticky;top:0;align-self:flex-start;width:220px;min-width:220px;
+  height:100vh;overflow-y:auto;padding:24px 16px;border-right:1px solid var(--line);background:#fff;}
+nav.side .brand{font-weight:900;font-size:1rem;}
+nav.side .brand small{display:block;color:var(--muted);font-weight:600;font-size:.72rem;margin-top:3px;}
+nav.side ol{list-style:none;margin:14px 0 0;padding:0;}
+nav.side li{margin:2px 0;}
+nav.side a{display:block;color:#334155;font-weight:700;font-size:.83rem;padding:6px 9px;border-radius:8px;}
+nav.side a:hover{background:var(--soft);text-decoration:none;}
+main{flex:1;max-width:980px;margin:0 auto;padding:36px 42px 80px;}
+h1{font-size:1.85rem;margin:0 0 6px;}
+h2{font-size:1.22rem;margin:34px 0 10px;padding-top:6px;}
+h2 .n{display:inline-flex;align-items:center;justify-content:center;width:1.55rem;height:1.55rem;
+  background:var(--ink);color:#fff;border-radius:7px;font-size:.88rem;margin-right:9px;vertical-align:middle;}
+h3{font-size:1rem;margin:20px 0 8px;}
+p{margin:8px 0;}
+.sub{color:var(--muted);font-size:.93rem;}
+.tag{display:inline-block;background:#eaf6ef;color:var(--green);border:1px solid #bfe3cd;
+  border-radius:999px;padding:3px 12px;font-weight:800;font-size:.78rem;}
+table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.92rem;}
+th,td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;}
+th{background:var(--soft);font-weight:800;color:#334155;}
+tr:last-child td{border-bottom:0;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.best{color:var(--green);font-weight:900;}
+.callout{border:1px solid var(--line);border-left:5px solid var(--blue);background:#f5f9ff;
+  border-radius:12px;padding:14px 18px;margin:14px 0;}
+.callout.g{border-left-color:var(--green);background:#f1faf4;}
+.callout.o{border-left-color:var(--orange);background:#fff8ef;}
+.callout.r{border-left-color:var(--red);background:#fef4f3;}
+
+/* Model color badges */
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.8rem;}
+.badge-ds{background:#dbeafe;color:var(--ds);}
+.badge-kimi{background:#dcfce7;color:var(--kimi);}
+.badge-qwen{background:#fff7ed;color:var(--qwen);}
+
+/* 3-column comparison grid */
+.cmp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0;}
+.cmp-card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+.cmp-card h4{margin:0 0 8px;font-size:.92rem;}
+.cmp-card.ds{border-top:3px solid var(--ds);}
+.cmp-card.kimi{border-top:3px solid var(--kimi);}
+.cmp-card.qwen{border-top:3px solid var(--qwen);}
+.cmp-card p{font-size:.88rem;color:var(--muted);margin:4px 0;}
+.metric-big{font-size:1.6rem;font-weight:900;}
+.ds .metric-big{color:var(--ds);}
+.kimi .metric-big{color:var(--kimi);}
+.qwen .metric-big{color:var(--qwen);}
+
+/* quote blocks */
+.quote{background:var(--soft);border-left:4px solid var(--line);border-radius:8px;
+  padding:10px 14px;margin:8px 0;font-size:.89rem;color:#334155;font-style:italic;}
+
+ul{margin:8px 0 8px 4px;padding-left:20px;}li{margin:4px 0;}
+footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.83rem;}
+@media(max-width:820px){nav.side{display:none;}main{padding:22px;}.cmp{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="side">
+  <div class="brand">OpenClaw<small>大模型对比实验</small></div>
+  <ol>
+    <li><a href="#overview">1. 实验概述</a></li>
+    <li><a href="#metrics">2. 量化指标对比</a></li>
+    <li><a href="#depth">3. 分析深度对比</a></li>
+    <li><a href="#style">4. 风格特点</a></li>
+    <li><a href="#unique">5. 各模型独特发现</a></li>
+    <li><a href="#conclusion">6. 结论与建议</a></li>
+  </ol>
+</nav>
+<main>
+  <span class="tag">课程要求 c) · 大模型对比</span>
+  <h1>大模型对比实验报告</h1>
+  <p class="sub">同一份 <code>diagnostic_summary.json</code> 输入三个旗舰模型，对比数据挖掘任务中的分析质量。</p>
+
+  <!-- 1. 实验概述 -->
+  <h2 id="overview"><span class="n">1</span>实验概述</h2>
+  <p>将 OpenClaw 流水线生成的结构化事实摘要（<code>diagnostic_summary.json</code>，含 500 个仓库的分类/消融/基线/语言分布等实验数据）作为唯一输入，要求三个大模型撰写包含 7 个固定章节的数据挖掘分析报告，并由自动校验器核查所有引用数字是否与原始事实摘要一致（容差 10%）。</p>
+  <table>
+    <thead><tr><th>模型</th><th>服务商</th><th>定位</th><th>调用方式</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-ds">DeepSeek V4 Pro</span></td><td>DeepSeek / OpenRouter</td><td>DeepSeek 最新旗舰，代码与推理强模型</td><td><code>deepseek/deepseek-v4-pro</code></td></tr>
+      <tr><td><span class="badge badge-kimi">Kimi K2</span></td><td>Moonshot AI / OpenRouter</td><td>Moonshot 最新旗舰，长上下文、结构化输出</td><td><code>moonshotai/kimi-k2</code></td></tr>
+      <tr><td><span class="badge badge-qwen">Qwen3.7 Max</span></td><td>阿里云通义 / OpenRouter</td><td>Qwen3 系列旗舰，多语言、精确引用</td><td><code>qwen/qwen3.7-max</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>校验机制：</b>OpenClaw 的 <code>insight-analysis</code> skill 会用正则提取模型输出中的所有数字，
+    逐一核查是否能在 <code>diagnostic_summary.json</code> 中找到对应值（±10% 容差）。
+    <b>分子/分母 = 未通过校验的数字数 / 总引用数字数</b>，数字越小说明模型引用越准确。
+  </div>
+
+  <!-- 2. 量化指标 -->
+  <h2 id="metrics"><span class="n">2</span>量化指标对比</h2>
+  <div class="cmp">
+    <div class="cmp-card ds">
+      <h4><span class="badge badge-ds">DeepSeek V4 Pro</span></h4>
+      <div class="metric-big">2 / 146</div>
+      <p>未通过校验数 / 总引用数字数</p>
+      <p>准确率 <b>98.6%</b></p>
+    </div>
+    <div class="cmp-card kimi">
+      <h4><span class="badge badge-kimi">Kimi K2</span></h4>
+      <div class="metric-big">0 / 77</div>
+      <p>未通过校验数 / 总引用数字数</p>
+      <p>准确率 <b class="best">100%</b></p>
+    </div>
+    <div class="cmp-card qwen">
+      <h4><span class="badge badge-qwen">Qwen3.7 Max</span></h4>
+      <div class="metric-big">0 / 108</div>
+      <p>未通过校验数 / 总引用数字数</p>
+      <p>准确率 <b class="best">100%</b></p>
+    </div>
+  </div>
+  <table>
+    <thead><tr>
+      <th>维度</th>
+      <th><span class="badge badge-ds">DeepSeek V4 Pro</span></th>
+      <th><span class="badge badge-kimi">Kimi K2</span></th>
+      <th><span class="badge badge-qwen">Qwen3.7 Max</span></th>
+    </tr></thead>
+    <tbody>
+      <tr><td>引用数字总量</td><td class="num best">146（最多）</td><td class="num">77（最少）</td><td class="num">108</td></tr>
+      <tr><td>数字准确率</td><td class="num">98.6%</td><td class="num best">100%</td><td class="num best">100%</td></tr>
+      <tr><td>未校验数字</td><td class="num">2</td><td class="num best">0</td><td class="num best">0</td></tr>
+      <tr><td>章节完整性</td><td>全 7 节，充分展开</td><td>全 7 节，较简洁</td><td>全 7 节，结构规范</td></tr>
+      <tr><td>输出字数（约）</td><td>~1800 字</td><td>~900 字</td><td>~1400 字</td></tr>
+    </tbody>
+  </table>
+  <div class="callout o">
+    <b>关键观察：</b>DeepSeek 引用数字最多（信息密度最高），但有 2 个偏差；
+    Kimi 引用最少（约为 DeepSeek 一半），全部准确——两者体现了"信息丰富度"与"保守准确"之间不同的权衡策略。
+    Qwen 居中，准确率也达到 100%。
+  </div>
+
+  <!-- 3. 分析深度 -->
+  <h2 id="depth"><span class="n">3</span>分析深度对比</h2>
+  <h3>第 1 节：实验结论</h3>
+  <table>
+    <thead><tr><th>模型</th><th>表现</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-ds">DeepSeek</span></td>
+        <td>最详尽：分别给出各模型 AUC/PR-AUC/F1/P@10/P@20，计算了 Python 正例率偏差（+0.416）和模型 vs 基线的 AUC 提升量（+0.225）</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-kimi">Kimi</span></td>
+        <td>简洁：4 个要点，突出 RF 最佳、P@10 优势，时间验证结果。省略 P@20 等细节</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-qwen">Qwen</span></td>
+        <td>精确：引用了完整的精确值（AUC 0.887922），明确比较了 LR/RF/XGBoost 三者分工</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>第 3 节：数据集问题诊断</h3>
+  <p>这一节最能体现模型的批判性思维能力。</p>
+  <div class="cmp">
+    <div class="cmp-card ds">
+      <h4><span class="badge badge-ds">DeepSeek</span> · 文字分析型</h4>
+      <p>对每个问题展开段落式论证，如："Python 的 per-language AUC 仅 0.674，低于有可比 AUC 的语言平均值 0.130"——主动计算了均值差距，而非直接复述原始数字。</p>
+    </div>
+    <div class="cmp-card kimi">
+      <h4><span class="badge badge-kimi">Kimi</span> · 表格结构型</h4>
+      <p>使用"问题 | 证据 | 影响"三列表格呈现，一眼可扫描。节省阅读时间，但分析不如文字版深入。</p>
+    </div>
+    <div class="cmp-card qwen">
+      <h4><span class="badge badge-qwen">Qwen</span> · 溯源审计型</h4>
+      <p>主动核查了数据血缘："当前数据声明所有 500 行均使用了严格的 30 天收集器（all_strict_30d: true）"——是三个模型中唯一主动验证数据来源元数据的。</p>
+    </div>
+  </div>
+
+  <h3>第 6 节：下一步实验建议</h3>
+  <p>三者风格差异最明显：</p>
+  <ul>
+    <li><span class="badge badge-ds">DeepSeek</span>：学术风格，给出 5 条具体可执行的实验方向（含重采样、消融、多切分点验证）</li>
+    <li><span class="badge badge-kimi">Kimi</span>：产品风格，用 <b>P0/P1/P2 优先级</b>分类建议，更像工程 backlog 而非学术实验计划</li>
+    <li><span class="badge badge-qwen">Qwen</span>：合规风格，建议中多次提及"保持可重复性"、"添加免责声明"，侧重规范性</li>
+  </ul>
+
+  <!-- 4. 风格特点 -->
+  <h2 id="style"><span class="n">4</span>风格特点总结</h2>
+  <div class="cmp">
+    <div class="cmp-card ds">
+      <h4><span class="badge badge-ds">DeepSeek V4 Pro</span></h4>
+      <p><b>风格：</b>学术论文型</p>
+      <p><b>优势：</b>分析最深入，会做二次推导（如计算均值差）；信息密度最高</p>
+      <p><b>劣势：</b>有 2 个数字略偏差；篇幅最长，有重复信息</p>
+      <p><b>适合场景：</b>需要深度探索性分析，对完整性要求高</p>
+    </div>
+    <div class="cmp-card kimi">
+      <h4><span class="badge badge-kimi">Kimi K2</span></h4>
+      <p><b>风格：</b>工程决策型</p>
+      <p><b>优势：</b>100% 数字准确；表格 + 优先级标注，决策者友好；最简洁</p>
+      <p><b>劣势：</b>引用信息量只有 DeepSeek 一半；深度分析不足</p>
+      <p><b>适合场景：</b>需要快速决策、给非技术人员看的汇报</p>
+    </div>
+    <div class="cmp-card qwen">
+      <h4><span class="badge badge-qwen">Qwen3.7 Max</span></h4>
+      <p><b>风格：</b>精确审计型</p>
+      <p><b>优势：</b>100% 准确；唯一主动核查数据元数据；引用精确到小数点后 6 位</p>
+      <p><b>劣势：</b>格式较模板化，洞察深度居中</p>
+      <p><b>适合场景：</b>需要严格可溯源性，审计或合规场景</p>
+    </div>
+  </div>
+
+  <!-- 5. 独特发现 -->
+  <h2 id="unique"><span class="n">5</span>各模型独特发现</h2>
+  <h3><span class="badge badge-ds">DeepSeek V4 Pro</span> 独有观察</h3>
+  <ul>
+    <li>主动计算了 Python AUC 与"非 Python 语言平均 AUC"之间的差距（0.130），而原始数据中没有这个数字——说明它在做真正的推理，而不只是复述</li>
+    <li>指出派生特征的冗余："从 C 组到 D 组仅 +0.0013 AUC，特征可减法"</li>
+    <li>提出了一个有价值的替代标签假设："若将未来标签从 current_stars 换成 360 天后星标增量…"</li>
+  </ul>
+  <h3><span class="badge badge-kimi">Kimi K2</span> 独有观察</h3>
+  <ul>
+    <li>唯一使用 <b>P0/P1/P2 优先级框架</b>，把学术建议转化为产品迭代计划</li>
+    <li>明确指出 <code>readme_len_30d</code> 与 <code>commits_30d</code> 的相关系数仅 0.215，说明 README 特征是<b>独立信号</b>——这是对特征间关系的正面论证，其他模型只聚焦高相关问题</li>
+  </ul>
+  <h3><span class="badge badge-qwen">Qwen3.7 Max</span> 独有观察</h3>
+  <ul>
+    <li>唯一主动说明 SHAP 数据缺失："top10_shap 为空，无法从边际贡献角度验证"——说明它读取了 JSON 结构，而不只是数字</li>
+    <li>注意到时间切分测试集正例率下降（0.15 vs 全局 0.204），并提出了有价值的假设："近期仓库 star 增长趋势是否整体放缓"</li>
+    <li>引用精确度最高，AUC 引用为 0.887922 而非四舍五入的 0.888</li>
+  </ul>
+
+  <!-- 6. 结论 -->
+  <h2 id="conclusion"><span class="n">6</span>结论与对比总结</h2>
+  <table>
+    <thead><tr>
+      <th>评估维度</th>
+      <th><span class="badge badge-ds">DeepSeek</span></th>
+      <th><span class="badge badge-kimi">Kimi</span></th>
+      <th><span class="badge badge-qwen">Qwen</span></th>
+    </tr></thead>
+    <tbody>
+      <tr><td>信息密度</td><td class="best">★★★★★</td><td>★★★</td><td>★★★★</td></tr>
+      <tr><td>数字准确性</td><td>★★★★☆</td><td class="best">★★★★★</td><td class="best">★★★★★</td></tr>
+      <tr><td>推理深度</td><td class="best">★★★★★</td><td>★★★</td><td>★★★★</td></tr>
+      <tr><td>结构清晰度</td><td>★★★★</td><td class="best">★★★★★</td><td>★★★★</td></tr>
+      <tr><td>数据溯源意识</td><td>★★★★</td><td>★★★</td><td class="best">★★★★★</td></tr>
+      <tr><td>实用决策价值</td><td>★★★★</td><td class="best">★★★★★</td><td>★★★★</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout g">
+    <b>核心结论：三个模型体现了不同的权衡策略，没有绝对最优。</b><br><br>
+    <b>DeepSeek V4 Pro</b>："宁可多说，不怕偏差"——信息最密集，推理最深，2/146 的偏差率可接受，适合探索性分析。<br>
+    <b>Kimi K2</b>："只说有把握的"——数字最保守（仅引用 77 个），全部准确，结构最清晰，适合向非技术决策者汇报。<br>
+    <b>Qwen3.7 Max</b>："既要准确，也要溯源"——居中方案，唯一主动审计数据来源，精确引用，适合需要可审计性的场景。
+  </div>
+
+  <div class="callout">
+    <b>对 OpenClaw 框架的启示：</b>这一对比验证了 OpenClaw 设计原则的必要性——
+    即使是最优秀的大模型（DeepSeek V4 Pro 98.6% 准确率），在 146 次引用中仍有 2 次偏差。
+    在数据挖掘任务中，<b>先算事实、再让大模型基于事实推理</b>的受约束架构，
+    能将模型的"编造"风险从不可控降低到可量化的程度。
+  </div>
+
+  <footer>OpenClaw 大模型对比实验 · 输入：diagnostic_summary.json · 模型：deepseek/deepseek-v4-pro · moonshotai/kimi-k2 · qwen/qwen3.7-max · via OpenRouter API</footer>
+</main>
+</div>
+</body>
+</html>

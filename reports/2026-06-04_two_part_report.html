@@ -314,8 +314,8 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 展示材料见 <a href="./OPEN_THIS_latest_presentation.pdf">展示 PPT（PDF）</a> 与
 <a href="./OPEN_THIS_speech_guide.html">逐页讲稿</a>。</p>
 <h2 id="runinfo"><span class="n">✓</span>本次运行</h2>
-<p class="sub">本次运行时间：2026-06-03T11:02:26Z。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
-<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>Data Collection</td><td>skipped</td><td class='sub'>fixed strict-30d raw data already exists</td></tr><tr><td>Feature Extraction</td><td>executed</td><td class='sub'>refreshed 19-feature matrix from strict raw data</td></tr><tr><td>Model Training</td><td>executed</td><td class='sub'>refreshed LR/RF/XGBoost metrics and model artifacts</td></tr><tr><td>Diagnostic Builder</td><td>executed</td><td class='sub'>rebuilt fact-grounded diagnostic summary</td></tr><tr><td>Insight Analysis</td><td>executed</td><td class='sub'>generated deterministic template insights</td></tr><tr><td>Report Generation</td><td>executed</td><td class='sub'>regenerated light-themed HTML reports</td></tr></tbody></table>
+<p class="sub">本次运行时间：2026-06-03T00:05:03.729887Z。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
+<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>repo_collector</td><td>skip</td><td class='sub'>fixed historical snapshot exists (500 records)</td></tr><tr><td>feature_extractor</td><td>skip</td><td class='sub'>features.csv is newer than raw data</td></tr><tr><td>model_trainer</td><td>skip</td><td class='sub'>model_results.json is up to date (LR/RF/XGBoost)</td></tr><tr><td>diagnostic_builder</td><td>skip</td><td class='sub'>diagnostic_summary.json is up to date</td></tr><tr><td>insight_analysis</td><td>skip</td><td class='sub'>INSIGHTS.md is up to date</td></tr><tr><td>report_generator</td><td>executed</td><td class='sub'>always runs per scheduling rule</td></tr></tbody></table>
 
   <footer>本报告由 report-generator 自动生成 · 2026-06-04 12:18 UTC ·
   数据来源：<code>model_results.json</code> / <code>diagnostic_summary.json</code>。

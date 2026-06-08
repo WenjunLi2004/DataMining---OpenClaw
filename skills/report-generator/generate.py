@@ -329,6 +329,50 @@ def sec_importance(results):
 <table><thead><tr><th>特征</th><th>相对重要性</th><th class="num">值</th></tr></thead><tbody>{rows}</tbody></table>
 """
 
+def sec_regression(results):
+    reg = results.get("regression", {})
+    if not reg or not reg.get("models"):
+        return "<p>（无回归数据，请重新运行 model-trainer）</p>"
+
+    models_data = reg["models"]
+    target = reg.get("target", "log1p(current_stars)")
+    best_r2_name = max(models_data, key=lambda m: models_data[m]["r2"]["mean"])
+    best_r2 = models_data[best_r2_name]["r2"]["mean"]
+    best_cls_auc = mean(results.get("models", {}).get("LR", {}).get("auc", 0))
+
+    rows = ""
+    for name in ["Ridge", "RF", "XGBoost"]:
+        if name not in models_data:
+            continue
+        m   = models_data[name]
+        r2  = m["r2"]["mean"];  r2s  = m["r2"]["std"]
+        rmse = m["rmse_log1p"]["mean"]
+        mae  = m["mae_log1p"]["mean"]
+        cls  = "num best" if name == best_r2_name else "num"
+        rows += (f"<tr><td>{esc(name)}</td>"
+                 f"<td class='{cls}'>{fmt(r2,4)} <span style='color:var(--muted);font-size:.82rem'>±{fmt(r2s,4)}</span></td>"
+                 f"<td class='num'>{fmt(rmse,4)}</td>"
+                 f"<td class='num'>{fmt(mae,4)}</td></tr>")
+
+    return f"""
+<p>用相同的 19 个早期特征做<strong>回归任务</strong>：预测仓库约一年后的 log₁₊(star 数)，
+比较"项目会不会跑出来（分类）"和"如果跑出来会火到什么程度（回归）"两个问题的可预测性。</p>
+<p>目标变量：<code>{esc(target)}</code>（对数变换消除右偏，1 unit ≈ star 数翻 e 倍），{reg.get("cv_folds",5)} 折交叉验证。</p>
+<table><thead><tr>
+  <th>模型</th><th class="num">R²</th>
+  <th class="num">RMSE (log)</th><th class="num">MAE (log)</th>
+</tr></thead><tbody>{rows}</tbody></table>
+<div class="callout b">
+  <b>分类 vs 回归的互补视角：</b><br>
+  分类 AUC {fmt(best_cls_auc)}：排序"谁会进 Top 20%"的准确率。<br>
+  回归 R² {fmt(best_r2,3)}（{esc(best_r2_name)}）：同样的信号预测具体热度时，
+  只能解释约 {fmt(best_r2*100,0)}% 的方差——说明"能不能跑出来"比"能火多少"更可预测。
+  这符合直觉：30 天内的早期信号足以判断项目有无潜力，
+  但最终热度还受外部推广、媒体报道等随机因素影响。
+</div>
+"""
+
+
 def sec_clustering(results):
     cl = results.get("clustering", {})
     if not cl:
@@ -566,6 +610,7 @@ SECTIONS = [
     ("models",     "模型结果",         sec_models),
     ("metrics",    "指标解释",         sec_metrics),
     ("ablation",   "消融实验",         sec_ablation),
+    ("regression", "回归实验",         sec_regression),
     ("timesplit",  "时间切分",         sec_timesplit),
     ("perlang",    "分语言表现",        sec_perlang),
     ("baselines",  "对比简单基线",      sec_baselines),
@@ -597,7 +642,7 @@ def build_html(results, diag, decision_log, lang_counts):
             content = fn(models)
         elif fn is sec_metrics:
             content = fn(models)
-        elif fn in (sec_ablation, sec_timesplit, sec_importance, sec_clustering):
+        elif fn in (sec_ablation, sec_regression, sec_timesplit, sec_importance, sec_clustering):
             content = fn(results)
         elif fn is sec_perlang:
             content = fn(diag, results)

@@ -579,10 +579,19 @@ def sec_run_info(decision_log, generated_at):
     dec = decision_log.get("decisions", {}) if isinstance(decision_log, dict) else {}
     run_at = decision_log.get("run_at", "") if isinstance(decision_log, dict) else ""
     rows = ""
-    for step, info in dec.items():
-        if isinstance(info, dict):
-            rows += (f"<tr><td>{esc(step)}</td><td>{esc(info.get('action','-'))}</td>"
-                     f"<td class='sub'>{esc(info.get('reason','-'))}</td></tr>")
+    if isinstance(dec, dict):
+        items = [
+            {"step": step, **info}
+            for step, info in dec.items()
+            if isinstance(info, dict)
+        ]
+    elif isinstance(dec, list):
+        items = [info for info in dec if isinstance(info, dict)]
+    else:
+        items = []
+    for info in items:
+        rows += (f"<tr><td>{esc(info.get('step','-'))}</td><td>{esc(info.get('action','-'))}</td>"
+                 f"<td class='sub'>{esc(info.get('reason','-'))}</td></tr>")
     table = (f"<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody>{rows}</tbody></table>"
              if rows else "<p class='sub'>（本次无调度决策记录）</p>")
     return f"""

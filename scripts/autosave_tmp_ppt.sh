@@ -2,8 +2,8 @@
 set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SOURCE="${1:-$ROOT/reports/OPEN_THIS_latest_presentation.pptx}"
-BACKUP_DIR="${2:-$ROOT/autosave_backups/OPEN_THIS_latest_presentation}"
+SOURCE="${1:-$ROOT/reports/Presentation.pptx}"
+BACKUP_DIR="${2:-$ROOT/autosave_backups/Presentation}"
 INTERVAL="${AUTOSAVE_INTERVAL_SECONDS:-15}"
 base_name="$(basename "$SOURCE" .pptx)"
 

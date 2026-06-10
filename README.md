@@ -17,7 +17,7 @@
 - **OpenClaw 的价值**：把多步骤分析组织成"先算事实、再让大模型基于证据推理"的可复现工作流——每一步都有中间产物和决策日志，大模型无法编造数字。
 - **现在能跑什么**：完整离线 pipeline + 聚类可视化 + 错误案例分析 + OpenClaw Console（dashboard）+ PPT 讲稿。
 
-> 📊 13 页展示 PPT 预览（完整文件见 [`reports/OPEN_THIS_latest_presentation.pptx`](reports/OPEN_THIS_latest_presentation.pptx)）：
+> 📊 17 页展示 PPT 预览（完整文件见 [`reports/Presentation.pptx`](reports/Presentation.pptx)）：
 >
 > ![展示 PPT 预览](docs/deck_preview.png)
 
@@ -242,12 +242,14 @@ openclaw-project/
 │   ├── summary.md / run_history.json / decision_log.json / pipeline_status.jsonl
 │
 ├── reports/                   # 当前展示材料（已清理，只留可用版本）
-│   ├── OPEN_THIS_latest_presentation.pptx  # 13 页展示 PPT（主交付）
-│   ├── OPEN_THIS_latest_presentation.pdf
+│   ├── Presentation.pptx  # 17 页展示 PPT（主交付）
+│   ├── Presentation.pdf
 │   ├── OPEN_THIS_speech_guide.html         # 逐页讲稿（9–10 分钟）
-│   ├── INSIGHTS.md / insights.html         # 洞察分析
-│   ├── today_radar.{html,json}             # 今日候选清单（可选）
-│   └── README_CURRENT.html                 # reports 目录索引
+│   ├── latest_final.html                   # 评估报告 + 文件网络（所有产物入口）
+│   ├── insights.html                       # 洞察分析（insight-analysis）
+│   ├── error_analysis.html                 # 错误分析（error-analyst）
+│   ├── llm_comparison.html                 # 大模型对比
+│   └── today_radar.{html,json}             # 今日候选清单（可选）
 │
 ├── dashboard/                 # OpenClaw Console（pipeline 状态 + 报告 + 雷达）
 │   └── index.html
@@ -371,8 +373,8 @@ python3 -m http.server 8080 --bind 127.0.0.1   # http://127.0.0.1:8080/dashboard
 
 | 文件 | 说明 |
 |---|---|
-| [`reports/OPEN_THIS_latest_presentation.pptx`](reports/OPEN_THIS_latest_presentation.pptx) | 13 页展示 PPT，约 9–10 分钟 |
-| [`reports/OPEN_THIS_latest_presentation.pdf`](reports/OPEN_THIS_latest_presentation.pdf) | 同上 PDF |
+| [`reports/Presentation.pptx`](reports/Presentation.pptx) | 17 页展示 PPT，约 9–10 分钟 |
+| [`reports/Presentation.pdf`](reports/Presentation.pdf) | 同上 PDF |
 | [`reports/OPEN_THIS_speech_guide.html`](reports/OPEN_THIS_speech_guide.html) | 逐页讲稿（每页一段可直接照讲） |
 
 **讲述主线**：提出问题 → OpenClaw 架构 → 数据与特征 → 模型与结果 → OpenClaw 价值 → Today Radar → 总结。先证明模型有效，再说明 OpenClaw 如何把一次实验变成可运行的系统。
@@ -388,7 +390,7 @@ python3 -m http.server 8080 --bind 127.0.0.1   # http://127.0.0.1:8080/dashboard
 - [x] 事实诊断 + 受约束洞察分析（数字真实性校验，失败回退确定性模板）
 - [x] OpenClaw 多智能体 pipeline + Console（dashboard）
 - [x] TypeScript 补采到 99 条
-- [x] 13 页展示 PPT + 逐页讲稿
+- [x] 17 页展示 PPT + 逐页讲稿
 
 **进行中 / 计划 ⏳**
 - [ ] **多维度评分**：将 Today Radar 的单一概率分拆成"社区成长潜力 / 项目可维护性 / 推广采用潜力"三个子分，面向两类用户各有侧重

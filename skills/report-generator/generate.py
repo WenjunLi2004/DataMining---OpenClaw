@@ -132,6 +132,15 @@ td.num,th.num{text-align:right; font-variant-numeric:tabular-nums;}
 .callout b{color:var(--ink);}
 .bar{height:11px; background:#e7edf4; border-radius:6px; overflow:hidden; min-width:80px;}
 .bar > i{display:block; height:100%; background:var(--blue); border-radius:6px;}
+.docnav{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin:16px 0 8px;}
+.docnav a{display:block; border:1px solid var(--line); border-left:5px solid var(--blue); border-radius:13px;
+          padding:13px 16px; background:#fff; box-shadow:var(--shadow); color:var(--ink); transition:transform .12s,border-color .12s;}
+.docnav a:hover{text-decoration:none; transform:translateY(-2px); border-left-color:var(--green);}
+.docnav .t{font-weight:900; font-size:.97rem;}
+.docnav .d{color:var(--muted); font-size:.82rem; margin-top:3px; line-height:1.5;}
+.docnav a.purple{border-left-color:var(--purple);} .docnav a.teal{border-left-color:var(--teal);}
+.docnav a.red{border-left-color:var(--red);} .docnav a.orange{border-left-color:var(--orange);}
+.docnav a.green{border-left-color:var(--green);}
 footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:.84rem;}
 @media(max-width:820px){ nav.side{display:none;} main{padding:24px;} }
 """
@@ -571,7 +580,7 @@ def sec_methodology():
 <p>采集 → 特征 → 训练 → 事实诊断 → 洞察 → 报告，由一个编排器调度，每一步都留下中间产物与事件记录。
 洞察分析<strong>先由事实诊断算出结构化事实，再让大模型只能基于这些事实做解释</strong>，引用的数字必须能在事实摘要里校验。</p>
 <p>更细的可解释分析见 <a href="./insights.html">洞察分析（insights.html）</a>；
-展示材料见 <a href="./OPEN_THIS_latest_presentation.pdf">展示 PPT（PDF）</a> 与
+展示材料见 <a href="./Presentation.pdf">展示 PPT（PDF）</a> 与
 <a href="./OPEN_THIS_speech_guide.html">逐页讲稿</a>。</p>
 """
 
@@ -627,7 +636,7 @@ def build_html(results, diag, decision_log, lang_counts):
 
     # build part-1 sections
     body = []
-    nav = []
+    nav = ['<li><a href="#docs">📂 相关文档</a></li>']
     n = 0
     for anchor, title, fn in SECTIONS:
         n += 1
@@ -671,6 +680,17 @@ def build_html(results, diag, decision_log, lang_counts):
              + sec_methodology()
              + h2("✓", "本次运行", "runinfo") + sec_run_info(decision_log, generated_at))
 
+    docs_hub = """<h2 id="docs"><span class="n">📂</span>相关文档 · 文件网络</h2>
+<p class="sub">本报告是文档网络的入口。下面汇总项目里所有可打开的产物，按用途分类——洞察分析（为什么）与错误分析（哪里错）是两件不同的事，分开列出。</p>
+<div class="docnav">
+  <a class="purple" href="./Presentation.pdf"><div class="t">📊 演示文稿（PDF）</div><div class="d">17 页展示 deck：多智能体 · 实验 · 应用价值。可编辑源 Presentation.pptx 在同目录。</div></a>
+  <a class="blue" href="./OPEN_THIS_speech_guide.html"><div class="t">🎤 逐页讲稿</div><div class="d">每页可照着讲的稿子，约 9–10 分钟。</div></a>
+  <a class="teal" href="./insights.html"><div class="t">💡 洞察分析 · insight-analysis</div><div class="d">从已验证事实里提炼“为什么”：7 个章节的可解释结论。</div></a>
+  <a class="red" href="./error_analysis.html"><div class="t">🔎 错误分析 · error-analyst</div><div class="d">复盘模型高置信错误：15 个假阳性（看着会火却没火）+ 15 个被低估的成功项目。</div></a>
+  <a class="orange" href="./llm_comparison.html"><div class="t">🤖 大模型对比</div><div class="d">同一份事实喂 3 个旗舰 LLM，逐数字校验引用准确率。</div></a>
+  <a class="green" href="./today_radar.html"><div class="t">📡 Today Radar</div><div class="d">近期候选项目观察清单（可选应用，非已验证预测）。</div></a>
+</div>"""
+
     nav_html = "\n".join(nav)
     return f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8">
@@ -688,6 +708,7 @@ def build_html(results, diag, decision_log, lang_counts):
   <span class="tag">数据快照 {date}</span>
   <h1>模型评估报告</h1>
   <p class="sub">用 GitHub 仓库创建后 30 天的早期信号，预测约一年后是否进入样本前 20%。所有数字均来自当前实验产物。</p>
+  {docs_hub}
   {part1}
   {part2}
   <footer>本报告由 report-generator 自动生成 · {generated_at} ·

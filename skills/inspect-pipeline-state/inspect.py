@@ -119,6 +119,29 @@ def inspect_insights():
     return info
 
 
+def inspect_error_analysis():
+    model_path = DATA_DIR / "model_results.json"
+    error_path = DATA_DIR / "error_analysis.json"
+    info = _file_info(error_path)
+    if info["exists"]:
+        if model_path.exists():
+            info["newer_than_model_results"] = error_path.stat().st_mtime > model_path.stat().st_mtime
+        try:
+            data = json.loads(error_path.read_text())
+            info["fp_count"] = len(data.get("fp_cases", []))
+            info["fn_count"] = len(data.get("fn_cases", []))
+            info["used_llm"] = data.get("used_llm")
+        except Exception as e:
+            info["parse_error"] = str(e)
+
+    html_path = REPORTS_DIR / "error_analysis.html"
+    html_info = _file_info(html_path)
+    if html_info["exists"] and model_path.exists():
+        html_info["newer_than_model_results"] = html_path.stat().st_mtime > model_path.stat().st_mtime
+    info["html"] = html_info
+    return info
+
+
 def inspect_today_radar():
     path = REPORTS_DIR / "today_radar.json"
     info = _file_info(path)
@@ -160,7 +183,7 @@ def inspect_reports():
     if total == 0:
         return {"exists": True, "latest_report": None, "total_reports": 0}
 
-    AUX_NAMES = {"insights.html", "today_radar.html"}
+    AUX_NAMES = {"insights.html", "today_radar.html", "error_analysis.html", "llm_comparison.html"}
     AUX_SUFFIXES = ("_modification_summary.html",)
 
     def is_auxiliary(p: Path) -> bool:
@@ -197,6 +220,7 @@ def main():
         "model_results": inspect_model_results(),
         "diagnostic_summary": inspect_diagnostic_summary(),
         "insights":      inspect_insights(),
+        "error_analysis": inspect_error_analysis(),
         "today_radar":   inspect_today_radar(),
         "reports":       inspect_reports(),
     }

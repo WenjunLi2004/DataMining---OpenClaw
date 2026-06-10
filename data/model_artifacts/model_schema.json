@@ -120,13 +120,13 @@
     }
   },
   "score_thresholds": {
-    "deep_dive": 0.9070000000000005,
-    "try": 0.14699999999999988,
-    "watch": 0.035,
+    "deep_dive": 0.6660000000000003,
+    "try": 0.06,
+    "watch": 0.01,
     "_source": "RF predict_proba on full training set, p80/p60/p40"
   },
   "label": "is_top20",
-  "trained_on": "data\\features.csv",
+  "trained_on": "data/features.csv",
   "n_samples": 500,
   "n_features": 19,
   "n_positive": 102,

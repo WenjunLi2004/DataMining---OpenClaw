@@ -161,11 +161,24 @@ def cases_to_text(cases: list[dict], case_type: str) -> str:
 SYSTEM_PROMPT = (
     "你是一名数据挖掘专家，负责分析机器学习模型的预测错误。"
     "请基于提供的案例数据，给出客观、有依据的分析，不要编造数据中没有的信息。"
+    "当前模型只使用 strict-30d 的 19 个结构化特征：语言、owner 类型、前30天 commits/issues/PRs/contributors、"
+    "前30天 README 统计与派生活跃度。模型没有使用仓库名、description、topics、TF-IDF、当前 README、"
+    "当前 contributors、author_followers、author_public_repos 或 has_license。"
+    "因此禁止把错误归因于这些未进入模型的字段。"
 )
 
 USER_PROMPT_TEMPLATE = """\
 以下是 GitHub 仓库流行度预测模型（随机森林）的预测错误案例。
 模型使用仓库**创建后 30 天内**的早期信号预测约一年后是否进入样本前 20%。
+模型输入只包含这些 30 天内或历史可回溯的结构化特征：
+语言、owner 类型、commits_30d、issues_30d、prs_30d、contributors_30d、
+has_readme_30d、readme_len_30d、readme_has_image_30d、readme_has_demo_url_30d、
+activity_total_30d、commits_per_contributor_30d、prs_per_issue_30d、has_pr_activity_30d。
+
+请特别注意：
+- 不要说模型依赖仓库名、description、topics、TF-IDF 或文本关键词，因为这些没有进入当前模型。
+- 不要说模型依赖 author_followers、author_public_repos、当前 README 或当前 contributors，因为这些也没有进入当前模型。
+- 改进建议必须是创建后 30 天内可采集、或能在历史 commit / API 中回溯到 30 天窗口内的信号。
 
 {fp_text}
 
@@ -239,7 +252,8 @@ def deterministic_analysis(fp_cases: list[dict], fn_cases: list[dict]) -> str:
 FP 案例（{len(fp_cases)} 个）的早期信号较强但最终未入 Top 20%：
 平均前 30 天提交 {fp_commits:.1f} 次、Issue {fp_issues:.1f} 个、README 长度 {fp_readme:.0f} 字符，
 最终平均 star 数仅 {fp_stars:.0f}。早期活跃度高但可能缺乏持续维护或社区运营，
-导致模型被"冲刺型"活跃信号误导。
+导致模型被"冲刺型"活跃信号误导。需要注意，当前模型没有使用仓库名、描述或文本向量，
+所以这里的误判应优先理解为结构化早期行为信号不足以代表长期社区采用。
 
 ### 2. 假阴性规律（统计摘要，无 LLM）
 
@@ -251,10 +265,11 @@ FN 案例（{len(fn_cases)} 个）早期信号偏弱但最终进入 Top 20%：
 ### 3. 改进启示（统计摘要，无 LLM）
 
 可考虑引入以下补充信号：
-- 项目描述与 README 的语义相似度（Embedding 特征）
-- 作者历史上是否有过高 star 仓库
 - 第 15-30 天相比第 1-14 天的增量活跃度（趋势特征）
-- 项目是否被已有高 star 项目依赖
+- Issue / PR 的响应速度、关闭率和讨论长度
+- README 在前 30 天内的变化量，而不仅是第 30 天快照
+- 30 天窗口内是否出现 release、tag、CI 配置或测试目录
+- 30 天窗口内是否被其他仓库引用或依赖（需要可回溯的历史数据源）
 
 （设置 DEEPSEEK_API_KEY 后可获得 LLM 深度分析。）
 """

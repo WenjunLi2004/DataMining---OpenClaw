@@ -1,66 +1,161 @@
 {
-  "run_at": "2026-06-03T13:20:00Z",
-  "trigger": "manual_full_refresh",
+  "run_at": "2026-06-10T14:09:36.094074+00:00",
   "state_snapshot": {
+    "checked_at": "2026-06-10T14:09:36.114176+00:00",
     "raw_data": {
       "exists": true,
-      "path": "data/repos_raw_500_strict.jsonl",
+      "path": "/Users/wenjun/openclaw-project/data/repos_raw_500_strict.jsonl",
+      "mtime_iso": "2026-05-30T12:50:46.078033+00:00",
+      "age_days": 11.05,
+      "size_bytes": 558760,
       "record_count": 500
     },
     "features": {
       "exists": true,
-      "path": "data/features.csv",
-      "feature_count": 19
+      "path": "/Users/wenjun/openclaw-project/data/features.csv",
+      "mtime_iso": "2026-06-10T14:04:06.386073+00:00",
+      "age_days": 0.0,
+      "size_bytes": 77890,
+      "newer_than_raw": true
+    },
+    "model_results": {
+      "exists": true,
+      "path": "/Users/wenjun/openclaw-project/data/model_results.json",
+      "mtime_iso": "2026-06-10T14:04:17.886936+00:00",
+      "age_days": 0.0,
+      "size_bytes": 66014,
+      "models": [
+        "LR",
+        "RF",
+        "XGBoost"
+      ],
+      "has_ablation": true,
+      "has_shap": true,
+      "has_time_split": true,
+      "newer_than_features": true
     },
     "diagnostic_summary": {
       "exists": true,
-      "path": "data/diagnostic_summary.json",
-      "all_early_30d": true
+      "path": "/Users/wenjun/openclaw-project/data/diagnostic_summary.json",
+      "mtime_iso": "2026-06-10T14:04:18.887086+00:00",
+      "age_days": 0.0,
+      "size_bytes": 16241,
+      "newer_than_model_results": true,
+      "newer_than_features": true,
+      "has_baselines": true,
+      "has_anomalies": true,
+      "anomaly_count": 2,
+      "best_auc": {
+        "model": "LR",
+        "value": 0.882965
+      }
+    },
+    "insights": {
+      "exists": true,
+      "path": "/Users/wenjun/openclaw-project/reports/INSIGHTS.md",
+      "mtime_iso": "2026-06-10T14:04:19.018271+00:00",
+      "age_days": 0.0,
+      "size_bytes": 5363,
+      "newer_than_diagnostic": true,
+      "section_count": 7,
+      "has_required_sections": true
+    },
+    "error_analysis": {
+      "exists": true,
+      "path": "/Users/wenjun/openclaw-project/data/error_analysis.json",
+      "mtime_iso": "2026-06-10T14:04:19.214725+00:00",
+      "age_days": 0.0,
+      "size_bytes": 14865,
+      "newer_than_model_results": true,
+      "fp_count": 12,
+      "fn_count": 15,
+      "used_llm": false,
+      "html": {
+        "exists": true,
+        "path": "/Users/wenjun/openclaw-project/reports/error_analysis.html",
+        "mtime_iso": "2026-06-10T14:04:19.215217+00:00",
+        "age_days": 0.0,
+        "size_bytes": 17084,
+        "newer_than_model_results": true
+      }
+    },
+    "today_radar": {
+      "exists": true,
+      "path": "/Users/wenjun/openclaw-project/reports/today_radar.json",
+      "mtime_iso": "2026-06-03T07:08:16.283090+00:00",
+      "age_days": 7.29,
+      "size_bytes": 9260,
+      "mode": "offline_existing_jsonl",
+      "candidate_count": 10,
+      "generated_at": "2026-06-03T07:08:16.281990+00:00",
+      "top_candidate": "lunashia/o-m_beatmap_trainer",
+      "top_score": 0.935,
+      "html": {
+        "exists": true,
+        "path": "/Users/wenjun/openclaw-project/reports/today_radar.html",
+        "mtime_iso": "2026-06-03T07:08:16.284116+00:00",
+        "age_days": 7.29,
+        "size_bytes": 10885
+      }
+    },
+    "reports": {
+      "exists": true,
+      "latest_report": "latest_final.html",
+      "latest_report_path": "/Users/wenjun/openclaw-project/reports/latest_final.html",
+      "latest_report_source": "latest_final_alias",
+      "latest_mtime_iso": "2026-06-10T14:08:17.965814+00:00",
+      "latest_age_days": 0.0,
+      "total_reports": 7
     }
   },
   "decisions": [
     {
       "step": "Data Collection",
       "action": "skipped",
-      "reason": "复用固定历史快照（30 天窗口原始数据已存在）"
+      "reason": "fixed historical snapshot exists (11.1d old); age alone does not trigger recollection"
     },
     {
       "step": "Feature Extraction",
       "action": "executed",
-      "reason": "从历史快照重建 19 维早期特征矩阵"
+      "reason": "forced re-extraction"
     },
     {
       "step": "Model Training",
       "action": "executed",
-      "reason": "刷新 LR/RF/XGBoost 指标、OOF 概率与可复用模型产物"
+      "reason": "forced re-training"
     },
     {
       "step": "Diagnostic Builder",
       "action": "executed",
-      "reason": "重建以事实为基准的诊断摘要"
+      "reason": "forced diagnostic rebuild"
     },
     {
       "step": "Insight Analysis",
       "action": "executed",
-      "reason": "基于事实摘要生成可解释洞察"
+      "reason": "forced insight regeneration"
     },
     {
       "step": "Error Analysis",
       "action": "executed",
-      "reason": "基于 RF 的 OOF 概率定位高置信 FP / FN，归纳模型盲区"
+      "reason": "forced error analysis regeneration"
     },
     {
       "step": "Report Generation",
       "action": "executed",
-      "reason": "重新生成浅色主题 HTML 报告（含聚类分析与应用价值）"
+      "reason": "always regenerated — captures today's date, decision log, run history, insight analysis, and error analysis"
+    },
+    {
+      "step": "Today Radar",
+      "action": "available",
+      "reason": "latest candidate shortlist exists at /Users/wenjun/openclaw-project/reports/today_radar.json"
     }
   ],
   "tool_calls_sequence": [
-    "feature_extractor",
-    "model_trainer",
-    "diagnostic_builder",
-    "insight_analysis",
-    "error_analyst",
-    "report_generator"
+    "run_feature_extractor",
+    "run_model_trainer",
+    "run_diagnostic_builder",
+    "run_insight_analysis",
+    "run_error_analyst",
+    "run_report_generator"
   ]
 }

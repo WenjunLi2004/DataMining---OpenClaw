@@ -1,7 +1,22 @@
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_start", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "feature-engineer", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "model-trainer", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "diagnostic-builder", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "insight-analyst", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "report-generator", "event_type": "agent_completed", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
-{"timestamp": "2026-06-03T11:02:26Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_complete", "duration_ms": 0, "message": "strict-30d local refresh; old leakage-era data removed"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_start", "duration_ms": 0, "message": "local refresh: unify reproducible metrics and error analysis"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "feature-engineer", "event_type": "agent_completed", "duration_ms": 0, "message": "rebuilt 500x19 strict-30d features"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "model-trainer", "event_type": "agent_completed", "duration_ms": 0, "message": "trained LR/RF/XGBoost with current code"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "diagnostic-builder", "event_type": "agent_completed", "duration_ms": 0, "message": "rebuilt diagnostic_summary.json"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "insight-analyst", "event_type": "agent_completed", "duration_ms": 0, "message": "generated template INSIGHTS.md"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "error-analyst", "event_type": "agent_completed", "duration_ms": 0, "message": "generated FP/FN error analysis"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "report-generator", "event_type": "agent_completed", "duration_ms": 0, "message": "regenerated latest_final.html"}
+{"timestamp": "2026-06-10T14:05:26.139679Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_complete", "duration_ms": 0, "message": "local refresh complete"}
+{"timestamp": "2026-06-10T14:09:36Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_start", "duration_ms": 0, "message": "force-local: 开始分析"}
+{"timestamp": "2026-06-10T14:09:36Z", "agent_id": "feature-engineer", "event_type": "agent_start", "duration_ms": 0, "message": "/Users/wenjun/openclaw-project/data/repos_raw_500_strict.jsonl --output /Users/wenjun/openclaw-project/data/features.csv"}
+{"timestamp": "2026-06-10T14:09:36Z", "agent_id": "feature-engineer", "event_type": "agent_completed", "duration_ms": 392, "message": "Threshold: 49 stars"}
+{"timestamp": "2026-06-10T14:09:36Z", "agent_id": "model-trainer", "event_type": "agent_start", "duration_ms": 0, "message": "/Users/wenjun/openclaw-project/data/features.csv --output /Users/wenjun/openclaw-project/data/model_results.json"}
+{"timestamp": "2026-06-10T14:09:49Z", "agent_id": "model-trainer", "event_type": "agent_completed", "duration_ms": 12874, "message": "  TypeScript      n= 99  AUC=N/A"}
+{"timestamp": "2026-06-10T14:09:49Z", "agent_id": "diagnostic-builder", "event_type": "agent_start", "duration_ms": 0, "message": "/Users/wenjun/openclaw-project/data/features.csv --output /Users/wenjun/openclaw-project/data/diagnostic_summary.json"}
+{"timestamp": "2026-06-10T14:09:50Z", "agent_id": "diagnostic-builder", "event_type": "agent_completed", "duration_ms": 850, "message": "  anomalies: 2"}
+{"timestamp": "2026-06-10T14:09:50Z", "agent_id": "insight-analyst", "event_type": "agent_start", "duration_ms": 0, "message": "/Users/wenjun/openclaw-project/reports/INSIGHTS.md --mode auto"}
+{"timestamp": "2026-06-10T14:10:19Z", "agent_id": "insight-analyst", "event_type": "agent_completed", "duration_ms": 29524, "message": "  mode: llm"}
+{"timestamp": "2026-06-10T14:10:19Z", "agent_id": "error-analyst", "event_type": "agent_start", "duration_ms": 0, "message": "/Users/wenjun/openclaw-project/data/error_analysis.json --out-html /Users/wenjun/openclaw-project/reports/error_analysis.html"}
+{"timestamp": "2026-06-10T14:10:31Z", "agent_id": "error-analyst", "event_type": "agent_completed", "duration_ms": 11596, "message": "Done."}
+{"timestamp": "2026-06-10T14:10:31Z", "agent_id": "report-generator", "event_type": "agent_start", "duration_ms": 0, "message": "/Users/wenjun/openclaw-project/reports --out-file 2026-06-10_final.html"}
+{"timestamp": "2026-06-10T14:10:31Z", "agent_id": "report-generator", "event_type": "agent_completed", "duration_ms": 50, "message": "[OK] wrote /Users/wenjun/openclaw-project/reports/latest_final.html"}
+{"timestamp": "2026-06-10T14:10:45Z", "agent_id": "pipeline-orchestrator", "event_type": "pipeline_complete", "duration_ms": 0, "message": "force-local pipeline complete"}

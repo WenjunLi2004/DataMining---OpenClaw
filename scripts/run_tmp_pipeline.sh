@@ -4,7 +4,7 @@
 #
 # 跳过 GitHub 数据采集，固定使用 data/repos_raw_500_strict.jsonl，
 # 强制重算后续步骤：
-#   特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 报告生成
+#   特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 错误分析 → 报告生成
 #
 # 默认输出到 ./tmp/pipeline_latest/，每次运行会先清空该目录。
 # 这不会修改正式 data/ 和 reports/ 产物。
@@ -38,28 +38,28 @@ rm -rf "$OUT"
 mkdir -p "$ARTIFACTS" "$REPORTS"
 
 echo
-echo "［1/5］特征工程"
+echo "［1/6］特征工程"
 python3 "$ROOT/skills/feature-extractor/extract.py" \
   --input "$RAW" \
   --output "$OUT/features.csv" \
   --artifacts-dir "$ARTIFACTS"
 
 echo
-echo "［2/5］模型训练"
+echo "［2/6］模型训练"
 python3 "$ROOT/skills/model-trainer/train.py" \
   --input "$OUT/features.csv" \
   --output "$OUT/model_results.json" \
   --artifacts-dir "$ARTIFACTS"
 
 echo
-echo "［3/5］事实诊断"
+echo "［3/6］事实诊断"
 python3 "$ROOT/skills/diagnostic-builder/diagnose.py" \
   --results "$OUT/model_results.json" \
   --features "$OUT/features.csv" \
   --output "$OUT/diagnostic_summary.json"
 
 echo
-echo "［4/5］洞察分析（template，避免依赖 API key）"
+echo "［4/6］洞察分析（template，避免依赖 API key）"
 python3 "$ROOT/skills/insight-analysis/analyze.py" \
   --diagnostic "$OUT/diagnostic_summary.json" \
   --output "$REPORTS/INSIGHTS.md" \

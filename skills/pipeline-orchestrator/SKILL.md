@@ -157,7 +157,8 @@ openclaw agent → pipeline-orchestrator skill
                 ├── [4?] run_model_trainer           (if rule 3 triggers)
                 ├── [5?] run_diagnostic_builder      (if rule 4 triggers)
                 ├── [6?] run_insight_analysis        (if rule 5 triggers)
-                └── [7]  run_report_generator        (always)
+                ├── [7?] run_error_analyst           (if rule 6 triggers)
+                └── [8]  run_report_generator        (always)
 ```
 
 ## Output
@@ -171,8 +172,10 @@ openclaw agent → pipeline-orchestrator skill
 | `data/diagnostic_summary.json` | Fact-only diagnostics for insight analysis |
 | `reports/INSIGHTS.md` | Insight analysis grounded in diagnostic facts (LLM output is rejected if it cites numbers not present in the diagnostic summary) |
 | `reports/insights.html` | HTML render of INSIGHTS.md for the dashboard 洞察分析 tab |
+| `data/error_analysis.json` | High-confidence FP/FN cases from RF OOF probabilities |
+| `reports/error_analysis.html` | Error-analysis report for the dashboard 错误分析 tab |
 | `reports/YYYY-MM-DD_final.html` | Full analysis report |
 | `reports/latest_final.html` | Stable filename for dashboard iframe |
 | `reports/today_radar.json` | Recent-repo candidate shortlist, if Today Radar was requested |
 | `reports/today_radar.html` | Human-readable Today Radar report (action thresholds come from `model_schema.json::score_thresholds`, p80/p60/p40 of RF training-set probabilities) |
-| `dashboard/index.html` | Unified OpenClaw Console showing all 6 worker nodes (数据采集 / 特征工程 / 模型训练 / 事实诊断 / 洞察分析 / 报告生成); auto-started by this runner |
+| `dashboard/index.html` | Unified OpenClaw Console showing all 7 worker nodes (数据采集 / 特征工程 / 模型训练 / 事实诊断 / 洞察分析 / 错误分析 / 报告生成); auto-started by this runner |

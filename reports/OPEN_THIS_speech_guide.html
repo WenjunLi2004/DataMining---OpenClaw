@@ -108,7 +108,7 @@
   <header>
     <p class="eyebrow">OpenClaw PPT Speech Guide</p>
     <h1>按照 PPT 每一页组织的展示讲稿</h1>
-    <p class="lead editable" data-edit-id="lead">这份 HTML 按当前 13 页 PPT 的顺序，把每一页的讲述逻辑串起来。重点不是背稿，而是知道每一页承担什么任务、讲到哪里就自然转到下一页。</p>
+    <p class="lead editable" data-edit-id="lead">这份 HTML 按当前 17 页 PPT 的顺序，把每一页的讲述逻辑串起来。重点不是背稿，而是知道每一页承担什么任务、讲到哪里就自然转到下一页。</p>
     <div class="toolbar">
       <button class="primary" id="toggleEdit">开启编辑模式</button>
       <button id="saveLocal">保存到浏览器缓存</button>
@@ -145,8 +145,8 @@
     <div class="slide-num"><b>01</b><span>Cover</span></div>
     <div>
       <h2>封面：先把项目定位讲准</h2>
-      <div class="meta"><span class="pill">开场</span><span class="pill">关键词：500 / 19 / 0.888 / 1 年标签窗口</span></div>
-      <div class="script editable" data-edit-id="slide1-script"><strong>讲稿：</strong>“我的项目是一个开源项目潜力发现系统。它关注的问题是：一个仓库刚创建时，还没有完全流行起来，我们能不能根据早期行为判断它是否值得继续观察？这页先给出四个核心数字：我采集了 500 个历史仓库，把每个仓库转换成 19 个早期特征，模型最好的 AUC 是 0.888（随机森林），并且标签来自约一年后的星标表现。后面我会按数据采集、特征工程、模型训练、结果解释、OpenClaw 多智能体流程和 Today Radar 应用来讲。”</div>
+      <div class="meta"><span class="pill">开场</span><span class="pill">关键词：500 / 19 / 0.883 / 1 年以上标签窗口</span></div>
+      <div class="script editable" data-edit-id="slide1-script"><strong>讲稿：</strong>“我的项目是一个开源项目潜力发现系统。它关注的问题是：一个仓库刚创建时，还没有完全流行起来，我们能不能根据早期行为判断它是否值得继续观察？这页先给出四个核心数字：我采集了 500 个历史仓库，把每个仓库转换成 19 个早期特征，最佳 AUC 是 0.883（逻辑回归），并且标签来自采集时的 star 表现，距离仓库创建至少一年。后面我会按数据采集、特征工程、模型训练、结果解释、OpenClaw 多智能体流程和 Today Radar 应用来讲。”</div>
       <ul><li>这一页只讲项目定位，不展开“如何防泄漏”这类论文细节。</li><li>转场：为什么这个问题值得做？进入动机页。</li></ul>
     </div>
   </section>
@@ -186,7 +186,7 @@
     <div>
       <h2>数据采集：30 天快照和未来标签分开</h2>
       <div class="meta"><span class="pill">采集逻辑</span><span class="pill">时间边界</span></div>
-      <div class="script editable" data-edit-id="slide5-script"><strong>讲稿：</strong>“数据采集阶段最重要的是时间边界。对每个仓库，我只把创建后 30 天内能看到的信息放进模型输入，比如当时的说明文档、提交次数、问题数量、合并请求数量和贡献者数量。然后再用约一年后的星标数生成训练答案，也就是这个仓库后来有没有进入样本前 20%。所以左边是模型能看的早期快照，右边是未来标签。它们分开之后，模型学到的是早期信号和后续热度之间的关系。”</div>
+      <div class="script editable" data-edit-id="slide5-script"><strong>讲稿：</strong>“数据采集阶段最重要的是时间边界。对每个仓库，我只把创建后 30 天内能看到的信息放进模型输入，比如当时的说明文档、提交次数、问题数量、合并请求数量和贡献者数量。然后再用采集时的星标数生成训练答案，也就是这个仓库在至少一年之后有没有进入样本前 20%。所以左边是模型能看的早期快照，右边是未来标签。它们分开之后，模型学到的是早期信号和后续热度之间的关系。”</div>
       <ul><li>日期窗：仓库创建于 2025-03-01 到 2025-04-30，保证有完整的 30 天观察期和约一年标签窗口。</li><li>转场：下一页用一条具体记录把这个切分讲清楚。</li></ul>
     </div>
   </section>
@@ -196,7 +196,7 @@
     <div>
       <h2>数据样例：一条仓库记录怎么被拆开</h2>
       <div class="meta"><span class="pill">样例解释</span><span class="pill">输入 / 答案</span></div>
-      <div class="script editable" data-edit-id="slide6-script"><strong>讲稿：</strong>“这一页是数据样例。左边叫 30 天快照，也就是模型输入。它记录的是仓库刚创建后 30 天内发生了什么：使用什么语言、有多少提交、有多少问题和合并请求、有多少贡献者、说明文档大概多长。右边是未来标签，也就是训练答案。它记录这个仓库一年后星标数是多少，是否进入前 20%。模型训练时只能看左边，右边只用来告诉模型答案。”</div>
+      <div class="script editable" data-edit-id="slide6-script"><strong>讲稿：</strong>“这一页是数据样例。左边叫 30 天快照，也就是模型输入。它记录的是仓库刚创建后 30 天内发生了什么：使用什么语言、有多少提交、有多少问题和合并请求、有多少贡献者、说明文档大概多长。右边是未来标签，也就是训练答案。它记录这个仓库在采集时的星标数，以及是否进入前 20%。模型训练时只能看左边，右边只用来告诉模型答案。”</div>
       <ul><li>这里直接说“30 天快照”和“未来标签”，不要讲内部字段名。</li><li>转场：有了原始记录，下一步要把它变成模型能处理的特征。</li></ul>
     </div>
   </section>
@@ -220,7 +220,7 @@
       <h2>模型训练：三类模型各有作用</h2>
       <div class="meta"><span class="pill">训练流程</span><span class="pill">模型特点</span></div>
       <div class="script editable" data-edit-id="slide8-script"><strong>讲稿：</strong>“特征表准备好以后，我训练了三类模型。逻辑回归是线性模型，优点是稳定、容易解释；随机森林能处理非线性关系和特征组合，在候选排序里很有用；XGBoost 是更强的梯度提升模型，用来做对照。训练阶段不只是得到分数，还会保存模型文件、特征顺序、动态阈值，以及随机森林的 OOF 概率和 KMeans 聚类结果——这两样正是后面错误分析页和聚类页的输入。后面的 Today Radar 也可以直接复用这套模型。”</div>
-      <table><tr><th>模型</th><th>特点</th><th>本项目里怎么理解</th></tr><tr><td>逻辑回归</td><td>线性、稳定</td><td>AUC 0.883，简单可解释</td></tr><tr><td>随机森林</td><td>非线性、能处理组合关系</td><td>AUC 0.888 最佳 · PR-AUC 0.652，候选排序主力</td></tr><tr><td>XGBoost</td><td>拟合能力强</td><td>AUC 0.876，作为强基线对照</td></tr></table>
+      <table><tr><th>模型</th><th>特点</th><th>本项目里怎么理解</th></tr><tr><td>逻辑回归</td><td>线性、稳定</td><td>最佳 AUC 0.883，简单可解释</td></tr><tr><td>随机森林</td><td>非线性、能处理组合关系</td><td>PR-AUC 0.662 最佳，候选排序主力</td></tr><tr><td>XGBoost</td><td>拟合能力强</td><td>AUC 0.876，P@10 0.80，作为强基线对照</td></tr></table>
     </div>
   </section>
 
@@ -239,7 +239,7 @@
     <div>
       <h2>实验结果：早期信号确实有排序能力</h2>
       <div class="meta"><span class="pill">核心数字</span><span class="pill">消融实验</span></div>
-      <div class="script editable" data-edit-id="slide10-script"><strong>讲稿：</strong>“实验结果主要看三点。第一，随机森林的 AUC 最高，到 0.888，说明早期信号确实能把更有潜力的仓库排到前面。第二，它的 PR-AUC 是 0.652，对少数热门项目的识别能力不错。第三，时间切分的 AUC 差距只有 -0.0048，绝对值很小，说明结果在这个时间窗口里比较稳定。下面的消融实验说明，加入早期活跃度提升最大，再加入说明文档继续提升到 0.8866，而派生比率几乎不再贡献——真正起作用的是早期活跃度和文档信号。”</div>
+      <div class="script editable" data-edit-id="slide10-script"><strong>讲稿：</strong>“实验结果主要看三点。第一，最佳 AUC 是 0.883，说明早期信号确实能把更有潜力的仓库排到前面。第二，随机森林的 PR-AUC 是 0.662，对少数热门项目的识别能力最好。第三，时间切分的 AUC 差距只有 +0.0004，说明这个时间窗口里的结果比较稳定。下面的消融实验说明，基础特征是 0.8562，加入早期活跃度后到 0.8698，加入 30 天 README 后达到 0.8885；再加入派生比率反而回落到 0.8812，说明派生比率没有带来稳定增益。”</div>
       <ul><li>转场：模型有效之后，才讲 OpenClaw 的额外价值。</li></ul>
     </div>
   </section>
@@ -289,7 +289,7 @@
     <div>
       <h2>Today Radar：把历史模型用于今天的候选发现</h2>
       <div class="meta"><span class="pill">应用闭环</span><span class="pill">候选榜单</span></div>
-      <div class="script editable" data-edit-id="slide12-script"><strong>讲稿：</strong>“Today Radar 是应用层。它不会重新训练模型，而是扫描创建 30 到 45 天的近期仓库，用同一套 19 个特征生成输入，再用训练好的随机森林模型打分。右边的排行榜展示了一个小规模实时扫描结果，每个仓库都有关注分数和行动分层。它的意义是把前面的历史回测变成今天可以使用的观察清单，后续可以继续回看这些仓库的星标增长。”</div>
+      <div class="script editable" data-edit-id="slide12-script"><strong>讲稿：</strong>“Today Radar 是应用层。它不会重新训练模型，而是扫描创建 30 到 45 天的近期仓库，用同一套 19 个特征生成输入，再用训练好的随机森林模型打分。右边的排行榜展示的是当前仓库里保存的一次离线样例结果，每个仓库都有关注分数和行动分层。它的意义是把前面的历史回测变成可以持续运行的观察清单，后续可以继续回看这些仓库的星标增长。”</div>
       <ul><li>这里不用反复强调边界，只说“观察清单”和“后续回看”即可。</li></ul>
     </div>
   </section>

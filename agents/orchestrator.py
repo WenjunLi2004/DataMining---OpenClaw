@@ -39,6 +39,7 @@ FEATURES    = DATA_DIR / "features.csv"
 RESULTS     = DATA_DIR / "model_results.json"
 DIAGNOSTIC  = DATA_DIR / "diagnostic_summary.json"
 INSIGHTS    = REPORTS_DIR / "INSIGHTS.md"
+ERROR_ANALYSIS = DATA_DIR / "error_analysis.json"
 TODAY_RADAR = REPORTS_DIR / "today_radar.json"
 DECISION_LOG = DATA_DIR / "decision_log.json"
 RUN_HISTORY  = DATA_DIR / "run_history.json"
@@ -54,6 +55,7 @@ AGENT_ID_MAP = [
     ("model-trainer",         "model-trainer"),
     ("diagnostic-builder",    "diagnostic-builder"),
     ("insight-analysis",      "insight-analyst"),
+    ("error-analyst",         "error-analyst"),
     ("report-generator",      "report-generator"),
     ("today-radar",           "today-radar"),
     ("inspect-pipeline-state","inspect"),  # not surfaced as an agent card
@@ -247,7 +249,7 @@ TOOLS = [
             "description": (
                 "Inspect current pipeline file state. Returns JSON with facts about "
                 "repos_raw_500_strict.jsonl, features.csv, model_results.json, "
-                "diagnostic_summary.json, INSIGHTS.md, and reports/. "
+                "diagnostic_summary.json, INSIGHTS.md, error_analysis.json, and reports/. "
                 "ALWAYS call this first before any other tool."
             ),
             "parameters": {"type": "object", "properties": {}, "required": []},
@@ -569,7 +571,7 @@ def run_report_generator(results: str = str(RESULTS),
                           out_dir: str = str(REPORTS_DIR),
                           out_file: str = "") -> str:
     today    = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    filename = out_file or f"{today}_final.html"
+    filename = out_file or f"{today}_two_part_report.html"
     return _run([
         "python3", str(SKILLS_DIR / "report-generator/generate.py"),
         "--results", results, "--features", features,
@@ -618,6 +620,7 @@ def _derive_decisions(state: dict, executed: List[str]) -> List[dict]:
     model = state.get("model_results", {})
     diag  = state.get("diagnostic_summary", {})
     ins   = state.get("insights", {})
+    err   = state.get("error_analysis", {})
     radar = state.get("today_radar", {})
 
     # Collect
@@ -699,10 +702,31 @@ def _derive_decisions(state: dict, executed: List[str]) -> List[dict]:
             "reason": "INSIGHTS.md exists and is newer than diagnostic_summary.json",
         })
 
+    # Error analysis
+    if "run_error_analyst" in executed:
+        if not err.get("exists"):
+            reason = "error_analysis.json not found"
+        elif err.get("newer_than_model_results") is False:
+            reason = "error_analysis.json older than model_results.json → regenerate"
+        else:
+            reason = "forced error analysis regeneration"
+        decisions.append({"step": "Error Analysis", "action": "executed", "reason": reason})
+    else:
+        if err.get("exists"):
+            decisions.append({
+                "step": "Error Analysis", "action": "skipped",
+                "reason": "error_analysis.json exists and is newer than model_results.json",
+            })
+        else:
+            decisions.append({
+                "step": "Error Analysis", "action": "missing",
+                "reason": "error_analysis.json not found",
+            })
+
     # Report (always)
     decisions.append({
         "step": "Report Generation", "action": "executed",
-        "reason": "always regenerated — captures today's date, decision log, run history, and insight analysis",
+        "reason": "always regenerated — captures today's date, decision log, run history, insight analysis, and error analysis",
     })
 
     if "run_today_radar" in executed:
@@ -807,6 +831,8 @@ def run_forced_pipeline(user_message: str, mode: str):
     executed_tools.append("run_diagnostic_builder")
     run_insight_analysis()
     executed_tools.append("run_insight_analysis")
+    run_error_analyst()
+    executed_tools.append("run_error_analyst")
 
     _save_decision_log(state_snapshot, executed_tools, run_at)
     run_report_generator()
@@ -829,9 +855,9 @@ def run_forced_pipeline(user_message: str, mode: str):
     print("[orchestrator] Forced pipeline complete.", flush=True)
     print(f"{'='*60}", flush=True)
     if mode == "full":
-        print("已强制执行完整链路：重新采集 → 特征 → 训练 → 诊断 → 洞察 → 报告。", flush=True)
+        print("已强制执行完整链路：重新采集 → 特征 → 训练 → 诊断 → 洞察 → 错误分析 → 报告。", flush=True)
     else:
-        print("已强制执行本地分析链路：特征 → 训练 → 诊断 → 洞察 → 报告；保留固定历史原始数据。", flush=True)
+        print("已强制执行本地分析链路：特征 → 训练 → 诊断 → 洞察 → 错误分析 → 报告；保留固定历史原始数据。", flush=True)
 
 
 # ---------------------------------------------------------------------------

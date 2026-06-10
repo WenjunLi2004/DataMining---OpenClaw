@@ -577,8 +577,8 @@ def sec_methodology():
   <li>无法历史回溯的当前态字段（账号粉丝数、账号公开仓库数、当前 README、当前贡献者数、文本词向量等）一律不进模型。</li>
 </ul>
 <h3>多智能体流水线</h3>
-<p>采集 → 特征 → 训练 → 事实诊断 → 洞察 → 报告，由一个编排器调度，每一步都留下中间产物与事件记录。
-洞察分析<strong>先由事实诊断算出结构化事实，再让大模型只能基于这些事实做解释</strong>，引用的数字必须能在事实摘要里校验。</p>
+<p>采集 → 特征 → 训练 → 事实诊断 → 洞察分析 / 错误分析 → 报告，由一个编排器调度，每一步都留下中间产物与事件记录。
+洞察分析<strong>先由事实诊断算出结构化事实，再让大模型只能基于这些事实做解释</strong>；错误分析则复盘高置信 FP / FN，定位模型盲区。</p>
 <p>更细的可解释分析见 <a href="./insights.html">洞察分析（insights.html）</a>；
 展示材料见 <a href="./Presentation.pdf">展示 PPT（PDF）</a> 与
 <a href="./OPEN_THIS_speech_guide.html">逐页讲稿</a>。</p>
@@ -686,7 +686,7 @@ def build_html(results, diag, decision_log, lang_counts):
   <a class="purple" href="./Presentation.pdf"><div class="t">📊 演示文稿（PDF）</div><div class="d">17 页展示 deck：多智能体 · 实验 · 应用价值。可编辑源 Presentation.pptx 在同目录。</div></a>
   <a class="blue" href="./OPEN_THIS_speech_guide.html"><div class="t">🎤 逐页讲稿</div><div class="d">每页可照着讲的稿子，约 9–10 分钟。</div></a>
   <a class="teal" href="./insights.html"><div class="t">💡 洞察分析 · insight-analysis</div><div class="d">从已验证事实里提炼“为什么”：7 个章节的可解释结论。</div></a>
-  <a class="red" href="./error_analysis.html"><div class="t">🔎 错误分析 · error-analyst</div><div class="d">复盘模型高置信错误：15 个假阳性（看着会火却没火）+ 15 个被低估的成功项目。</div></a>
+  <a class="red" href="./error_analysis.html"><div class="t">🔎 错误分析 · error-analyst</div><div class="d">复盘模型高置信错误：假阳性（看着会火却没火）+ 被低估的成功项目。</div></a>
   <a class="orange" href="./llm_comparison.html"><div class="t">🤖 大模型对比</div><div class="d">同一份事实喂 3 个旗舰 LLM，逐数字校验引用准确率。</div></a>
   <a class="green" href="./today_radar.html"><div class="t">📡 Today Radar</div><div class="d">近期候选项目观察清单（可选应用，非已验证预测）。</div></a>
 </div>"""

@@ -1,74 +1,72 @@
-# OpenClaw Insight Analysis
+好的，这是根据您提供的 `diagnostic_summary.json` 生成的 OpenClaw INSIGHTS.md 分析报告。
 
-生成时间：2026-06-03 11:00 UTC  
-生成方式：deterministic-template  
-事实来源：`data/diagnostic_summary.json`
+---
 
 ## 1. 实验结论
 
-OpenClaw 当前最稳的定位是历史回测实验：使用仓库创建后 30 天内的早期信号，预测它是否进入样本内 top 20%。本轮样本量为 500，正例为 102，positive rate=20.4%，top-20 阈值为 49 stars。
+本次实验是一个基于 500 个样本的历史回测，旨在利用仓库前 30 天的早期信号，预测其当前星级是否位于样本前 20%（阈值：49 颗星）。主要结论如下：
 
-| 模型 | AUC | PR-AUC | F1 | Precision | Recall | P@10 |
-|---|---:|---:|---:|---:|---:|---:|
-| LR | 0.8830 | 0.6243 | 0.6330 | 0.5135 | 0.8419 | 0.80 |
-| RF | 0.8812 | 0.6617 | 0.5402 | 0.6320 | 0.4890 | 0.70 |
-| XGBoost | 0.8759 | 0.6339 | 0.5994 | 0.5517 | 0.6843 | 0.80 |
-
-结论上，最佳 AUC 是 LR=0.8830，最佳 PR-AUC 是 RF=0.6617，最佳 P@10 是 LR=0.8000。最佳单特征 baseline 是 `issues_30d`，AUC=0.6628；最佳模型是 LR=0.8830，差距=0.2201。
+- **模型整体有效，但存在性能上限**：逻辑回归（LR）取得了最高的 AUC（0.882965）和 F1 分数（0.63295），随机森林（RF）取得了最高的 PR-AUC（0.661715）。所有模型均显著优于随机基线（AUC=0.5）。
+- **最佳模型是逻辑回归**：LR 在 AUC、F1 和 P@10（0.8）上表现最佳，且其高召回率（0.842）特性使其更适合用于候选名单筛选。
+- **模型性能优于单一特征基线**：最佳单一特征（`issues_30d`）的 AUC 为 0.662836，而所有模型的 AUC 均高于 0.875，证明了多特征机器学习方法的有效性。
+- **时间验证稳定**：在时间分割验证中，RF 模型的 AUC 为 0.881569，与随机交叉验证的 AUC（0.881216）差距极小（0.000352），表明模型在时间维度上具有较好的稳定性。
 
 ## 2. 模型行为解释
 
-RF 的 AUC=0.8812、Precision=0.6320、Recall=0.4890、P@10=0.70。这说明 RF 更适合“少量候选短名单”的推荐场景：它在高置信 top-10 上表现强，但默认分类阈值下 Recall 较低，会漏掉一部分潜力项目。
+- **逻辑回归 (LR)**：行为偏向于**高召回率、低精度**（召回率=0.842，精度=0.513）。这意味着它倾向于识别出大部分真正的“未来之星”，但会包含较多误报。其 P@10 为 0.8，表明在最高置信度的前 10 个预测中，有 80% 是准确的，非常适合作为**候选名单生成器**。
+- **随机森林 (RF)**：行为偏向于**高精度、低召回率**（精度=0.632，召回率=0.489）。这意味着它做出的预测非常可靠，但会遗漏大量真正的“未来之星”。其 P@20 为 0.85，表明在排名前 20 的预测中，有 85% 是准确的，适合需要**高确定性**的场景。
+- **XGBoost**：行为介于 LR 和 RF 之间，在精度（0.552）和召回率（0.684）上取得了平衡，P@10 同样为 0.8。
 
-LR 的 Recall=0.8419，通常更愿意覆盖更多正例；XGBoost 的 Precision=0.5517、Recall=0.6843，在保守性和覆盖率之间更均衡。若产品目标是“每天只看 3-5 个”，RF 的高 P@10 更有用；若目标是“尽量不要漏掉潜力股”，LR/XGBoost 的 Recall 更值得关注。
+**核心发现**：模型主要依赖**语言特征**和**早期活动特征**进行预测。`lang_Python` 是所有模型中最重要的特征，表明 Python 项目有更高的概率成为 top 20%。早期活动（如 `issues_30d`, `activity_total_30d`）也是关键信号。
 
 ## 3. 数据集问题诊断
 
-语言级最低可靠 AUC 出现在 `Go`：AUC=0.6641，positive rate=22.2%，比全局高 1.8%，比可用语言均值低 0.0661。
-
-此外，数据诊断记录了这些风险：
-
-- Python subset has much higher positive rate than global: Per-language Python AUC may be depressed by class distribution shift and within-language homogeneity.
-- Some features are strongly correlated: Feature importance should be interpreted as model attribution, not causal attribution.
-
-这些问题不否定模型结果，但会限制结论边界。当前模型只使用 19 个严格的 30 天内早期特征，已经移除 TF-IDF / author_followers / has_license / 当前 README 等无法历史回溯或泄漏当前状态的字段；所有特征均来自 created_at + 30 天窗口，不含任何事后信息。
+- **类别不平衡**：正样本（top 20%）仅占 20.4%（102/500），这是一个典型的类别不平衡问题。模型在评估时已考虑了这一点（使用了 PR-AUC）。
+- **语言分布不均与异常**：
+    - **Python 子集严重偏移**：Python 样本的正样本率高达 62%，远高于全局的 20.4%。这导致 Python 的 AUC（0.673）低于其他语言，可能是由于类分布偏移和组内同质性造成的。
+    - **TypeScript 和 Other 样本不足**：TypeScript 和 Other 语言的正样本数为 0，无法计算 AUC。TypeScript 的样本量（99）较小，其相关结论应谨慎对待。
+    - **Go 语言表现异常**：Go 语言在所有有 AUC 的语言中 AUC 最低（0.664），低于语言平均 AUC（0.730），被标记为异常。
+- **特征高度相关**：部分特征之间存在强相关性，例如 `commits_30d` 与 `activity_total_30d` 的相关系数高达 0.967。这会影响特征重要性解释的可靠性，但不会显著影响模型整体预测能力。
+- **标签定义**：标签 `is_top20` 是基于**当前**星级，而非未来星级。这是一个历史回测标签，不能直接证明模型能实时发现未来的热门项目。
 
 ## 4. 真正有意义的特征
 
-RF Gini 的最高特征是 `lang_Python`，分数=0.1611。SHAP 的最高特征是 `lang_Python`，mean|SHAP|=0.1440。
+综合 Gini、SHAP 和 XGBoost 重要性，以下特征被一致认为是预测的关键：
 
-`readme_len_30d` 与 `commits_30d` 的相关系数是 0.2150。
+1.  **`lang_Python`**：在所有重要性排名中均位列第一，是预测能力最强的单一特征。Python 项目成为 top 20% 的概率显著更高。
+2.  **`activity_total_30d`**：前 30 天的总活动量，是衡量项目早期活跃度的核心指标。
+3.  **`issues_30d`**：前 30 天创建的 Issue 数量，在 SHAP 和 Gini 重要性中均排名靠前，是早期社区参与度的良好信号。
+4.  **`readme_len_30d`**：前 30 天 README 的长度，在 Gini 和 SHAP 重要性中均表现突出。更长的 README 可能意味着项目更成熟、文档更完善。
+5.  **`commits_30d`**：前 30 天的提交次数，是早期开发活跃度的直接体现。
 
-Ablation 中最大 AUC 增量来自 `C_readme`，delta=0.0186；最小增量来自 `D_all`，delta=-0.0072。这比单看 feature importance 更可靠，因为它检验了成组特征对模型表现的边际贡献。
-
-Gini 和 SHAP 的差异：RF Gini top-5 only: commits_30d, lang_JavaScript; SHAP top-5 only: issues_30d, lang_TypeScript 解释特征时应把它们当作“模型使用了什么信号”，不要直接说成因果关系。
+**注意**：`lang_JavaScript` 和 `lang_TypeScript` 在 Gini 重要性中排名靠前，但在 SHAP 中排名较低，其重要性可能被高估。建议以 SHAP 为准。
 
 ## 5. 不能过度相信的结论
 
-不能把本项目说成已经能稳定预测“今天哪些项目一定会火”。当前标签是 `_current_stars` 形成的历史回测标签，不是实时未来标签；如果做 Today Radar，只能叫候选观察清单。
-
-Time split 结果：AUC=0.8816，random CV AUC=0.8812，gap=0.0004。这个结果能说明单窗口数据内的时序风险较小，但不能自动推广到不同月份、不同主题热潮或更长期窗口。
-
-另外，TypeScript 样本量有限（约 31 条），语言级结论需在报告里加谨慎表述：这是课程级 prototype，不是生产级预测系统。
+- **“模型可以实时发现未来的热门项目”**：**不能**。实验是历史回测，标签是当前星级。模型无法证明其能预测未来，尤其是对于刚创建、尚无历史数据的仓库。
+- **“Python 项目一定比 Rust 项目更容易成功”**：**不能**。虽然 `lang_Python` 特征极其重要，但这可能反映了样本偏差（Python 样本中 62% 是正样本）。Rust 的 AUC（0.88）非常高，说明模型在 Rust 项目上区分能力很强，但 Rust 的正样本率（16.16%）低于全局。
+- **“TypeScript 项目没有成功潜力”**：**不能**。TypeScript 样本中正样本数为 0，这很可能是由于样本量小或采样偏差导致，不代表 TypeScript 项目本身没有潜力。
+- **“`commits_30d` 和 `activity_total_30d` 是两个独立的强特征”**：**不能**。它们之间的相关性高达 0.967，几乎可以互相替代。模型可能只依赖其中一个，另一个的重要性是共享的。
+- **“Go 语言项目表现不佳”**：**不能完全相信**。Go 的 AUC 最低（0.664），但其正样本率（22.22%）与全局接近。这可能意味着 Go 项目的早期信号模式更难捕捉，而不是 Go 项目本身不好。
 
 ## 6. 下一步实验建议
 
-- P0: Keep the default experiment as a fixed historical backtest. 原因：It avoids unstable live labels and makes course evaluation reproducible.
-- P0: Present Today Radar, if used, as a candidate shortlist rather than verified prediction. 原因：Recent repositories do not yet have future labels.
-- P1: Compare model ranking against simple single-feature baselines. 原因：This shows whether the ML pipeline beats simple heuristics.
-- P1: Verify that raw data was collected with the strict-30d collector (v2+). 原因：The 19-feature model assumes all features are bounded to the first 30 days; approximate values reduce model validity.
-- P2: Treat TypeScript and per-language results as caveated unless more samples are collected. 原因：N500 TypeScript count is small.
-
-最优先的工程动作是：保留固定历史回测作为主线；把 Today Radar 降级成”近期候选项目 shortlist”；继续做单特征 baseline 对比展示；确认原始数据由 strict-30d collector（v2+）采集，确保 19 个特征全部严格锁定在 30 天窗口内。
+1.  **【P0】构建“Today Radar”模式**：将模型应用于新创建的仓库（例如，过去 7 天内创建的），输出一个候选短名单。**必须明确声明**这是一个候选列表，而非已验证的预测。
+2.  **【P1】特征工程优化**：
+    - **处理特征冗余**：考虑移除或合并高度相关的特征，如 `commits_30d` 和 `activity_total_30d`，以提高模型可解释性。
+    - **引入时间衰减**：对于“Today Radar”，应使用更近期的活动数据，而非固定的 30 天窗口。
+3.  **【P1】数据收集与采样改进**：
+    - **增加样本量**：特别是 TypeScript 和 Other 语言的样本，以获得更可靠的跨语言结论。
+    - **分层采样**：按语言进行分层采样，确保每种语言都有足够的正样本，避免 Python 主导模型。
+4.  **【P2】深入分析语言差异**：
+    - 针对 Go 和 Rust 等语言，单独训练模型或进行特征重要性分析，探索其成功的早期信号模式是否与 Python 不同。
+    - 调查 Python 样本中高正样本率的原因，是采样偏差还是 Python 生态系统的真实特性。
+5.  **【P2】尝试更复杂的模型**：虽然 LR 表现最佳，但可以尝试 LightGBM 或 CatBoost，并调整超参数，看是否能进一步提升 PR-AUC。
 
 ## 7. 可追问问题
 
-- 为什么 RF 的 AUC 高，但 Recall 明显低？
-- 如果只看 P@10，RF 是否比 XGBoost 更适合推荐场景？
-- 最佳模型相比最佳单特征 baseline 到底多赢了多少？
-- Python 子集为什么更难预测，是样本分布问题还是特征同质化问题？
-- 去掉 `contributors_30d` 后 AUC 会下降多少？
-- `readme_len_30d` 是真实质量信号，还是项目成熟度/曝光度的代理变量？
-- TypeScript 样本不足会不会影响整体模型？
-- 如果用固定 star 阈值代替样本内 top 20%，结论会不会变？
-- Today Radar 应该输出预测结论，还是候选观察清单？
+1.  对于“Today Radar”模式，我们期望的候选名单规模是多少？是 Top 10、Top 20 还是 Top 50？这将决定我们选择哪个模型（高召回率的 LR 还是高精度的 RF）。
+2.  我们是否可以获取到仓库的**创建日期**？这对于构建时间序列验证和“Today Radar”至关重要。
+3.  能否提供更多关于 Python 样本的信息？例如，这些 Python 项目是否集中在某个特定领域（如 AI/ML、Web 框架）？这有助于解释其高正样本率。
+4.  对于 Go 语言 AUC 较低的问题，我们是否可以检查一下 Go 项目的早期活动特征（如 `issues_30d`, `prs_30d`）的分布情况？是否普遍偏低？
+5.  在未来的数据收集中，我们能否增加对仓库**描述（description）** 和 **主题标签（topics）** 的文本分析？这可能会提供比单纯的语言标签更丰富的语义信息。

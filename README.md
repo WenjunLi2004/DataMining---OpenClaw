@@ -70,11 +70,15 @@
 ```mermaid
 flowchart LR
     subgraph PIPE [固定历史回测链路]
-      A1[repo-collector<br/>采集] --> A2[feature-extractor<br/>特征] --> A3[model-trainer<br/>训练] --> A4[diagnostic-builder<br/>事实诊断] --> A5[insight-analysis<br/>洞察] --> A6[report-generator<br/>报告]
+      A1[repo-collector<br/>采集] --> A2[feature-extractor<br/>特征] --> A3[model-trainer<br/>训练] --> A4[diagnostic-builder<br/>事实诊断]
+      A4 --> A5[insight-analysis<br/>洞察]
+      A3 --> A6[error-analyst<br/>错误分析]
+      A5 --> A7[report-generator<br/>报告]
+      A6 --> A7
     end
     O([Orchestrator · DeepSeek Chat + Tool Use<br/>检查状态 / 选择技能 / 运行角色 / 记录事件]) -.调度.-> PIPE
     A3 -. 复用模型/特征/阈值 .-> TR[today-radar<br/>近期候选观察清单 · 可选]
-    A6 --> CON[(OpenClaw Console<br/>dashboard/index.html)]
+    A7 --> CON[(OpenClaw Console<br/>dashboard/index.html)]
 ```
 
 | Agent | 技能目录 | 输入 → 输出 | 产物 |
@@ -84,14 +88,15 @@ flowchart LR
 | 训练 | `skills/model-trainer` | 特征表 → 模型指标 | `data/model_results.json`、`data/model_artifacts/` |
 | 事实 | `skills/diagnostic-builder` | 模型指标 → 结构化事实 | `data/diagnostic_summary.json` |
 | 洞察 | `skills/insight-analysis` | 事实摘要 → 受约束解释 | `reports/INSIGHTS.md`、`reports/insights.html` |
+| 错误 | `skills/error-analyst` | OOF 概率 → 高置信错误案例 | `data/error_analysis.json`、`reports/error_analysis.html` |
 | 报告 | `skills/report-generator` | 中间产物 → 可读报告 | `reports/*_final.html` |
 | 应用 | `skills/today-radar` | 近期仓库 → 候选打分（可选） | `reports/today_radar.{json,html}` |
 
 **OpenClaw 的不可替代性**：单次问大模型也能写分析，但容易引用不存在的数字、每次结果不一致、难以接入完整流程。OpenClaw 的做法是 **先由事实诊断模块算出结构化事实，再让大模型只能基于这些事实做解释，且引用数字必须能在事实摘要里校验** —— 把大模型从"编故事"变成"基于证据推理"。
 
-此外，新增的 **error-analyst** skill 专门找出高置信度预测错误（假阳性 / 假阴性），由 LLM 归纳共同模式——纯统计工具能找出哪些样本预测错了，但无法跨 15 个案例归纳"被冲刺型活跃度误导"这类规律，这正是多智能体框架不可替代的地方。
+其中 **error-analyst** 专门找出高置信度预测错误（假阳性 / 假阴性），由 LLM 或确定性模板归纳共同模式——纯统计工具能找出哪些样本预测错了，但无法跨案例归纳"被冲刺型活跃度误导"这类规律，这正是多智能体框架不可替代的地方。
 
-> Console 实时展示 6 个步骤状态（事件源 `data/pipeline_status.jsonl`）：
+> Console 实时展示 7 个步骤状态（事件源 `data/pipeline_status.jsonl`）：
 >
 > ![OpenClaw Console](docs/dashboard_screenshot.png)
 
@@ -224,6 +229,7 @@ openclaw-project/
 │   ├── model-trainer/         #   训练：train.py
 │   ├── diagnostic-builder/    #   事实诊断：diagnose.py
 │   ├── insight-analysis/      #   洞察：analyze.py
+│   ├── error-analyst/         #   错误分析：analyze.py
 │   ├── report-generator/      #   报告：generate.py
 │   ├── pipeline-orchestrator/ #   总指挥入口：run.py
 │   ├── today-radar/           #   应用层（可选）：radar.py
@@ -238,6 +244,7 @@ openclaw-project/
 │   ├── features.csv                 # 500 × 19 特征矩阵 + is_top20 标签
 │   ├── model_results.json           # LR/RF/XGBoost 指标 + 消融 + 重要性
 │   ├── diagnostic_summary.json      # 结构化事实（baseline/anomaly/相关性…）
+│   ├── error_analysis.json          # 高置信 FP / FN 错误案例分析
 │   ├── model_artifacts/             # 可复用 RF 模型 + feature/model schema
 │   ├── summary.md / run_history.json / decision_log.json / pipeline_status.jsonl
 │
@@ -323,7 +330,7 @@ bash scripts/run_tmp_pipeline.sh
 它固定读取 `data/repos_raw_500_strict.jsonl`，然后依次重跑：
 
 ```
-特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 报告生成
+特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 错误分析 → 报告生成
 ```
 
 默认输出目录为 `tmp/pipeline_latest/`，每次运行前会自动清空这个目录：
@@ -388,14 +395,15 @@ python3 -m http.server 8080 --bind 127.0.0.1   # http://127.0.0.1:8080/dashboard
 - [x] strict 原始数据采集：500 条记录全部含 `contributors_30d` 与历史 README 30d 字段（`all_strict_30d=true`）
 - [x] 三模型训练 + 评估（AUC / PR-AUC / P@10 / 时间切分 / 消融 / 分语言 / baseline 对比）
 - [x] 事实诊断 + 受约束洞察分析（数字真实性校验，失败回退确定性模板）
+- [x] 错误分析 Agent：自动生成高置信 FP / FN 案例与 `error_analysis.html`
+- [x] Dashboard 错误分析 tab + 7 worker 状态图
+- [x] Orchestrator 集成 error-analyst：inspect / force-local / decision log / dashboard 事件均可追踪
 - [x] OpenClaw 多智能体 pipeline + Console（dashboard）
 - [x] TypeScript 补采到 99 条
 - [x] 17 页展示 PPT + 逐页讲稿
 
 **进行中 / 计划 ⏳**
 - [ ] **多维度评分**：将 Today Radar 的单一概率分拆成"社区成长潜力 / 项目可维护性 / 推广采用潜力"三个子分，面向两类用户各有侧重
-- [ ] **Dashboard 错误分析 tab**：在 Console 里加入 error_analysis.html 的入口
-- [ ] **Orchestrator 集成 error-analyst**：pipeline 自动跑完后生成错误分析报告
 - [ ] **Embedding 特征验证**：配置 DEEPSEEK_API_KEY 后运行 `--with-embeddings`，验证语义信号是否能进一步提升 AUC
 - [ ] **Today Radar live run**：配置 GITHUB_TOKEN 后扫描创建于 30–45 天前的近期仓库（当前支持离线冒烟测试）
 

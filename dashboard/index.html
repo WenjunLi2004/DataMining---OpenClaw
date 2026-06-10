@@ -508,42 +508,47 @@ marker path { fill: #2d3748; }
   </defs>
 
   <!-- Connection lines (orchestrator center 520,75 → worker center, y=148) -->
-  <line id="conn-data-collector"     class="cline" x1="520" y1="75" x2="100" y2="148" marker-end="url(#arr-idle)"/>
-  <line id="conn-feature-engineer"   class="cline" x1="520" y1="75" x2="268" y2="148" marker-end="url(#arr-idle)"/>
-  <line id="conn-model-trainer"      class="cline" x1="520" y1="75" x2="436" y2="148" marker-end="url(#arr-idle)"/>
-  <line id="conn-diagnostic-builder" class="cline" x1="520" y1="75" x2="604" y2="148" marker-end="url(#arr-idle)"/>
-  <line id="conn-insight-analyst"    class="cline" x1="520" y1="75" x2="772" y2="148" marker-end="url(#arr-idle)"/>
-  <line id="conn-report-generator"   class="cline" x1="520" y1="75" x2="940" y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-data-collector"     class="cline" x1="520" y1="75" x2="70"  y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-feature-engineer"   class="cline" x1="520" y1="75" x2="220" y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-model-trainer"      class="cline" x1="520" y1="75" x2="370" y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-diagnostic-builder" class="cline" x1="520" y1="75" x2="520" y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-insight-analyst"    class="cline" x1="520" y1="75" x2="670" y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-error-analyst"      class="cline" x1="520" y1="75" x2="820" y2="148" marker-end="url(#arr-idle)"/>
+  <line id="conn-report-generator"   class="cline" x1="520" y1="75" x2="970" y2="148" marker-end="url(#arr-idle)"/>
 
   <!-- Orchestrator -->
   <rect id="node-pipeline-orchestrator" class="nrect n-orch-idle" x="390" y="18" width="260" height="57"/>
   <text id="lbl-pipeline-orchestrator" class="nlabel orch" x="520" y="38">流水线编排器</text>
   <text class="nsub" x="520" y="56" style="fill:#7c3aed">🧠 调度决策 · deepseek-v4-pro</text>
 
-  <!-- Sub-agent nodes (6 workers, w=150 gap=18, margin 25) -->
-  <rect id="node-data-collector"     class="nrect n-idle" x="25"  y="148" width="150" height="55"/>
-  <text id="lbl-data-collector"      class="nlabel"       x="100" y="168">数据采集</text>
-  <text class="nsub"                 x="100" y="184">🗄️ GitHub 快照</text>
+  <!-- Sub-agent nodes (7 workers, w=130 gap=20, margin 5) -->
+  <rect id="node-data-collector"     class="nrect n-idle" x="5"   y="148" width="130" height="55"/>
+  <text id="lbl-data-collector"      class="nlabel"       x="70"  y="168">数据采集</text>
+  <text class="nsub"                 x="70"  y="184">🗄️ GitHub 快照</text>
 
-  <rect id="node-feature-engineer"   class="nrect n-idle" x="193" y="148" width="150" height="55"/>
-  <text id="lbl-feature-engineer"    class="nlabel"       x="268" y="168">特征工程</text>
-  <text class="nsub"                 x="268" y="184">⚙️ 早期信号</text>
+  <rect id="node-feature-engineer"   class="nrect n-idle" x="155" y="148" width="130" height="55"/>
+  <text id="lbl-feature-engineer"    class="nlabel"       x="220" y="168">特征工程</text>
+  <text class="nsub"                 x="220" y="184">⚙️ 早期信号</text>
 
-  <rect id="node-model-trainer"      class="nrect n-idle" x="361" y="148" width="150" height="55"/>
-  <text id="lbl-model-trainer"       class="nlabel"       x="436" y="168">模型训练</text>
-  <text class="nsub"                 x="436" y="184">🤖 LR / RF / XGBoost</text>
+  <rect id="node-model-trainer"      class="nrect n-idle" x="305" y="148" width="130" height="55"/>
+  <text id="lbl-model-trainer"       class="nlabel"       x="370" y="168">模型训练</text>
+  <text class="nsub"                 x="370" y="184">🤖 三模型</text>
 
-  <rect id="node-diagnostic-builder" class="nrect n-idle" x="529" y="148" width="150" height="55"/>
-  <text id="lbl-diagnostic-builder"  class="nlabel"       x="604" y="168">事实诊断</text>
-  <text class="nsub"                 x="604" y="184">🔎 事实摘要</text>
+  <rect id="node-diagnostic-builder" class="nrect n-idle" x="455" y="148" width="130" height="55"/>
+  <text id="lbl-diagnostic-builder"  class="nlabel"       x="520" y="168">事实诊断</text>
+  <text class="nsub"                 x="520" y="184">🔎 事实摘要</text>
 
-  <rect id="node-insight-analyst"    class="nrect n-idle" x="697" y="148" width="150" height="55"/>
-  <text id="lbl-insight-analyst"     class="nlabel"       x="772" y="168">洞察分析</text>
-  <text class="nsub"                 x="772" y="184">🧠 七章解读</text>
+  <rect id="node-insight-analyst"    class="nrect n-idle" x="605" y="148" width="130" height="55"/>
+  <text id="lbl-insight-analyst"     class="nlabel"       x="670" y="168">洞察分析</text>
+  <text class="nsub"                 x="670" y="184">🧠 七章解读</text>
 
-  <rect id="node-report-generator"   class="nrect n-idle" x="865" y="148" width="150" height="55"/>
-  <text id="lbl-report-generator"    class="nlabel"       x="940" y="168">报告生成</text>
-  <text class="nsub"                 x="940" y="184">📊 HTML 报告</text>
+  <rect id="node-error-analyst"      class="nrect n-idle" x="755" y="148" width="130" height="55"/>
+  <text id="lbl-error-analyst"       class="nlabel"       x="820" y="168">错误分析</text>
+  <text class="nsub"                 x="820" y="184">🔍 FP / FN</text>
+
+  <rect id="node-report-generator"   class="nrect n-idle" x="905" y="148" width="130" height="55"/>
+  <text id="lbl-report-generator"    class="nlabel"       x="970" y="168">报告生成</text>
+  <text class="nsub"                 x="970" y="184">📊 HTML 报告</text>
 </svg>
 </div>
 

@@ -194,15 +194,15 @@ orchestrator.py  (DeepSeek Chat + Tool Use)
 
 ## Dashboard (OpenClaw 控制台)
 
-`dashboard/index.html` 展示 6 个 worker 步骤的实时状态，与 SKILL.md 的执行顺序一致：
+`dashboard/index.html` 展示 7 个 worker 步骤的实时状态，与 SKILL.md 的执行顺序一致：
 
 ```
-数据采集 → 特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 报告生成
+数据采集 → 特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 错误分析 → 报告生成
 ```
 
 - 事件源 `data/pipeline_status.jsonl` 由 `agents/orchestrator.py` 自动写入；走 Python
-  orchestrator.py 路径时 6 个步骤都会留事件，dashboard 不再出现"中间步骤静默"现象。
-- "今日雷达" tab → `reports/today_radar.html`；"洞察分析" tab → `reports/insights.html`。
+  orchestrator.py 路径时 7 个步骤都会留事件，dashboard 不再出现"中间步骤静默"现象。
+- "今日雷达" tab → `reports/today_radar.html`；"洞察分析" tab → `reports/insights.html`；"错误分析" tab → `reports/error_analysis.html`。
 - 启动 dashboard server：`cd ~/openclaw-project && python3 -m http.server 8080 --bind 127.0.0.1`
   然后浏览器访问 `http://127.0.0.1:8080/dashboard/`。`run.py` 会自动完成这一步。
 

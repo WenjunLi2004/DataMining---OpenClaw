@@ -114,7 +114,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
   <a class="purple" href="./Presentation.pdf"><div class="t">📊 演示文稿（PDF）</div><div class="d">17 页展示 deck：多智能体 · 实验 · 应用价值。可编辑源 Presentation.pptx 在同目录。</div></a>
   <a class="blue" href="./OPEN_THIS_speech_guide.html"><div class="t">🎤 逐页讲稿</div><div class="d">每页可照着讲的稿子，约 9–10 分钟。</div></a>
   <a class="teal" href="./insights.html"><div class="t">💡 洞察分析 · insight-analysis</div><div class="d">从已验证事实里提炼“为什么”：7 个章节的可解释结论。</div></a>
-  <a class="red" href="./error_analysis.html"><div class="t">🔎 错误分析 · error-analyst</div><div class="d">复盘模型高置信错误：15 个假阳性（看着会火却没火）+ 15 个被低估的成功项目。</div></a>
+  <a class="red" href="./error_analysis.html"><div class="t">🔎 错误分析 · error-analyst</div><div class="d">复盘模型高置信错误：假阳性（看着会火却没火）+ 被低估的成功项目。</div></a>
   <a class="orange" href="./llm_comparison.html"><div class="t">🤖 大模型对比</div><div class="d">同一份事实喂 3 个旗舰 LLM，逐数字校验引用准确率。</div></a>
   <a class="green" href="./today_radar.html"><div class="t">📡 Today Radar</div><div class="d">近期候选项目观察清单（可选应用，非已验证预测）。</div></a>
 </div>
@@ -122,8 +122,8 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <div class="cards">
   <div class="stat g"><div class="v">500</div><div class="l">历史仓库样本</div></div>
   <div class="stat b"><div class="v">19</div><div class="l">早期特征</div></div>
-  <div class="stat o"><div class="v">0.888</div><div class="l">最佳 AUC · RF</div></div>
-  <div class="stat p"><div class="v">0.652</div><div class="l">最佳 PR-AUC · RF</div></div>
+  <div class="stat o"><div class="v">0.883</div><div class="l">最佳 AUC · LR</div></div>
+  <div class="stat p"><div class="v">0.662</div><div class="l">最佳 PR-AUC · RF</div></div>
 </div>
 <p>本报告评估一个<strong>历史回测</strong>任务：用 GitHub 仓库<strong>创建后 30 天内</strong>能观测到的早期信号，
 预测该仓库<strong>约一年后</strong>的 star 是否进入样本前 20%。正例（进入前 20%）共 102 个，
@@ -148,13 +148,13 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <h2 id="models"><span class="n">4</span>模型结果</h2>
 <p>在固定特征矩阵上训练三类模型，5 折交叉验证。</p>
 <table><thead><tr><th>模型</th><th class="num">AUC</th><th class="num">PR-AUC</th><th class="num">P@10</th><th>角色</th></tr></thead>
-<tbody><tr><td>逻辑回归 (LR)</td><td class='num'>0.883</td><td class='num'>0.624</td><td class='num'>0.80</td><td>整体排序最好、线性稳定、易解释</td></tr><tr><td>随机森林 (RF)</td><td class='num best'>0.888</td><td class='num best'>0.652</td><td class='num'>0.80</td><td>少数正例识别最好、适合候选排序</td></tr><tr><td>XGBoost</td><td class='num'>0.876</td><td class='num'>0.634</td><td class='num'>0.80</td><td>强基线对照</td></tr></tbody></table>
+<tbody><tr><td>逻辑回归 (LR)</td><td class='num best'>0.883</td><td class='num'>0.624</td><td class='num'>0.80</td><td>整体排序最好、线性稳定、易解释</td></tr><tr><td>随机森林 (RF)</td><td class='num'>0.881</td><td class='num best'>0.662</td><td class='num'>0.70</td><td>少数正例识别最好、适合候选排序</td></tr><tr><td>XGBoost</td><td class='num'>0.876</td><td class='num'>0.634</td><td class='num'>0.80</td><td>强基线对照</td></tr></tbody></table>
 <p class="sub">绿色为该列最佳。模型并非选"唯一正确"，而是看排序、正例识别和应用需求。</p>
 
 <h2 id="metrics"><span class="n">5</span>指标解释</h2>
 <p>这是一个<strong>候选发现</strong>任务（正例约两成），所以要同时看几个互补指标：</p>
 <ul>
-  <li><strong>AUC（整体排序）</strong>：随机取一个热门和一个冷门仓库，模型把热门排前面的概率。当前最佳 0.888。</li>
+  <li><strong>AUC（整体排序）</strong>：随机取一个热门和一个冷门仓库，模型把热门排前面的概率。当前最佳 0.883。</li>
   <li><strong>PR-AUC（少数正例识别）</strong>：正例稀少时比准确率更能反映"找到潜力项目"的能力。</li>
   <li><strong>P@10（前排候选质量）</strong>：只看模型排在最前面的 10 个项目里有多少真正高增长。</li>
   <li><strong>时间切分（时间泛化）</strong>：按创建时间切训练/测试，检验随机验证是否过于乐观。</li>
@@ -166,7 +166,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <h2 id="ablation"><span class="n">6</span>消融实验</h2>
 <p>逐步加入特征，观察 AUC 变化：</p>
 <table><thead><tr><th>特征组合</th><th class="num">特征数</th><th>相对强度</th><th class="num">AUC</th></tr></thead>
-<tbody><tr><td>A: Language + Owner</td><td class='num'>7</td><td><div class='bar'><i style='width:96%;background:var(--muted)'></i></div></td><td class='num'>0.8557</td></tr><tr><td>B: A + Early Activity (30d)</td><td class='num'>11</td><td><div class='bar'><i style='width:98%;background:var(--green)'></i></div></td><td class='num'>0.8717</td></tr><tr><td>C: B + Historical README (30d)</td><td class='num'>15</td><td><div class='bar'><i style='width:99%;background:var(--blue)'></i></div></td><td class='num'>0.8866</td></tr><tr><td>D: All 19 Features (+ Derived)</td><td class='num'>19</td><td><div class='bar'><i style='width:100%;background:var(--ink)'></i></div></td><td class='num'>0.8879</td></tr></tbody></table>
+<tbody><tr><td>A: Language + Owner</td><td class='num'>7</td><td><div class='bar'><i style='width:96%;background:var(--muted)'></i></div></td><td class='num'>0.8562</td></tr><tr><td>B: A + Early Activity (30d)</td><td class='num'>11</td><td><div class='bar'><i style='width:97%;background:var(--green)'></i></div></td><td class='num'>0.8698</td></tr><tr><td>C: B + Historical README (30d)</td><td class='num'>15</td><td><div class='bar'><i style='width:100%;background:var(--blue)'></i></div></td><td class='num'>0.8885</td></tr><tr><td>D: All 19 Features (+ Derived)</td><td class='num'>19</td><td><div class='bar'><i style='width:99%;background:var(--ink)'></i></div></td><td class='num'>0.8812</td></tr></tbody></table>
 <p class="sub">加入早期说明文档后排序最好；继续加入派生比率反而带来少量噪声——并非特征越多越好。</p>
 
 <h2 id="regression"><span class="n">7</span>回归实验</h2>
@@ -176,7 +176,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <table><thead><tr>
   <th>模型</th><th class="num">R²</th>
   <th class="num">RMSE (log)</th><th class="num">MAE (log)</th>
-</tr></thead><tbody><tr><td>Ridge</td><td class='num best'>0.4988 <span style='color:var(--muted);font-size:.82rem'>±0.0948</span></td><td class='num'>1.2440</td><td class='num'>0.8529</td></tr><tr><td>RF</td><td class='num'>0.4819 <span style='color:var(--muted);font-size:.82rem'>±0.0205</span></td><td class='num'>1.2694</td><td class='num'>0.8735</td></tr><tr><td>XGBoost</td><td class='num'>0.4638 <span style='color:var(--muted);font-size:.82rem'>±0.0475</span></td><td class='num'>1.2896</td><td class='num'>0.8913</td></tr></tbody></table>
+</tr></thead><tbody><tr><td>Ridge</td><td class='num best'>0.4988 <span style='color:var(--muted);font-size:.82rem'>±0.0948</span></td><td class='num'>1.2440</td><td class='num'>0.8529</td></tr><tr><td>RF</td><td class='num'>0.4807 <span style='color:var(--muted);font-size:.82rem'>±0.0178</span></td><td class='num'>1.2707</td><td class='num'>0.8739</td></tr><tr><td>XGBoost</td><td class='num'>0.4638 <span style='color:var(--muted);font-size:.82rem'>±0.0475</span></td><td class='num'>1.2896</td><td class='num'>0.8913</td></tr></tbody></table>
 <div class="callout b">
   <b>分类 vs 回归的互补视角：</b><br>
   分类 AUC 0.883：排序"谁会进 Top 20%"的准确率。<br>
@@ -189,16 +189,16 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <h2 id="timesplit"><span class="n">8</span>时间切分</h2>
 <p>按创建时间把较早的仓库用于训练、较晚的用于测试（切分点 2025-04-18，模型 RF）：</p>
 <table><thead><tr><th>验证方式</th><th class="num">AUC</th></tr></thead><tbody>
-<tr><td>随机 5 折交叉验证</td><td class="num">0.8879</td></tr>
-<tr><td>时间切分</td><td class="num">0.8831</td></tr>
-<tr><td><strong>差距</strong></td><td class="num"><strong>-0.0048</strong></td></tr>
+<tr><td>随机 5 折交叉验证</td><td class="num">0.8812</td></tr>
+<tr><td>时间切分</td><td class="num">0.8816</td></tr>
+<tr><td><strong>差距</strong></td><td class="num"><strong>+0.0004</strong></td></tr>
 </tbody></table>
 <p class="sub">差距很小，说明结果在这个时间窗口内比较稳定，不是随机划分下才好看。</p>
 
 <h2 id="perlang"><span class="n">9</span>分语言表现</h2>
 <p>分语言看模型表现（需谨慎解读）：</p>
 <table><thead><tr><th>语言</th><th class="num">样本</th><th class="num">正例</th><th class="num">语言内 AUC</th></tr></thead>
-<tbody><tr><td>Go</td><td class='num'>99</td><td class='num'>22 (22%)</td><td class='num'>0.649</td></tr><tr><td>JavaScript</td><td class='num'>100</td><td class='num'>2 (2%)</td><td class='num'>0.888</td></tr><tr><td>Other</td><td class='num'>3</td><td class='num'>0 (0%)</td><td class='num'>样本不足</td></tr><tr><td>Python</td><td class='num'>100</td><td class='num'>62 (62%)</td><td class='num'>0.674</td></tr><tr><td>Rust</td><td class='num'>99</td><td class='num'>16 (16%)</td><td class='num'>0.885</td></tr><tr><td>TypeScript</td><td class='num'>99</td><td class='num'>0 (0%)</td><td class='num'>样本不足</td></tr></tbody></table>
+<tbody><tr><td>Go</td><td class='num'>99</td><td class='num'>22 (22%)</td><td class='num'>0.664</td></tr><tr><td>JavaScript</td><td class='num'>100</td><td class='num'>2 (2%)</td><td class='num'>0.704</td></tr><tr><td>Other</td><td class='num'>3</td><td class='num'>0 (0%)</td><td class='num'>样本不足</td></tr><tr><td>Python</td><td class='num'>100</td><td class='num'>62 (62%)</td><td class='num'>0.673</td></tr><tr><td>Rust</td><td class='num'>99</td><td class='num'>16 (16%)</td><td class='num'>0.880</td></tr><tr><td>TypeScript</td><td class='num'>99</td><td class='num'>0 (0%)</td><td class='num'>样本不足</td></tr></tbody></table>
 <div class="callout r"><b>注意：</b>Python 子集正例率明显高于全局，存在分布偏移；部分语言正例过少，语言内 AUC 不稳定。
 这是已记录的数据异常，解读时不应夸大。</div>
 
@@ -209,7 +209,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 
 <h2 id="importance"><span class="n">11</span>特征重要性</h2>
 <p>随机森林给出的特征重要性（前 10）：</p>
-<table><thead><tr><th>特征</th><th>相对重要性</th><th class="num">值</th></tr></thead><tbody><tr><td>语言=Python</td><td><div class='bar'><i style='width:100%;background:var(--green)'></i></div></td><td class='num'>0.1862</td></tr><tr><td>前30天提交数</td><td><div class='bar'><i style='width:88%;background:var(--green)'></i></div></td><td class='num'>0.1642</td></tr><tr><td>前30天总活跃度</td><td><div class='bar'><i style='width:54%;background:var(--green)'></i></div></td><td class='num'>0.1017</td></tr><tr><td>语言=JavaScript</td><td><div class='bar'><i style='width:53%;background:var(--green)'></i></div></td><td class='num'>0.0998</td></tr><tr><td>语言=TypeScript</td><td><div class='bar'><i style='width:46%;background:var(--green)'></i></div></td><td class='num'>0.0860</td></tr><tr><td>人均提交</td><td><div class='bar'><i style='width:45%;background:var(--green)'></i></div></td><td class='num'>0.0840</td></tr><tr><td>30天说明文档长度</td><td><div class='bar'><i style='width:38%;background:var(--green)'></i></div></td><td class='num'>0.0717</td></tr><tr><td>前30天问题数</td><td><div class='bar'><i style='width:37%;background:var(--green)'></i></div></td><td class='num'>0.0706</td></tr><tr><td>语言=Go</td><td><div class='bar'><i style='width:23%;background:var(--green)'></i></div></td><td class='num'>0.0431</td></tr><tr><td>请求/问题比</td><td><div class='bar'><i style='width:15%;background:var(--green)'></i></div></td><td class='num'>0.0288</td></tr></tbody></table>
+<table><thead><tr><th>特征</th><th>相对重要性</th><th class="num">值</th></tr></thead><tbody><tr><td>语言=Python</td><td><div class='bar'><i style='width:100%;background:var(--green)'></i></div></td><td class='num'>0.1611</td></tr><tr><td>前30天总活跃度</td><td><div class='bar'><i style='width:84%;background:var(--green)'></i></div></td><td class='num'>0.1355</td></tr><tr><td>前30天提交数</td><td><div class='bar'><i style='width:65%;background:var(--green)'></i></div></td><td class='num'>0.1057</td></tr><tr><td>语言=JavaScript</td><td><div class='bar'><i style='width:59%;background:var(--green)'></i></div></td><td class='num'>0.0958</td></tr><tr><td>30天说明文档长度</td><td><div class='bar'><i style='width:53%;background:var(--green)'></i></div></td><td class='num'>0.0865</td></tr><tr><td>语言=TypeScript</td><td><div class='bar'><i style='width:50%;background:var(--green)'></i></div></td><td class='num'>0.0810</td></tr><tr><td>前30天问题数</td><td><div class='bar'><i style='width:46%;background:var(--green)'></i></div></td><td class='num'>0.0743</td></tr><tr><td>人均提交</td><td><div class='bar'><i style='width:38%;background:var(--green)'></i></div></td><td class='num'>0.0616</td></tr><tr><td>前30天合并请求数</td><td><div class='bar'><i style='width:33%;background:var(--green)'></i></div></td><td class='num'>0.0541</td></tr><tr><td>是否组织账号</td><td><div class='bar'><i style='width:25%;background:var(--green)'></i></div></td><td class='num'>0.0406</td></tr></tbody></table>
 
 <h2 id="clustering"><span class="n">12</span>聚类分析</h2>
 <p>对 500 个仓库的 19 个早期特征做 <strong>KMeans 聚类（k=4）</strong>，
@@ -280,7 +280,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <h3>数字的现实含义</h3>
 <div class="cards">
   <div class="stat g">
-    <div class="v">0.888</div>
+    <div class="v">0.883</div>
     <div class="l">最佳 AUC · 排序准确率</div>
   </div>
   <div class="stat b">
@@ -292,12 +292,12 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
     <div class="l">vs 随机猜测提升倍数（基线约 20%）</div>
   </div>
   <div class="stat p">
-    <div class="v">0.652</div>
+    <div class="v">0.662</div>
     <div class="l">PR-AUC · 少数正例识别能力</div>
   </div>
 </div>
 <ul>
-  <li><strong>AUC 0.888</strong>：随机取一个"后来火了"和一个"没火"的仓库，模型把前者排在前面的概率是 0.888，远高于最强单特征规则（0.663）。</li>
+  <li><strong>AUC 0.883</strong>：随机取一个"后来火了"和一个"没火"的仓库，模型把前者排在前面的概率是 0.883，远高于最强单特征规则（0.663）。</li>
   <li><strong>P@10 = 0.80（8/10）</strong>：用 OpenClaw 排出的前 10 个仓库，平均有 <strong>8 个</strong>一年后确实跑出来——随机猜测只有 2 个，提升约 4 倍。</li>
   <li><strong>提前 ≈11 个月</strong>：观察窗口是创建后 30 天，而 GitHub Trending 通常在项目积累数百至数千 star 后才推送，两者之间的时间差就是"发现优势"。</li>
 </ul>
@@ -328,16 +328,16 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
   <li>无法历史回溯的当前态字段（账号粉丝数、账号公开仓库数、当前 README、当前贡献者数、文本词向量等）一律不进模型。</li>
 </ul>
 <h3>多智能体流水线</h3>
-<p>采集 → 特征 → 训练 → 事实诊断 → 洞察 → 报告，由一个编排器调度，每一步都留下中间产物与事件记录。
-洞察分析<strong>先由事实诊断算出结构化事实，再让大模型只能基于这些事实做解释</strong>，引用的数字必须能在事实摘要里校验。</p>
+<p>采集 → 特征 → 训练 → 事实诊断 → 洞察分析 / 错误分析 → 报告，由一个编排器调度，每一步都留下中间产物与事件记录。
+洞察分析<strong>先由事实诊断算出结构化事实，再让大模型只能基于这些事实做解释</strong>；错误分析则复盘高置信 FP / FN，定位模型盲区。</p>
 <p>更细的可解释分析见 <a href="./insights.html">洞察分析（insights.html）</a>；
 展示材料见 <a href="./Presentation.pdf">展示 PPT（PDF）</a> 与
 <a href="./OPEN_THIS_speech_guide.html">逐页讲稿</a>。</p>
 <h2 id="runinfo"><span class="n">✓</span>本次运行</h2>
-<p class="sub">本次运行时间：2026-06-03T13:20:00Z。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
-<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>Data Collection</td><td>skipped</td><td class='sub'>复用固定历史快照（30 天窗口原始数据已存在）</td></tr><tr><td>Feature Extraction</td><td>executed</td><td class='sub'>从历史快照重建 19 维早期特征矩阵</td></tr><tr><td>Model Training</td><td>executed</td><td class='sub'>刷新 LR/RF/XGBoost 指标、OOF 概率与可复用模型产物</td></tr><tr><td>Diagnostic Builder</td><td>executed</td><td class='sub'>重建以事实为基准的诊断摘要</td></tr><tr><td>Insight Analysis</td><td>executed</td><td class='sub'>基于事实摘要生成可解释洞察</td></tr><tr><td>Error Analysis</td><td>executed</td><td class='sub'>基于 RF 的 OOF 概率定位高置信 FP / FN，归纳模型盲区</td></tr><tr><td>Report Generation</td><td>executed</td><td class='sub'>重新生成浅色主题 HTML 报告（含聚类分析与应用价值）</td></tr></tbody></table>
+<p class="sub">本次运行时间：2026-06-10T14:09:36.094074+00:00。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
+<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>Data Collection</td><td>skipped</td><td class='sub'>fixed historical snapshot exists (11.1d old); age alone does not trigger recollection</td></tr><tr><td>Feature Extraction</td><td>executed</td><td class='sub'>forced re-extraction</td></tr><tr><td>Model Training</td><td>executed</td><td class='sub'>forced re-training</td></tr><tr><td>Diagnostic Builder</td><td>executed</td><td class='sub'>forced diagnostic rebuild</td></tr><tr><td>Insight Analysis</td><td>executed</td><td class='sub'>forced insight regeneration</td></tr><tr><td>Error Analysis</td><td>executed</td><td class='sub'>forced error analysis regeneration</td></tr><tr><td>Report Generation</td><td>executed</td><td class='sub'>always regenerated — captures today&#x27;s date, decision log, run history, insight analysis, and error analysis</td></tr><tr><td>Today Radar</td><td>available</td><td class='sub'>latest candidate shortlist exists at /Users/wenjun/openclaw-project/reports/today_radar.json</td></tr></tbody></table>
 
-  <footer>本报告由 report-generator 自动生成 · 2026-06-10 12:47 UTC ·
+  <footer>本报告由 report-generator 自动生成 · 2026-06-10 17:28 UTC ·
   数据来源：<code>model_results.json</code> / <code>diagnostic_summary.json</code>。
   课程级历史回测，不代表生产级实时预测。</footer>
 </main>

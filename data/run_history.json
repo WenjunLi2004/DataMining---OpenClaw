@@ -19,5 +19,25 @@
     ],
     "n_samples": 500,
     "notes": "Current clean strict-30d run only; older leakage-era data and histories were removed from the project workspace."
+  },
+  {
+    "run_at": "2026-06-10T14:09:36.094074+00:00",
+    "steps_executed": [
+      "run_feature_extractor",
+      "run_model_trainer",
+      "run_diagnostic_builder",
+      "run_insight_analysis",
+      "run_error_analyst",
+      "run_report_generator"
+    ],
+    "rf_auc": 0.8812162070524412,
+    "rf_pr_auc": 0.6617145460687641,
+    "best_model": "LR",
+    "top3_features": [
+      "lang_Python",
+      "activity_total_30d",
+      "commits_30d"
+    ],
+    "n_samples": 500
   }
 ]

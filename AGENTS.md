@@ -214,10 +214,10 @@ orchestrator.py  (DeepSeek Chat + Tool Use)
 
 ## Dashboard (OpenClaw 控制台)
 
-`dashboard/index.html` 展示 6 个 worker 步骤的实时状态，与 SKILL.md 的执行顺序一一对应：
+`dashboard/index.html` 展示 7 个 worker 步骤的实时状态，与 SKILL.md 的执行顺序一一对应：
 
 ```
-数据采集 → 特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 报告生成
+数据采集 → 特征工程 → 模型训练 → 事实诊断 → 洞察分析 → 错误分析 → 报告生成
 ```
 
 数据源：
@@ -234,6 +234,7 @@ orchestrator.py  (DeepSeek Chat + Tool Use)
 | 历史回测报告 | `reports/latest_final.html` |
 | 今日雷达 | `reports/today_radar.html` |
 | 洞察分析 | `reports/insights.html`（由 `report-generator` 把 `INSIGHTS.md` 渲染成 HTML） |
+| 错误分析 | `reports/error_analysis.html` |
 
 启动方式：
 

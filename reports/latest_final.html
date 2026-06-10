@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OpenClaw · 模型评估报告 2026-06-04</title>
+<title>OpenClaw · 模型评估报告 2026-06-09</title>
 <style>
 :root{
   --bg:#fbfcfe; --ink:#232a31; --muted:#5d6977; --line:#e1e8f0; --soft:#f4f7fb;
@@ -95,7 +95,7 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 <li><a href="#runinfo">本次运行</a></li></ol>
 </nav>
 <main>
-  <span class="tag">数据快照 2026-06-04</span>
+  <span class="tag">数据快照 2026-06-09</span>
   <h1>模型评估报告</h1>
   <p class="sub">用 GitHub 仓库创建后 30 天的早期信号，预测约一年后是否进入样本前 20%。所有数字均来自当前实验产物。</p>
   <div class="part"><div class="pn">Part 1</div><div class="pt">实验结果</div><div class="ps">当前模型在固定 500 仓库历史回测上的表现</div></div><h2 id="overview"><span class="n">1</span>概览</h2>
@@ -314,10 +314,10 @@ footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); colo
 展示材料见 <a href="./OPEN_THIS_latest_presentation.pdf">展示 PPT（PDF）</a> 与
 <a href="./OPEN_THIS_speech_guide.html">逐页讲稿</a>。</p>
 <h2 id="runinfo"><span class="n">✓</span>本次运行</h2>
-<p class="sub">本次运行时间：2026-06-03T11:02:26Z。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
-<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>Data Collection</td><td>skipped</td><td class='sub'>fixed strict-30d raw data already exists</td></tr><tr><td>Feature Extraction</td><td>executed</td><td class='sub'>refreshed 19-feature matrix from strict raw data</td></tr><tr><td>Model Training</td><td>executed</td><td class='sub'>refreshed LR/RF/XGBoost metrics and model artifacts</td></tr><tr><td>Diagnostic Builder</td><td>executed</td><td class='sub'>rebuilt fact-grounded diagnostic summary</td></tr><tr><td>Insight Analysis</td><td>executed</td><td class='sub'>generated deterministic template insights</td></tr><tr><td>Report Generation</td><td>executed</td><td class='sub'>regenerated light-themed HTML reports</td></tr></tbody></table>
+<p class="sub">本次运行时间：2026-06-03T13:20:00Z。下表是编排器对各步骤的调度决策（固定历史快照下，多数步骤会复用已有产物）。</p>
+<table><thead><tr><th>步骤</th><th>动作</th><th>原因</th></tr></thead><tbody><tr><td>Data Collection</td><td>skipped</td><td class='sub'>复用固定历史快照（30 天窗口原始数据已存在）</td></tr><tr><td>Feature Extraction</td><td>executed</td><td class='sub'>从历史快照重建 19 维早期特征矩阵</td></tr><tr><td>Model Training</td><td>executed</td><td class='sub'>刷新 LR/RF/XGBoost 指标、OOF 概率与可复用模型产物</td></tr><tr><td>Diagnostic Builder</td><td>executed</td><td class='sub'>重建以事实为基准的诊断摘要</td></tr><tr><td>Insight Analysis</td><td>executed</td><td class='sub'>基于事实摘要生成可解释洞察</td></tr><tr><td>Error Analysis</td><td>executed</td><td class='sub'>基于 RF 的 OOF 概率定位高置信 FP / FN，归纳模型盲区</td></tr><tr><td>Report Generation</td><td>executed</td><td class='sub'>重新生成浅色主题 HTML 报告（含聚类分析与应用价值）</td></tr></tbody></table>
 
-  <footer>本报告由 report-generator 自动生成 · 2026-06-04 12:18 UTC ·
+  <footer>本报告由 report-generator 自动生成 · 2026-06-09 18:05 UTC ·
   数据来源：<code>model_results.json</code> / <code>diagnostic_summary.json</code>。
   课程级历史回测，不代表生产级实时预测。</footer>
 </main>

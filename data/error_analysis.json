@@ -1,0 +1,580 @@
+{
+  "fp_threshold": 0.65,
+  "fn_threshold": 0.35,
+  "fp_cases": [
+    {
+      "rank": 1,
+      "full_name": "Otutu11/Extreme-Weather-Event-Classification",
+      "language": "Python",
+      "current_stars": 47,
+      "prob": 0.9736,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 0.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 0.0,
+        "readme_len_30d": 0.0,
+        "activity_total_30d": 0.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 0.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 2,
+      "full_name": "Eng-Hasan-Hajjar/Digital-Currency-Price-Prediction-using-Neural-Networks-and-Artificial-Intelligence",
+      "language": "Python",
+      "current_stars": 19,
+      "prob": 0.9736,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 0.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 0.0,
+        "readme_len_30d": 0.0,
+        "activity_total_30d": 0.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 0.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 3,
+      "full_name": "Otutu11/-Chlorophyll-a-and-Ocean-Productivity-Prediction",
+      "language": "Python",
+      "current_stars": 47,
+      "prob": 0.955,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 0.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 0.0,
+        "readme_len_30d": 0.0,
+        "activity_total_30d": 0.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 0.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 4,
+      "full_name": "MenaWANG/mlarena",
+      "language": "Python",
+      "current_stars": 38,
+      "prob": 0.945,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 62.0,
+        "issues_30d": 0.0,
+        "prs_30d": 24.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 5408.0,
+        "activity_total_30d": 86.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 62.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 5,
+      "full_name": "user1342/Folly",
+      "language": "Python",
+      "current_stars": 35,
+      "prob": 0.94,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 50.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 8775.0,
+        "activity_total_30d": 50.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 50.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 6,
+      "full_name": "CyberNexusX/AI-Powered-Threat-Detection-System",
+      "language": "Python",
+      "current_stars": 35,
+      "prob": 0.935,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 12.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 3187.0,
+        "activity_total_30d": 12.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 12.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 7,
+      "full_name": "divanvisagie/reservoir",
+      "language": "Rust",
+      "current_stars": 13,
+      "prob": 0.925,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 91.0,
+        "issues_30d": 11.0,
+        "prs_30d": 2.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 8774.0,
+        "activity_total_30d": 104.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 91.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 8,
+      "full_name": "nec-research/DIMOS",
+      "language": "Python",
+      "current_stars": 31,
+      "prob": 0.895,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 1.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 1802.0,
+        "activity_total_30d": 1.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 1.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 9,
+      "full_name": "8treenet/deeptrade",
+      "language": "Go",
+      "current_stars": 46,
+      "prob": 0.8918,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 0.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 0.0,
+        "readme_len_30d": 0.0,
+        "activity_total_30d": 0.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 0.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 10,
+      "full_name": "AI-sandbox/ADAMIXTURE",
+      "language": "Python",
+      "current_stars": 26,
+      "prob": 0.888,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 0.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 0.0,
+        "readme_len_30d": 0.0,
+        "activity_total_30d": 0.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 0.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 11,
+      "full_name": "shenxiangzhuang/aic",
+      "language": "Rust",
+      "current_stars": 7,
+      "prob": 0.86,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 88.0,
+        "issues_30d": 7.0,
+        "prs_30d": 35.0,
+        "contributors_30d": 3.0,
+        "readme_len_30d": 9857.0,
+        "activity_total_30d": 130.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 29.333333333333332,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 12,
+      "full_name": "aadya940/numpyai",
+      "language": "Python",
+      "current_stars": 23,
+      "prob": 0.85,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 68.0,
+        "issues_30d": 6.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 2687.0,
+        "activity_total_30d": 74.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 68.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 13,
+      "full_name": "aarangop/rust-ml",
+      "language": "Rust",
+      "current_stars": 2,
+      "prob": 0.815,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 40.0,
+        "issues_30d": 5.0,
+        "prs_30d": 2.0,
+        "contributors_30d": 2.0,
+        "readme_len_30d": 6957.0,
+        "activity_total_30d": 47.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 20.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 14,
+      "full_name": "SrujanPR/Vehicle-Detection-and-Counter-using-Yolo11",
+      "language": "Python",
+      "current_stars": 27,
+      "prob": 0.81,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 7.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 3137.0,
+        "activity_total_30d": 7.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 7.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 15,
+      "full_name": "manu12121999/GIMP-Selection-Refiner",
+      "language": "Python",
+      "current_stars": 30,
+      "prob": 0.805,
+      "is_top20": 0,
+      "features": {
+        "commits_30d": 8.0,
+        "issues_30d": 0.0,
+        "prs_30d": 2.0,
+        "contributors_30d": 2.0,
+        "readme_len_30d": 1665.0,
+        "activity_total_30d": 10.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 4.0,
+        "has_pr_activity_30d": 1.0
+      }
+    }
+  ],
+  "fn_cases": [
+    {
+      "rank": 1,
+      "full_name": "Dramwig/FlowLine",
+      "language": "JavaScript",
+      "current_stars": 390,
+      "prob": 0.005,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 29.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 1446.0,
+        "activity_total_30d": 29.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 29.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 2,
+      "full_name": "ConAcademy/buttplug-mcp",
+      "language": "Go",
+      "current_stars": 131,
+      "prob": 0.05,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 2.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 9333.0,
+        "activity_total_30d": 2.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 2.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 3,
+      "full_name": "The-Pocket/PocketFlow-Go",
+      "language": "Go",
+      "current_stars": 72,
+      "prob": 0.055,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 3.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 3926.0,
+        "activity_total_30d": 3.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 3.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 4,
+      "full_name": "maximhq/bifrost",
+      "language": "Go",
+      "current_stars": 5346,
+      "prob": 0.055,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 2.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 6390.0,
+        "activity_total_30d": 2.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 2.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 5,
+      "full_name": "Helicone/ai-gateway",
+      "language": "Rust",
+      "current_stars": 593,
+      "prob": 0.09,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 115.0,
+        "issues_30d": 0.0,
+        "prs_30d": 22.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 905.0,
+        "activity_total_30d": 137.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 115.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 6,
+      "full_name": "pancsta/secai",
+      "language": "Go",
+      "current_stars": 86,
+      "prob": 0.115,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 5.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 12792.0,
+        "activity_total_30d": 5.0,
+        "readme_has_demo_url_30d": 1.0,
+        "commits_per_contributor_30d": 5.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 7,
+      "full_name": "Sriram-PR/doc-scraper",
+      "language": "Go",
+      "current_stars": 91,
+      "prob": 0.125,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 16.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 14866.0,
+        "activity_total_30d": 16.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 16.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 8,
+      "full_name": "terhechte/cursor-rust-tools",
+      "language": "Rust",
+      "current_stars": 83,
+      "prob": 0.13,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 10.0,
+        "issues_30d": 0.0,
+        "prs_30d": 1.0,
+        "contributors_30d": 2.0,
+        "readme_len_30d": 4136.0,
+        "activity_total_30d": 11.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 5.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 9,
+      "full_name": "pansila/mcp_server_gdb",
+      "language": "Rust",
+      "current_stars": 66,
+      "prob": 0.15,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 28.0,
+        "issues_30d": 0.0,
+        "prs_30d": 23.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 1849.0,
+        "activity_total_30d": 51.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 28.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 10,
+      "full_name": "pentilm/torch_quant",
+      "language": "Python",
+      "current_stars": 78,
+      "prob": 0.2075,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 1.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 5505.0,
+        "activity_total_30d": 1.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 1.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 11,
+      "full_name": "seekrays/mcp-monitor",
+      "language": "Go",
+      "current_stars": 83,
+      "prob": 0.235,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 8.0,
+        "issues_30d": 0.0,
+        "prs_30d": 1.0,
+        "contributors_30d": 2.0,
+        "readme_len_30d": 2486.0,
+        "activity_total_30d": 9.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 4.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 12,
+      "full_name": "MegaGrindStone/go-light-rag",
+      "language": "Go",
+      "current_stars": 61,
+      "prob": 0.235,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 48.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 8184.0,
+        "activity_total_30d": 48.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 48.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 13,
+      "full_name": "go-a2a/adk-go",
+      "language": "Go",
+      "current_stars": 104,
+      "prob": 0.2492,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 66.0,
+        "issues_30d": 0.0,
+        "prs_30d": 0.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 0.0,
+        "activity_total_30d": 66.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 66.0,
+        "has_pr_activity_30d": 0.0
+      }
+    },
+    {
+      "rank": 14,
+      "full_name": "myysophia/OpsAgent",
+      "language": "Go",
+      "current_stars": 50,
+      "prob": 0.265,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 22.0,
+        "issues_30d": 0.0,
+        "prs_30d": 14.0,
+        "contributors_30d": 1.0,
+        "readme_len_30d": 15961.0,
+        "activity_total_30d": 36.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 22.0,
+        "has_pr_activity_30d": 1.0
+      }
+    },
+    {
+      "rank": 15,
+      "full_name": "LibreTranslate/LTEngine",
+      "language": "Rust",
+      "current_stars": 150,
+      "prob": 0.285,
+      "is_top20": 1,
+      "features": {
+        "commits_30d": 41.0,
+        "issues_30d": 0.0,
+        "prs_30d": 1.0,
+        "contributors_30d": 2.0,
+        "readme_len_30d": 5865.0,
+        "activity_total_30d": 42.0,
+        "readme_has_demo_url_30d": 0.0,
+        "commits_per_contributor_30d": 20.5,
+        "has_pr_activity_30d": 1.0
+      }
+    }
+  ],
+  "analysis": "### 1. 假阳性规律（统计摘要，无 LLM）\n\nFP 案例（15 个）的早期信号较强但最终未入 Top 20%：\n平均前 30 天提交 28.5 次、Issue 1.9 个、README 长度 3483 字符，\n最终平均 star 数仅 28。早期活跃度高但可能缺乏持续维护或社区运营，\n导致模型被\"冲刺型\"活跃信号误导。\n\n### 2. 假阴性规律（统计摘要，无 LLM）\n\nFN 案例（15 个）早期信号偏弱但最终进入 Top 20%：\n平均前 30 天提交 26.4 次、Issue 0.0 个、README 长度 6243 字符，\n最终平均 star 数 492。这类项目可能在 30 天窗口后才受到关注，\n或因某次外部传播（博客、媒体报道）导致突发增长，早期信号无法预测。\n\n### 3. 改进启示（统计摘要，无 LLM）\n\n可考虑引入以下补充信号：\n- 项目描述与 README 的语义相似度（Embedding 特征）\n- 作者历史上是否有过高 star 仓库\n- 第 15-30 天相比第 1-14 天的增量活跃度（趋势特征）\n- 项目是否被已有高 star 项目依赖\n\n（设置 DEEPSEEK_API_KEY 后可获得 LLM 深度分析。）\n",
+  "used_llm": false
+}

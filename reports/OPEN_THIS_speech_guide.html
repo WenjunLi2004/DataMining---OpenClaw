@@ -132,12 +132,12 @@
       </div>
     </div>
     <div class="callout editable" data-edit-id="expand-plan">
-      <strong>页面顺序：</strong>封面 → Motivation → OpenClaw 架构 → Agent 如何封装 → 数据采集 → 数据样例 → 19 特征全景 → 模型训练 → 指标解释 → 实验结果 → 事实诊断与洞察 → Today Radar → 总结。
+      <strong>页面顺序：</strong>封面 → Motivation → OpenClaw 架构 → Agent 如何封装 → 数据采集 → 数据样例 → 19 特征全景 → 模型训练 → 指标解释 → 实验结果 → 事实诊断与错误分析 → 聚类与模型盲区 → Today Radar → 总结 → 致谢。
     </div>
   </section>
 
   <section>
-    <h2>13 页 PPT：逐页讲述逻辑</h2>
+    <h2>17 页 PPT：逐页讲述逻辑</h2>
     <p class="note">下面按当前 OPEN_THIS_latest_presentation.pptx 来写。每页都有一段可以直接照着讲的稿子。时间不用死记，按你自然语速讲完这一段即可。</p>
   </section>
 
@@ -145,8 +145,8 @@
     <div class="slide-num"><b>01</b><span>Cover</span></div>
     <div>
       <h2>封面：先把项目定位讲准</h2>
-      <div class="meta"><span class="pill">开场</span><span class="pill">关键词：500 / 19 / 0.883 / 1 年标签窗口</span></div>
-      <div class="script editable" data-edit-id="slide1-script"><strong>讲稿：</strong>“我的项目是一个开源项目潜力发现系统。它关注的问题是：一个仓库刚创建时，还没有完全流行起来，我们能不能根据早期行为判断它是否值得继续观察？这页先给出四个核心数字：我采集了 500 个历史仓库，把每个仓库转换成 19 个早期特征，模型最好的 AUC 是 0.883，并且标签来自约一年后的星标表现。后面我会按数据采集、特征工程、模型训练、结果解释、OpenClaw 多智能体流程和 Today Radar 应用来讲。”</div>
+      <div class="meta"><span class="pill">开场</span><span class="pill">关键词：500 / 19 / 0.888 / 1 年标签窗口</span></div>
+      <div class="script editable" data-edit-id="slide1-script"><strong>讲稿：</strong>“我的项目是一个开源项目潜力发现系统。它关注的问题是：一个仓库刚创建时，还没有完全流行起来，我们能不能根据早期行为判断它是否值得继续观察？这页先给出四个核心数字：我采集了 500 个历史仓库，把每个仓库转换成 19 个早期特征，模型最好的 AUC 是 0.888（随机森林），并且标签来自约一年后的星标表现。后面我会按数据采集、特征工程、模型训练、结果解释、OpenClaw 多智能体流程和 Today Radar 应用来讲。”</div>
       <ul><li>这一页只讲项目定位，不展开“如何防泄漏”这类论文细节。</li><li>转场：为什么这个问题值得做？进入动机页。</li></ul>
     </div>
   </section>
@@ -164,10 +164,10 @@
   <section class="slide">
     <div class="slide-num"><b>03</b><span>OpenClaw</span></div>
     <div>
-      <h2>多智能体架构：总指挥 + 多个专职角色</h2>
+      <h2>多智能体架构：一个编排器 + 六个专职角色</h2>
       <div class="meta"><span class="pill">架构解释</span><span class="pill">证据链</span></div>
-      <div class="script editable" data-edit-id="slide3-script"><strong>讲稿：</strong>“这一页是 OpenClaw 的多智能体架构。它不是把所有事情塞进一个大模型回答里，而是有一个总指挥负责调度，下面有多个专职角色。采集角色负责拿 GitHub 数据，特征角色负责把原始记录变成特征表，训练角色负责训练和评估模型，事实角色负责把实验结果整理成结构化事实，洞察和报告角色再把这些事实变成可读解释。这样的好处是每一步都有中间产物，出了问题也能定位到是哪一步。”</div>
-      <ul><li>总指挥的功能：检查状态、选择任务、启动角色、记录事件、把结果串起来。</li><li>转场：下一页解释“角色”在代码里是怎么封装的。</li></ul>
+      <div class="script editable" data-edit-id="slide3-script"><strong>讲稿：</strong>“这一页是 OpenClaw 的多智能体架构。它不是把所有事情塞进一个大模型回答里，而是有一个编排器负责调度，下面是六个专职角色：采集角色拿 GitHub 数据，特征角色把原始记录变成特征表，训练角色训练和评估模型，事实角色把结果整理成结构化事实，洞察角色基于事实做正面解释，这次新增的误差角色专门复盘模型看错的案例；最后由报告生成器把它们的产物汇总成一份 HTML 报告。这样的好处是每一步都有中间产物，出了问题也能定位到是哪一步。”</div>
+      <ul><li>编排器的功能：检查状态、选择任务、启动角色、记录事件、把结果串起来。</li><li>洞察和误差是一对：一个解释“为什么模型对”，一个复盘“模型在哪里错”。</li><li>转场：下一页解释“角色”在代码里是怎么封装的。</li></ul>
     </div>
   </section>
 
@@ -176,7 +176,7 @@
     <div>
       <h2>Agent 封装：每个角色都有清晰输入输出</h2>
       <div class="meta"><span class="pill">系统实现</span><span class="pill">可复现</span></div>
-      <div class="script editable" data-edit-id="slide4-script"><strong>讲稿：</strong>“这里我想说明，OpenClaw 里的 Agent 不是只写一句提示词。每个角色都有自己的技能说明、执行脚本、输入文件、输出文件和事件记录。比如采集角色的输入是 GitHub 查询条件，输出是仓库原始记录；训练角色的输入是特征表，输出是模型指标；洞察角色的输入不是原始数据，而是已经算好的事实摘要。这样做的意义是把一次性的实验变成一套可以重复运行、可以检查结果来源的流程。”</div>
+      <div class="script editable" data-edit-id="slide4-script"><strong>讲稿：</strong>“这里我想说明，OpenClaw 里的 Agent 不是只写一句提示词。每个角色都有自己的技能说明、执行脚本、输入文件、输出文件和事件记录。比如采集角色的输入是 GitHub 查询条件，输出是仓库原始记录；训练角色的输入是特征表，输出是模型指标；洞察角色的输入是已经算好的事实摘要；这次新增的误差角色，输入是随机森林的 OOF 概率，输出是高置信预测错误（FP / FN）的规律。这样做的意义是把一次性的实验变成一套可以重复运行、可以检查结果来源的流程。”</div>
       <ul><li>这一页回答“OpenClaw 到底发挥了什么作用”：组织复杂流程，而不是替代机器学习模型。</li><li>转场：系统架构讲完后，进入第一步数据采集。</li></ul>
     </div>
   </section>
@@ -219,8 +219,8 @@
     <div>
       <h2>模型训练：三类模型各有作用</h2>
       <div class="meta"><span class="pill">训练流程</span><span class="pill">模型特点</span></div>
-      <div class="script editable" data-edit-id="slide8-script"><strong>讲稿：</strong>“特征表准备好以后，我训练了三类模型。逻辑回归是线性模型，优点是稳定、容易解释；随机森林能处理非线性关系和特征组合，在候选排序里很有用；XGBoost 是更强的梯度提升模型，用来做对照。训练阶段不只是得到分数，还会保存模型文件、特征顺序和动态阈值，后面的 Today Radar 可以直接复用。”</div>
-      <table><tr><th>模型</th><th>特点</th><th>本项目里怎么理解</th></tr><tr><td>逻辑回归</td><td>线性、稳定</td><td>AUC 0.883，整体排序最好</td></tr><tr><td>随机森林</td><td>非线性、能处理组合关系</td><td>PR-AUC 0.662，适合候选排序</td></tr><tr><td>XGBoost</td><td>拟合能力强</td><td>AUC 0.876，作为强基线对照</td></tr></table>
+      <div class="script editable" data-edit-id="slide8-script"><strong>讲稿：</strong>“特征表准备好以后，我训练了三类模型。逻辑回归是线性模型，优点是稳定、容易解释；随机森林能处理非线性关系和特征组合，在候选排序里很有用；XGBoost 是更强的梯度提升模型，用来做对照。训练阶段不只是得到分数，还会保存模型文件、特征顺序、动态阈值，以及随机森林的 OOF 概率和 KMeans 聚类结果——这两样正是后面错误分析页和聚类页的输入。后面的 Today Radar 也可以直接复用这套模型。”</div>
+      <table><tr><th>模型</th><th>特点</th><th>本项目里怎么理解</th></tr><tr><td>逻辑回归</td><td>线性、稳定</td><td>AUC 0.883，简单可解释</td></tr><tr><td>随机森林</td><td>非线性、能处理组合关系</td><td>AUC 0.888 最佳 · PR-AUC 0.652，候选排序主力</td></tr><tr><td>XGBoost</td><td>拟合能力强</td><td>AUC 0.876，作为强基线对照</td></tr></table>
     </div>
   </section>
 
@@ -228,7 +228,7 @@
     <div class="slide-num"><b>09</b><span>Metrics</span></div>
     <div>
       <h2>指标解释：为什么不能只看一个数字</h2>
-      <div class="meta"><span class="pill">AUC</span><span class="pill">PR-AUC</span><span class="pill">P@10</span><span class="pill">时间切分</span></div>
+      <div class="meta"><span class="pill">AUC</span><span class="pill">PR-AUC</span><span class="pill">P@10</span><span class="pill">Time-Split</span></div>
       <div class="script editable" data-edit-id="slide9-script"><strong>讲稿：</strong>“这一页解释几个指标分别看什么。AUC 看整体排序能力，也就是模型能不能把更可能成功的项目排到前面。PR-AUC 更关注少数正例，因为进入前 20% 的项目本来就少。P@10 看模型排在最前面的 10 个候选里命中多少，更接近实际使用。时间切分是把较早创建的仓库用于训练，较晚创建的仓库用于测试，用来检查结果是否只是随机划分下好看。”</div>
       <ul><li>这页的价值是让结果页不变成“报数字”。先解释指标，再展示结果。</li></ul>
     </div>
@@ -239,23 +239,53 @@
     <div>
       <h2>实验结果：早期信号确实有排序能力</h2>
       <div class="meta"><span class="pill">核心数字</span><span class="pill">消融实验</span></div>
-      <div class="script editable" data-edit-id="slide10-script"><strong>讲稿：</strong>“实验结果主要看三点。第一，逻辑回归的 AUC 是 0.883，说明早期信号确实能把更有潜力的仓库排到前面。第二，随机森林的 PR-AUC 是 0.662，说明它对少数热门项目的识别能力不错。第三，时间切分差距只有 +0.0004，说明结果在这个时间窗口里比较稳定。下面的消融实验说明，加入早期说明文档后效果最好，AUC 到 0.8885；但继续加入派生比率后略微下降，说明并不是特征越多越好。”</div>
+      <div class="script editable" data-edit-id="slide10-script"><strong>讲稿：</strong>“实验结果主要看三点。第一，随机森林的 AUC 最高，到 0.888，说明早期信号确实能把更有潜力的仓库排到前面。第二，它的 PR-AUC 是 0.652，对少数热门项目的识别能力不错。第三，时间切分的 AUC 差距只有 -0.0048，绝对值很小，说明结果在这个时间窗口里比较稳定。下面的消融实验说明，加入早期活跃度提升最大，再加入说明文档继续提升到 0.8866，而派生比率几乎不再贡献——真正起作用的是早期活跃度和文档信号。”</div>
       <ul><li>转场：模型有效之后，才讲 OpenClaw 的额外价值。</li></ul>
     </div>
   </section>
 
   <section class="slide">
-    <div class="slide-num"><b>11</b><span>OpenClaw</span></div>
+    <div class="slide-num"><b>11</b><span>Regression</span></div>
     <div>
-      <h2>事实诊断 + 洞察分析：OpenClaw 的核心价值</h2>
-      <div class="meta"><span class="pill">事实先行</span><span class="pill">受约束推理</span></div>
-      <div class="script editable" data-edit-id="slide11-script"><strong>讲稿：</strong>“这一页回答一个关键问题：为什么不是直接把实验结果丢给大模型？直接问大模型当然能生成一段分析，但它没有稳定的流程，也可能引用不存在的数字。OpenClaw 的做法是先由事实诊断模块计算结构化事实，比如哪个模型最好、哪些语言异常、哪些特征重要；然后洞察分析模块只能基于这些事实做解释，并且引用数字要能在事实摘要里找到。这样大模型的作用就从‘编故事’变成‘基于证据推理’。”</div>
-      <ul><li>这里可以强调：OpenClaw 的不可替代性不是“更聪明”，而是把复杂任务组织成可靠工作流。</li></ul>
+      <h2>回归实验：不仅看会不会火，还预测能火到多大</h2>
+      <div class="meta"><span class="pill">回归</span><span class="pill">R² ≈ 0.50</span></div>
+      <div class="script editable" data-edit-id="slide-regression"><strong>讲稿：</strong>“前面是分类，判断一个项目会不会进前 20%。这一页我们换个角度做回归：用同样的 19 个早期特征，直接预测项目约一年后的 star 数（取对数）。三个模型里岭回归最好，R² 大约 0.50，也就是说早期信号能解释大约一半的热度方差。分类回答‘会不会火’，回归回答‘能火到多大’，两者是互补的——早期行为不仅能区分头部项目，还能在一定程度上预测它们最终的量级。”</div>
+      <ul><li>这页只讲一个数：R² ≈ 0.50，强调“同样的信号也能预测热度量级”。</li><li>不用纠结 RMSE 等细节，点到为止。</li></ul>
     </div>
   </section>
 
   <section class="slide">
-    <div class="slide-num"><b>12</b><span>Today Radar</span></div>
+    <div class="slide-num"><b>12</b><span>OpenClaw</span></div>
+    <div>
+      <h2>事实诊断 + 错误分析：OpenClaw 的核心价值</h2>
+      <div class="meta"><span class="pill">事实先行</span><span class="pill">受约束推理</span><span class="pill">复盘盲区</span></div>
+      <div class="script editable" data-edit-id="slide11-script"><strong>讲稿：</strong>“这一页回答一个关键问题：为什么不是直接把实验结果丢给大模型？直接问大模型当然能生成一段分析，但它没有稳定的流程，也可能引用不存在的数字。OpenClaw 的做法是先由事实诊断模块计算结构化事实，比如哪个模型最好、哪些语言异常、哪些特征重要；然后洞察和误差两个角色只能基于这些事实做解释，引用的数字都要能在事实摘要里找到。这样大模型的作用就从‘编故事’变成‘基于证据推理’。而且模型一定会算错，OpenClaw 把高置信的错误也单独存成证据文件，让结论可以复盘，而不是只报一个好看的分数。”</div>
+      <ul><li>这里可以强调：OpenClaw 的不可替代性不是“更聪明”，而是把复杂任务组织成可靠、可复盘的工作流。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>13</b><span>Clustering &amp; Errors</span></div>
+    <div>
+      <h2>聚类 + 错误分析：不仅看分数，也看模型盲区</h2>
+      <div class="meta"><span class="pill">行为分群</span><span class="pill">FP / FN</span></div>
+      <div class="script editable" data-edit-id="slide12-script"><strong>讲稿：</strong>“这一页是新增的误差角色带来的两个视角。第一是聚类：用 KMeans 把 500 个仓库按早期行为分成四类，可以看到同样是早期项目，不同行为模式的成功率差别很大——最高的一类正例率到 62%，最低的一类只有 2%，说明‘活跃加文档完整’这类组合确实更可能跑出来。第二是错误分析：我把模型最有把握、却判断错了的案例单独拿出来看。有 15 个高置信假阳性，早期很活跃但最终没火；还有 15 个被低估的项目，早期很安静、后来却爆发。它回答的是‘哪些信号会骗过模型、哪些潜力项目会被低估’。”</div>
+      <ul><li>这页不用念具体仓库名，讲清“行为分群”和“高分会错、低分会爆”两件事即可。</li><li>转场：分析做完，进入应用层 Today Radar。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>14</b><span>LLM Comparison</span></div>
+    <div>
+      <h2>大模型对比：同一份事实，谁的分析最靠谱</h2>
+      <div class="meta"><span class="pill">课程要求 c</span><span class="pill">数字校验</span></div>
+      <div class="script editable" data-edit-id="slide-llm"><strong>讲稿：</strong>“这一页是大模型对比实验。我们把 OpenClaw 生成的同一份结构化事实摘要，分别喂给三个旗舰大模型——DeepSeek、Kimi、Qwen，让它们各写一份七章节的分析报告，再用自动校验器逐个核对它们引用的数字是否和事实一致。结果是：Kimi 和 Qwen 的数字准确率都是 100%，DeepSeek 引用的数字最多、信息最丰富，但有两处偏差，准确率 98.6%。这页真正想说明的是 OpenClaw 的价值：先把事实算好、再让大模型解释、并且逐个数字校验——把分析锚定在已验证的事实上，就能直接量化、对比不同大模型的可靠性，而不是让它们自由发挥编数字。”</div>
+      <ul><li>强调“先算事实、再解释、再校验”这条主线，和第 12 页呼应。</li><li>转场：分析能力展示完，进入应用层 Today Radar。</li></ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>15</b><span>Today Radar</span></div>
     <div>
       <h2>Today Radar：把历史模型用于今天的候选发现</h2>
       <div class="meta"><span class="pill">应用闭环</span><span class="pill">候选榜单</span></div>
@@ -265,11 +295,21 @@
   </section>
 
   <section class="slide">
-    <div class="slide-num"><b>13</b><span>Summary</span></div>
+    <div class="slide-num"><b>16</b><span>Summary</span></div>
     <div>
       <h2>总结：回到完整闭环</h2>
       <div class="meta"><span class="pill">收束</span><span class="pill">三层价值</span></div>
-      <div class="script editable" data-edit-id="slide13-script"><strong>讲稿：</strong>“最后我把项目总结成三层。第一是模型层：创建后 30 天内的早期信号，确实可以用于排序潜力仓库。第二是系统层：OpenClaw 把采集、特征、训练、诊断、洞察和报告拆成多个角色，让流程可复现、可检查。第三是应用层：Today Radar 复用同一套模型和特征格式，生成今天值得观察的候选项目。也就是说，这个项目不只是训练了一个模型，而是完成了一个从历史验证到今日应用的数据挖掘闭环。”</div>
+      <div class="script editable" data-edit-id="slide13-script"><strong>讲稿：</strong>“最后我把项目总结成三层。第一是模型层：创建后 30 天内的早期信号，确实可以用于排序潜力仓库。第二是分析层：OpenClaw 把训练、事实诊断、聚类、错误分析和洞察拆成多个角色，让流程可复现、可检查，连模型的盲区也能复盘。第三是应用层：Today Radar 复用同一套模型和特征格式，生成今天值得观察的候选项目。也就是说，这个项目不只是训练了一个模型，而是完成了一个从历史验证到今日应用的数据挖掘闭环。”</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-num"><b>17</b><span>Thanks</span></div>
+    <div>
+      <h2>致谢：自然收尾</h2>
+      <div class="meta"><span class="pill">结束</span></div>
+      <div class="script editable" data-edit-id="slide15-script"><strong>讲稿：</strong>“以上就是 OpenClaw 开源项目潜力发现系统的全部内容——从早期信号建模，到多智能体工作流，再到错误复盘和今日候选应用。谢谢大家，欢迎提问。”</div>
+      <ul><li>停在这一页接受提问，不要又翻回正文页。</li></ul>
     </div>
   </section>
 
@@ -278,11 +318,14 @@
     <table>
       <tr><th>阶段</th><th>对应页面</th><th>展示重点</th></tr>
       <tr><td>提出问题</td><td>1–2</td><td>为什么要从 GitHub 早期信号里发现潜力项目</td></tr>
-      <tr><td>系统结构</td><td>3–4</td><td>OpenClaw 如何把任务拆成总指挥和多个专职角色</td></tr>
+      <tr><td>系统结构</td><td>3–4</td><td>OpenClaw 如何把任务拆成一个编排器和六个专职角色</td></tr>
       <tr><td>数据与特征</td><td>5–7</td><td>30 天快照、未来标签、19 个早期特征</td></tr>
       <tr><td>模型与结果</td><td>8–10</td><td>模型选择、指标含义、实验结果</td></tr>
-      <tr><td>OpenClaw 价值</td><td>11</td><td>先算事实，再让大模型基于证据解释</td></tr>
-      <tr><td>应用闭环</td><td>12–13</td><td>Today Radar 和最终总结</td></tr>
+      <tr><td>回归扩展</td><td>11</td><td>同一套特征做回归，预测热度量级（R² ≈ 0.50）</td></tr>
+      <tr><td>OpenClaw 价值</td><td>12</td><td>先算事实，再让大模型基于证据解释、复盘错误</td></tr>
+      <tr><td>分析深化</td><td>13</td><td>聚类行为分群 + 高置信错误（FP / FN）复盘盲区</td></tr>
+      <tr><td>大模型对比</td><td>14</td><td>同一份事实喂三个大模型，逐数字校验可靠性</td></tr>
+      <tr><td>应用与收尾</td><td>15–17</td><td>Today Radar、总结、致谢</td></tr>
     </table>
     <div class="callout editable" data-edit-id="final-recommendation"><strong>最终建议：</strong>展示时不要从“严格 30 天”这种实现细节开场。它是实验设计的基本要求，可以在报告里展开；PPT 里只需要自然地讲“模型只看创建后 30 天快照，标签来自未来表现”。</div>
   </section>

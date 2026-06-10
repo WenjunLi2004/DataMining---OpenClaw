@@ -1,6 +1,6 @@
 {
-  "run_at": "2026-06-03T11:02:26Z",
-  "trigger": "manual_strict_30d_refresh",
+  "run_at": "2026-06-03T13:20:00Z",
+  "trigger": "manual_full_refresh",
   "state_snapshot": {
     "raw_data": {
       "exists": true,
@@ -15,39 +15,44 @@
     "diagnostic_summary": {
       "exists": true,
       "path": "data/diagnostic_summary.json",
-      "all_strict_30d": true
+      "all_early_30d": true
     }
   },
   "decisions": [
     {
       "step": "Data Collection",
       "action": "skipped",
-      "reason": "fixed strict-30d raw data already exists"
+      "reason": "复用固定历史快照（30 天窗口原始数据已存在）"
     },
     {
       "step": "Feature Extraction",
       "action": "executed",
-      "reason": "refreshed 19-feature matrix from strict raw data"
+      "reason": "从历史快照重建 19 维早期特征矩阵"
     },
     {
       "step": "Model Training",
       "action": "executed",
-      "reason": "refreshed LR/RF/XGBoost metrics and model artifacts"
+      "reason": "刷新 LR/RF/XGBoost 指标、OOF 概率与可复用模型产物"
     },
     {
       "step": "Diagnostic Builder",
       "action": "executed",
-      "reason": "rebuilt fact-grounded diagnostic summary"
+      "reason": "重建以事实为基准的诊断摘要"
     },
     {
       "step": "Insight Analysis",
       "action": "executed",
-      "reason": "generated deterministic template insights"
+      "reason": "基于事实摘要生成可解释洞察"
+    },
+    {
+      "step": "Error Analysis",
+      "action": "executed",
+      "reason": "基于 RF 的 OOF 概率定位高置信 FP / FN，归纳模型盲区"
     },
     {
       "step": "Report Generation",
       "action": "executed",
-      "reason": "regenerated light-themed HTML reports"
+      "reason": "重新生成浅色主题 HTML 报告（含聚类分析与应用价值）"
     }
   ],
   "tool_calls_sequence": [
@@ -55,6 +60,7 @@
     "model_trainer",
     "diagnostic_builder",
     "insight_analysis",
+    "error_analyst",
     "report_generator"
   ]
 }

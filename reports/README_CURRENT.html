@@ -31,7 +31,10 @@ a:hover{text-decoration:underline;}
   <h2>📊 展示材料（优先打开）</h2>
   <ul>
     <li><a href="./OPEN_THIS_latest_presentation.pptx">OPEN_THIS_latest_presentation.pptx</a>
-        <span class="tag">最新版 PPT · 13 页</span></li>
+        <span class="tag">最新版 PPT · 17 页</span>
+        — 含多智能体总览（7 个 Agent）、分类/<b>回归实验</b>、聚类 + 错误分析、<b>大模型对比</b>、Today Radar、Thanks。
+        指标已同步最新模型（RF 最佳 AUC 0.888 / PR-AUC 0.652）。
+        <code>update_presentation.pptx</code> 为同一内容的副本。</li>
     <li><a href="./OPEN_THIS_latest_presentation.pdf">OPEN_THIS_latest_presentation.pdf</a>
         <span class="tag b">PDF 版</span></li>
     <li><a href="./OPEN_THIS_speech_guide.html">OPEN_THIS_speech_guide.html</a>
@@ -44,13 +47,39 @@ a:hover{text-decoration:underline;}
   <ul>
     <li><a href="./latest_final.html">latest_final.html</a>
         <span class="tag">最新 · 稳定入口</span>
-        — 完整评估报告：概览、19 特征、三模型对比、消融、时间切分、分语言分析、方法说明。
-        所有数字均由当前 model_results.json 动态生成。</li>
-    <li><a href="./2026-06-03_two_part_report.html">2026-06-03_two_part_report.html</a>
+        — 完整评估报告：概览、19 特征、三模型对比、消融、Time-Split、分语言、
+        <b>聚类分析（KMeans + PCA 交互散点）</b>、<b>回归实验（log-star，R² ≈ 0.50）</b>、
+        <b>应用价值分析</b>、方法说明。所有数字均由当前 model_results.json 动态生成。</li>
+    <li><a href="./2026-06-09_two_part_report.html">2026-06-09_two_part_report.html</a>
         — 同上（与 latest_final.html 内容完全一致，带日期的存档版）。</li>
   </ul>
   <p class="note">报告由 skills/report-generator/generate.py 生成；可随时重新生成：
     <code>python3 skills/report-generator/generate.py</code></p>
+</div>
+
+<div class="card">
+  <h2>🔎 错误分析（模型盲区复盘）</h2>
+  <ul>
+    <li><a href="./error_analysis.html">error_analysis.html</a>
+        <span class="tag">error-analyst</span>
+        — RF 高置信预测错误的模式归纳：15 个高置信假阳性（FP，看着会火却没火）、
+        15 个被低估的成功项目（FN，早期安静却爆发），回答"哪些信号会骗过模型、哪些潜力项目被低估"。</li>
+  </ul>
+  <p class="note">由 skills/error-analyst/analyze.py 生成（无 API key 时回退确定性统计摘要）：
+    <code>python3 skills/error-analyst/analyze.py</code></p>
+</div>
+
+<div class="card">
+  <h2>🤖 大模型对比实验（课程要求 c）</h2>
+  <ul>
+    <li><a href="./llm_comparison.html">llm_comparison.html</a>
+        <span class="tag b">新增 · LLM 对比</span>
+        — 同一份事实摘要喂给三个旗舰大模型，自动校验引用数字的准确率：
+        <b>DeepSeek V4 Pro 98.6%</b>（146 引用 / 2 偏差）、<b>Kimi K2 100%</b>（77 引用）、<b>Qwen3.7 Max 100%</b>（108 引用）。</li>
+    <li><a href="./insights_deepseek.md">insights_deepseek.md</a> · <a href="./insights_kimi.md">insights_kimi.md</a> ·
+        <a href="./insights_qwen.md">insights_qwen.md</a> — 三个模型各自的完整 7 章节分析原文。</li>
+  </ul>
+  <p class="note">体现 OpenClaw "先算事实、再让大模型解释、并逐数字校验" 的核心价值——把分析锚定在已验证的事实上。</p>
 </div>
 
 <div class="card">
